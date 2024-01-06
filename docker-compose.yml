@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  client:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/usr/src/app  
+    depends_on:
+      - server
+
+  server:
+    build: ./server
+    ports:
+      - "5001:5001"
+    environment:
+      - DB_HOST=react_be_working-db-1
+      - DB_USER=postgres
+      - DB_PASS=@Ranka6164
+      - DB_NAME=docker_be_working
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "@Ranka6164"
+      POSTGRES_DB: docker_be_working
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
