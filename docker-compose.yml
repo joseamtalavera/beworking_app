@@ -8,6 +8,9 @@ services:
       - "3000:3000"
     volumes:
       - ./client:/usr/src/app  
+    environment:
+      - REACT_APP_GOOGLE_CLIENT_ID=341971575995-sbo8bpcfv71esgm8b08sf52m6keih7qo.apps.googleusercontent.com
+      - REACT_APP_GOOGLE_CLIENT_SECRET=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
     depends_on:
       - server
 

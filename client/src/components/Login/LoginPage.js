@@ -60,7 +60,7 @@ const LoginPage = () => {
                         </Box>
                         <Box position="absolute" top={2} left={2}>
                                 <Link href="/">
-                                 <img src="/logo.png" alt="Logo" style={{ maxWidth: '180px', maxHeight: '100px', marginLeft: '50px', marginTop: '30px'}} /> {/* Logo image */}
+                                 <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '50px', marginTop: '30px'}} /> {/* Logo image */}
                                 </Link>
                         </Box>
                         <Box position = "absolute" top={2} right={2} display= "flex" alignItems="center">
