@@ -18,6 +18,8 @@ services:
     build: ./server
     ports:
       - "5001:5001"
+    volumes:
+      - ./server:/usr/src/app  
     environment:
       - DB_HOST=react_be_working-db-1
       - DB_USER=postgres

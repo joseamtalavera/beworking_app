@@ -1,19 +1,20 @@
 const express = require('express');
 const passport = require('passport');
 const authController = require('../controllers/authController');
+
+// Create a new router object
 const router = express.Router();
 
-// Define routes
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    function(req, res) {
-        // This function is called when a user successfully authenticates with Google
-        // Its job is to redirect the user to the right place
-        res.redirect('/dashboard');
-    }
-);
+
+// Define a route for signing in with a token.
+// Wher this route is hit, the loginWithGoogle function in the authController is called.
 router.post('/token-signin', authController.loginWithGoogle);
+
+
+// Error handler middleware
+router.use((err, req, res, next) => {
+    res.status(500).send('Something went wrong');
+});
 
 module.exports = router;
 

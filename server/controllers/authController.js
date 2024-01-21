@@ -1,4 +1,4 @@
-import { GOOGLE_CLIENT_ID } from '../../Utils/config';
+//import { GOOGLE_CLIENT_ID } from '../../Utils/config';
 // Import the the OAuth2Client from google-auth-library and creates a new instance of it.
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
@@ -10,7 +10,7 @@ async function verify(token){
     // This method is asynchronous and returns a Promise that resolves to the ticket.
     const ticket = await client.verifyIdToken({ // This method verifies the ID token and returns the decoded token payload.
         idToken: token,
-        audience: GOOGLE_CLIENT_ID,
+        audience: process.env.REACT_APP_GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload(); // Extract the payload from the ticket. This is ID token payload.
     const userid = payload['sub']; // It stands for Subject. It is a unique identifier for the user. It is a claim in the JWT.
