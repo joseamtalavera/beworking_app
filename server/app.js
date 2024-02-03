@@ -11,9 +11,10 @@ const cors = require('cors');
 
 const app = express();
 
+
 app.use(cors()); // To allow cross-origin requests from the react client
 app.use(express.json()); // To parse the incoming requests with JSON payloads
-app.use(authRoutes);
+
 
 // Use express-session middleware for session management.
 // Sessions are a way to store information to a particular client (web browser) 
@@ -23,6 +24,8 @@ app.use(session({
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
 }));
+
+app.use(authRoutes);
 
 // Initialize passport and restore authentication state, if any, from the session.
 // Passport middleware is a strategy invoked in every request that authenticates the request.
@@ -44,7 +47,12 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-const port = process.env.PORT || 5001;
-app.listen(port, () => {
+app.get('/test', (req, res) => {
+    res.send('Test route is working');
+});
+
+
+const port = process.env.PORT || 5005;
+app.listen(port,'0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });

@@ -1,21 +1,21 @@
 
 const pool = require('./db');
-app.post('/register', async (req, res) => {
-  
-    // Validate and sanitize req.body here...
-  
-    // Define the SQL query
-    const text = 'INSERT INTO users(username, email, password) VALUES($1, $2, $3) RETURNING *';
-    const values = [req.body.username, req.body.email, req.body.password]; // Note: In a real app, you should hash the password before storing it
-  
-    try {
-      // Execute the query
-      const result = await pool.query(text, values);
-  
-      // Send a success response
-      res.send(result.rows[0]);
-    } catch (error) {
-      // Send an error response
-      res.status(500).send(error);
+
+exports.createUser = async (userid) => {
+
+  try {
+  // Check if a user with this Google ID already exists in the database
+    const existingUser = await pool.query('SELECT * FROM users WHERE google_id = $1', [userid]);
+
+    if (existingUser.rows.length === 0) {
+    // If not, create a new user
+      const newUser = await pool.query('INSERT INTO users(google_id) VALUES($1) RETURNING *', [userid]);
+      return newUser.rows[0];
     }
-  });
+  // If the user already exists, return the user.
+    return existingUser.rows[0];
+  } catch (error) {
+    console.error('Error in createUser:', error);
+    throw error;
+  }
+};

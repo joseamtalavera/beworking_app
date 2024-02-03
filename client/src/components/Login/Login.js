@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Checkbox, FormControlLabel, Link, Grid, Typography, IconButton } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography, IconButton } from '@mui/material';
 import EmailRecoveryForm from './EmailRecoveryForm';
 import GoogleButton from './GoogleButton';
 import PasswordInput from './PasswordInput';
@@ -17,13 +17,41 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (rememberMe) {
       document.cookie = `rememberMe=${email}; max-age=86400; path=/`;
     }
-    // Additional login logic goes here
-  };
+    // Handle registration here
+    // Make sure to use parameterized queries or prepared statements to prevent SQL injection
+
+    if (!email || !password) {
+        alert('Please fill out all fields');
+        return;
+    }
+    // Send a request to the server for regsitration
+    // We need to replace it with our own server
+
+    fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.sucess) {
+            alert('Login successful');
+        } else {
+            alert('Login failed');
+        }
+    })
+    .catch((error) =>{
+        console.error('Error:', error);
+    })
+};
 
 
 
@@ -64,18 +92,18 @@ function Login() {
             </Grid>
 
         <Grid item >
-          <GoogleButton 
+          {/* <GoogleButton 
             buttonText="Login with Google" 
-          />
+          />  */}
 
 
-          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', margin: '10px auto' }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', margin: '10px auto' }}>
             <Box flex={1} borderBottom={1} borderColor="orange" />
               <Typography mx={2} color="orange">
                 or
               </Typography>
             <Box flex={1} borderBottom={1} borderColor="orange" />
-          </Box>
+          </Box> */}
           
 
           <EmailInput

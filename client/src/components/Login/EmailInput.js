@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-const EmailInput = ({ email, setEmail }) => {
+const EmailInput = ({ email, handleEmailChange }) => {
     return (
         <TextField
             variant="outlined"
@@ -11,7 +11,8 @@ const EmailInput = ({ email, setEmail }) => {
             name="email"
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            //onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             placeholder='Email address'
             InputProps={{
                 style: {color: '#808080'},

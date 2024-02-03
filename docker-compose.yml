@@ -21,10 +21,11 @@ services:
     volumes:
       - ./server:/usr/src/app  
     environment:
-      - DB_HOST=react_be_working-db-1
+      - DB_HOST=db
       - DB_USER=postgres
       - DB_PASS=@Ranka6164
       - DB_NAME=docker_be_working
+      - GOOGLE_CLIENT_ID=341971575995-sbo8bpcfv71esgm8b08sf52m6keih7qo.apps.googleusercontent.com
     depends_on:
       - db
 
