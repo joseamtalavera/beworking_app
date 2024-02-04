@@ -4,14 +4,19 @@ import { useState, useEffect } from 'react';
 
 function useAuth() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [token, setToken] = useState(localStorage.getItem('token'));
+    const googleToken = localStorage.getItem('googleToken');
+    const emailToken = localStorage.getItem('emailToken');
 
     useEffect(() => {
-        setIsAuthenticated(!!token);
-    }, [token]);
+        setIsAuthenticated(!!googleToken || !!emailToken);
+    }, [googleToken, emailToken]);
 
     useEffect(() => {
-        const tokenListener = () => setToken(localStorage.getItem('token'));
+        const tokenListener = () => {
+            const googleToken = localStorage.getItem('googleToken');
+            const emailToken = localStorage.getItem('emailToken');
+            setIsAuthenticated(!!googleToken || !!emailToken);
+        };
 
         window.addEventListener('storage', tokenListener);
 

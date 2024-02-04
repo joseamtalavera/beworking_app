@@ -1,11 +1,10 @@
-//import { GOOGLE_CLIENT_ID } from '../../Utils/config';
-// Import the the OAuth2Client from google-auth-library and creates a new instance of it.
+
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const {createUser} = require('../model/queries');
 
 
-// Create a verify function that verifies the token.
+
 async function verify(token){
     console.log("Google Client ID (audience):", process.env.GOOGLE_CLIENT_ID); // Log the Google Client ID
 
@@ -18,9 +17,9 @@ async function verify(token){
     const userid = payload['sub']; // It stands for Subject. It is a unique identifier for the user. It is a claim in the JWT.
     return userid; // Return the User ID. The user ID can be used to identify the user in the database.
  
-}// End of the verify function
+}
 
-// Export the loginWithGoogle function
+
 exports.loginWithGoogle = async (req, res) => {
 
     const {token} = req.body; // Get the token from the request body of the HTTP POST request.
@@ -39,9 +38,25 @@ exports.loginWithGoogle = async (req, res) => {
 
         res.status(200).send({user});
     } catch(e) {
-        // if there's an error, we'll send the error in the response
-        console.error(e); // Log the error for debugging
+        console.error(e);
         res.status(500).send({ error: 'Internal Server Error' });
-    } // End of the try-catch block
+    } 
 
 }; 
+
+
+exports.registerEmail = async (req, res) => {
+    console.log(req.body);
+    try {
+        const {email, password} = req.body;
+        const user = await createUser(null, email, password);
+        res.status(201).send({ user });
+    } catch (error) {
+        console.log(error);
+        if (error.message === 'Email already exists') {
+            res.status(400).send({message: 'User already exists'});
+        } else {
+        res.status(400).send(error);
+        }
+    }
+};

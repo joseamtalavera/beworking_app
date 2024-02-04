@@ -1,21 +1,38 @@
 
 const pool = require('./db');
 
-exports.createUser = async (userid) => {
-
+const createUser = async (userid, email, password) => {
+  console.log(email, password);
   try {
-  // Check if a user with this Google ID already exists in the database
-    const existingUser = await pool.query('SELECT * FROM users WHERE google_id = $1', [userid]);
-
-    if (existingUser.rows.length === 0) {
-    // If not, create a new user
-      const newUser = await pool.query('INSERT INTO users(google_id) VALUES($1) RETURNING *', [userid]);
-      return newUser.rows[0];
+    // Check if the user already exists
+    let existingUser;
+    if (userid) {
+      existingUser = await pool.query('SELECT * FROM users WHERE google_id = $1', [userid]);
+    } else {
+      existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     }
-  // If the user already exists, return the user.
-    return existingUser.rows[0];
-  } catch (error) {
-    console.error('Error in createUser:', error);
-    throw error;
-  }
+
+      //if (existingUser.rows.length === 0) {
+      if (existingUser.rows.length > 0) {
+        throw new Error('User already exists');
+      }
+      // If not, create a new user
+      let newUser;
+      if (userid) {
+        newUser = await pool.query('INSERT INTO users(google_id) VALUES($1) RETURNING *', [userid]);
+      } else if (email && password) {
+        newUser = await pool.query('INSERT INTO users(email, password) VALUES($1, $2) RETURNING *', [email, password]);
+      }
+      return newUser.rows[0];
+  
+      // If the user already exists, return the user.
+      return existingUser.rows[0];
+      } catch (error) {
+      console.error('Error in createUser:', error);
+      throw error;
+      }
+};
+
+module.exports = {
+  createUser
 };

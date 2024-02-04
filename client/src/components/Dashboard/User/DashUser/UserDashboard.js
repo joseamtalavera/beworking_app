@@ -7,7 +7,7 @@ function AdminUser() {
             <Typography variant="h4">
                 Welcome to the Dashboard
             </Typography>
-            <img src="./DALLE.png" alt="Dashboard illustration" style={{ marginTop: '20px', maxWidth: '300px' }} />
+            {/* <img src="./DALLE.png" alt="Dashboard illustration" style={{ marginTop: '20px', maxWidth: '300px' }} /> */}
         </div>
     );
 }

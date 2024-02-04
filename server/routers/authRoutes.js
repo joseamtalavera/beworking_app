@@ -1,13 +1,12 @@
 const express = require('express');
 const authController = require('../controllers/authController');
-
-// Create a new router object
 const router = express.Router();
 
 
 // Define a route for signing in with a token.
 // Wher this route is hit, the loginWithGoogle function in the authController is called.
-router.post('/api/token-signin', authController.loginWithGoogle);
+router.post('/token-signin', authController.loginWithGoogle);
+router.post('/register', authController.registerEmail);
 
 
 // Error handler middleware

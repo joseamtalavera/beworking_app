@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Grid, Typography, Link } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
+import { useNavigate} from 'react-router-dom';
 //import GoogleButton from './GoogleButton';
 
 const RegistrationForm = () => {
@@ -9,6 +10,8 @@ const RegistrationForm = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -47,13 +50,17 @@ const RegistrationForm = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-    
-            if (data.success) {
-                alert('Registration successful');
+
+            if (data.user) {
+                console.log('Registration successful');
+                navigate('/dashboard/user');
             } else {
-                alert('Registration failed');
+                console.log('Registration failed');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -85,7 +92,7 @@ const RegistrationForm = () => {
                         Create an account
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2, textAlign: 'center'}} >
-                        Please enter your emial address and password 
+                        Please enter your email address and password 
                     </Typography>
                 </Grid>
 

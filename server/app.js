@@ -1,19 +1,40 @@
 
-// Load environment variables from the .env file
 require('dotenv').config();
-
 
 const express = require('express');
 const passport = require('passport');
-const authRoutes = require('./routers/authRoutes');
 const session = require('express-session');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const path = require('path');
+const authRoutes = require('./routers/authRoutes');
 
 const app = express();
 
+app.use(helmet());
+app.use(morgan('combined'));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.use(cors()); // To allow cross-origin requests from the react client
+const port = process.env.PORT || 5005;
+
+const allowedOrigins = ['http://localhost:3003', 'https://emailcall.onrender.com', 'http://localhost:3000'];
+app.use(cors({
+    origin: function(origin, callback){
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){
+            var msg = 'The CORS policy for this site does not ' +
+                                'allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+}));
+
 app.use(express.json()); // To parse the incoming requests with JSON payloads
+app.use(express.urlencoded({ extended: true }));
+app.use('/api', authRoutes);
 
 
 // Use express-session middleware for session management.
@@ -25,7 +46,7 @@ app.use(session({
     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
 }));
 
-app.use(authRoutes);
+
 
 // Initialize passport and restore authentication state, if any, from the session.
 // Passport middleware is a strategy invoked in every request that authenticates the request.
@@ -43,16 +64,16 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+    });
+
+// Error handler middleware
+app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong');
 });
 
-app.get('/test', (req, res) => {
-    res.send('Test route is working');
-});
-
-
-const port = process.env.PORT || 5005;
-app.listen(port,'0.0.0.0', () => {
-    console.log(`Server running on port ${port}`);
-});
+app.listen(port, () => {
+    console.log(`Server is running on Port ${port}`);
+  });
