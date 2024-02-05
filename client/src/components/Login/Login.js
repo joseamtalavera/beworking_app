@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
-import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography, IconButton } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography } from '@mui/material';
 import EmailRecoveryForm from './EmailRecoveryForm';
-import GoogleButton from './GoogleButton';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
+import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
+function Login(props) {
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
-
   const [email, setEmail] = useState(() => {
-    const rememberMe = document.cookie.split(';').find(row => row.startsWith('rememberMe='));
-    return rememberMe ? rememberMe.split('=')[1] : '';
-  });
+    try {
+        const rememberMe = document.cookie.split(';').find(row => row.startsWith('rememberMe='));
+        return rememberMe ? rememberMe.split('=')[1] : '';
+    } catch (error) {
+        console.error('Error parsing rememberMe cookie:', error);
+        return '';
+    }
+});
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (rememberMe) {
-      document.cookie = `rememberMe=${email}; max-age=86400; path=/`;
-    }
     // Handle registration here
     // Make sure to use parameterized queries or prepared statements to prevent SQL injection
 
@@ -30,27 +40,43 @@ function Login() {
         alert('Please fill out all fields');
         return;
     }
+
     // Send a request to the server for regsitration
     // We need to replace it with our own server
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.sucess) {
-            alert('Login successful');
+    try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            if (response.status === 400 && data.message === 'User already exists') {
+                alert('User already exists');
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
         } else {
-            alert('Login failed');
+            const data = await response.json();
+
+            if (data.user) {
+                console.log('Registration successful');
+            
+                // Store the token in the local storage
+                localStorage.setItem('token', data.token);
+                props.onRegistrationSuccess();
+            } else {
+            console.log('Registration failed');
+            window.alert('Registration failed');
+            }
         }
-    })
-    .catch((error) =>{
+        } catch (error) {
         console.error('Error:', error);
-    })
+    }
 };
 
 
@@ -108,7 +134,7 @@ function Login() {
 
           <EmailInput
             email={email}
-            setEmail={setEmail}
+            handleEmailChange={handleEmailChange}
           />
 
           <PasswordInput

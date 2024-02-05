@@ -25,8 +25,7 @@ const createUser = async (userid, email, password) => {
       }
       return newUser.rows[0];
   
-      // If the user already exists, return the user.
-      return existingUser.rows[0];
+      
       } catch (error) {
       console.error('Error in createUser:', error);
       throw error;

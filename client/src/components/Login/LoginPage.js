@@ -45,6 +45,11 @@ const LoginPage = () => {
                 setShowRegistrationForm(false);
                 setShowSignUpLink(true);
         }
+        const handleRegistrationSuccess = () => {
+                setShowRegistrationForm(false);
+                setShowSignUpLink(true);
+                window.alert('Registration Successful. Please login to continue.');
+        }
 
 
         
@@ -56,7 +61,7 @@ const LoginPage = () => {
                     </Grid>
                     <Grid item xs={8} style={loginContainerStyle}>
                         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                          {showRegistrationForm ? <RegistrationForm /> : <Login />}
+                          {showRegistrationForm ? <RegistrationForm onRegistrationSuccess={handleRegistrationSuccess} /> : <Login />}
                         </Box>
                         <Box position="absolute" top={2} left={2}>
                                 <Link href="/">

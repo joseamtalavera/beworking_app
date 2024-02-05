@@ -7,6 +7,7 @@ const router = express.Router();
 // Wher this route is hit, the loginWithGoogle function in the authController is called.
 router.post('/token-signin', authController.loginWithGoogle);
 router.post('/register', authController.registerEmail);
+router.post('/login', authController.loginEmail);
 
 
 // Error handler middleware

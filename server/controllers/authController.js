@@ -1,7 +1,9 @@
-
+const jwt = require('jsonwebtoken');
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const {createUser} = require('../model/queries');
+const { getUserByEmail } = require('../model/queries');
+const bcrypt = require('bcrypt');
 
 
 
@@ -50,13 +52,49 @@ exports.registerEmail = async (req, res) => {
     try {
         const {email, password} = req.body;
         const user = await createUser(null, email, password);
-        res.status(201).send({ user });
+
+        // Generate a token for the user
+        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        res.status(201).send({ user, token });
     } catch (error) {
         console.log(error);
-        if (error.message === 'Email already exists') {
+        if (error.message === 'User already exists') {
             res.status(400).send({message: 'User already exists'});
         } else {
         res.status(400).send(error);
         }
     }
 };
+
+exports.loginEmail = async (req, res) => {
+    console.log(req.body);
+    try {
+        const {email, password} = req.body;
+        // Check if the user exists
+        const user = await getUserByEmail({email});
+
+        // If the user doesn't exist, send an error message
+        if (!user) {
+            return res.status(400).send({message: 'Invalid email or password'});
+        }
+
+        // Check if the password is correct
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+        // If the password is incorrect, send an error message
+        if (!isPasswordCorrect) {
+            return res.status(400).send({message: 'Invalid email or password'});
+        }
+
+        // Generate a token for the user
+        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        res.status(201).send({ user, token });
+    } catch (error) {
+        console.log(error);
+        if (error.message === 'User already exists') {
+            res.status(400).send({message: 'User already exists'});
+        } else {
+        res.status(400).send(error);
+        }
+    }
+}

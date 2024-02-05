@@ -3,9 +3,9 @@ import { Box, Button, Grid, Typography, Link } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate} from 'react-router-dom';
-//import GoogleButton from './GoogleButton';
 
-const RegistrationForm = () => {
+
+const RegistrationForm = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -52,17 +52,27 @@ const RegistrationForm = () => {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (data.user) {
-                console.log('Registration successful');
-                navigate('/dashboard/user');
+                const data = await response.json();
+                if (response.status === 400 && data.message === 'User already exists') {
+                    alert('User already exists');
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
             } else {
+                const data = await response.json();
+
+                if (data.user) {
+                    console.log('Registration successful');
+                
+                    // Store the token in the local storage
+                    localStorage.setItem('token', data.token);
+                    props.onRegistrationSuccess();
+                } else {
                 console.log('Registration failed');
+                window.alert('Registration failed');
+                }
             }
-        } catch (error) {
+            } catch (error) {
             console.error('Error:', error);
         }
     };
