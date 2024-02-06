@@ -71,7 +71,9 @@ exports.loginEmail = async (req, res) => {
     try {
         const {email, password} = req.body;
         // Check if the user exists
-        const user = await getUserByEmail({email});
+        const user = await getUserByEmail(email);
+
+        console.log('User:', user);
 
         // If the user doesn't exist, send an error message
         if (!user) {
@@ -79,8 +81,7 @@ exports.loginEmail = async (req, res) => {
         }
 
         // Check if the password is correct
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
+        const isPasswordCorrect = password === user.password;
         // If the password is incorrect, send an error message
         if (!isPasswordCorrect) {
             return res.status(400).send({message: 'Invalid email or password'});

@@ -4,30 +4,35 @@ import { useState, useEffect } from 'react';
 
 function useAuth() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const googleToken = localStorage.getItem('googleToken');
-    const token = localStorage.getItem('token');
 
     useEffect(() => {
-        setIsAuthenticated(!!googleToken || !!token);
-    }, [googleToken, token]);
-
-    useEffect(() => {
-        const tokenListener = () => {
-            const googleToken = localStorage.getItem('googleToken');
-            const emailToken = localStorage.getItem('token');
-            setIsAuthenticated(!!googleToken || !!token);
+        const checkAuth = () => {
+            const token = localStorage.getItem('googleToken') || localStorage.getItem('token');
+            console.log('Token found in local storage:', token);
+            setIsAuthenticated(!!token);
+            //console.log('Authentication status:', isAuthenticated);
         };
 
-        window.addEventListener('storage', tokenListener);
+        checkAuth();
 
+        // Check auth status whenever local storage changes
+        window.addEventListener('storage', checkAuth);
+
+        // Clean up event listener
         return () => {
-            window.removeEventListener('storage', tokenListener);
+            window.removeEventListener('storage', checkAuth);
         };
     }, []);
 
-    console.log('Authentication status:', isAuthenticated); // Add logging
+    useEffect(() => {
+        console.log('Authentication right now status:', isAuthenticated);
+    }, [isAuthenticated]);
 
-    return isAuthenticated;
+    
+
+    //return isAuthenticated;
+    return {isAuthenticated, setIsAuthenticated};
 }
 
-export default useAuth;      
+
+export default useAuth;

@@ -4,6 +4,7 @@ import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../Utils/useAuth';
 
 
 function Login(props) {
@@ -22,6 +23,8 @@ function Login(props) {
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
+  //const  setIsAuthenticated  = useAuth();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -45,6 +48,7 @@ function Login(props) {
     // We need to replace it with our own server
 
     try {
+        console.log(JSON.stringify({ email, password }));
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
             headers: {
@@ -54,24 +58,26 @@ function Login(props) {
         });
 
         if (!response.ok) {
-            const data = await response.json();
-            if (response.status === 400 && data.message === 'User already exists') {
-                alert('User already exists');
-            } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+          console.error('Server responded with status', response.status);
+          window.alert('Login failed');
         } else {
             const data = await response.json();
 
             if (data.user) {
-                console.log('Registration successful');
-            
-                // Store the token in the local storage
-                localStorage.setItem('token', data.token);
-                props.onRegistrationSuccess();
+                console.log('Login successful');
+
+                localStorage.setItem('token', JSON.stringify(data.token));
+                console.log('Token set in local storage:', localStorage.getItem('token'));
+
+                window.dispatchEvent(new Event('storage'));
+                //setEmail('');
+                setIsAuthenticated(true);
+                navigate('/dashboard/user');
+                
+                
             } else {
-            console.log('Registration failed');
-            window.alert('Registration failed');
+            console.log('Login failed');
+            window.alert('Login failed');
             }
         }
         } catch (error) {
