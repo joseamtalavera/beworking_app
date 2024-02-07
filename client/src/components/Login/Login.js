@@ -4,6 +4,7 @@ import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
 
 
@@ -23,8 +24,14 @@ function Login(props) {
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
-  //const  setIsAuthenticated  = useAuth();
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
+ 
+  const { isAuthenticated, setIsAuthenticated } = useAuth(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+        navigate('/dashboard/user');
+    }
+  }, [isAuthenticated]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -36,19 +43,15 @@ function Login(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle registration here
-    // Make sure to use parameterized queries or prepared statements to prevent SQL injection
+    
 
     if (!email || !password) {
         alert('Please fill out all fields');
         return;
     }
 
-    // Send a request to the server for regsitration
-    // We need to replace it with our own server
 
     try {
-        console.log(JSON.stringify({ email, password }));
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
             headers: {
@@ -58,25 +61,16 @@ function Login(props) {
         });
 
         if (!response.ok) {
-          console.error('Server responded with status', response.status);
           window.alert('Login failed');
         } else {
             const data = await response.json();
-
+            
             if (data.user) {
                 console.log('Login successful');
 
                 localStorage.setItem('token', JSON.stringify(data.token));
-                console.log('Token set in local storage:', localStorage.getItem('token'));
-
-                window.dispatchEvent(new Event('storage'));
-                //setEmail('');
-                setIsAuthenticated(true);
-                navigate('/dashboard/user');
-                
-                
+                setIsAuthenticated(true);   
             } else {
-            console.log('Login failed');
             window.alert('Login failed');
             }
         }
@@ -89,6 +83,7 @@ function Login(props) {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+    setShowPassword(!showPassword);
   };
 
   const handleRecoveryClick = (event) => {

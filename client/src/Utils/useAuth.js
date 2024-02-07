@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from 'react';
 
-function useAuth() {
+function useAuth(autoCheck = true) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+   
 
     useEffect(() => {
         const checkAuth = () => {
+            if (autoCheck){
             const token = localStorage.getItem('googleToken') || localStorage.getItem('token');
-            console.log('Token found in local storage:', token);
             setIsAuthenticated(!!token);
-            //console.log('Authentication status:', isAuthenticated);
-        };
-
+            setIsLoading(false);                   
+            }
+        }
         checkAuth();
 
         // Check auth status whenever local storage changes
@@ -22,16 +25,12 @@ function useAuth() {
         return () => {
             window.removeEventListener('storage', checkAuth);
         };
-    }, []);
+        
+    }, [autoCheck]);
 
-    useEffect(() => {
-        console.log('Authentication right now status:', isAuthenticated);
-    }, [isAuthenticated]);
 
     
-
-    //return isAuthenticated;
-    return {isAuthenticated, setIsAuthenticated};
+    return {isAuthenticated, setIsAuthenticated,isLoading};
 }
 
 

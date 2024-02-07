@@ -3,7 +3,7 @@ import { TextField, IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const PasswordInput = ({ password, showPassword, setPassword, handleMouseDownPassword, setShowPassword, autoComplete, label, placeholder, required, ...props }) => {
-    const toggleShowPassword = () => setPassword(!showPassword);
+const toggleShowPassword = () => setPassword(!showPassword);
 
     return (
         <TextField

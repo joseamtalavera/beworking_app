@@ -81,6 +81,7 @@ const RegistrationForm = (props) => {
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
+        setShowPassword(!showPassword);
     }
 
     const formContainerStyle = {

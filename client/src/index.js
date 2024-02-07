@@ -1,4 +1,4 @@
-import { GoogleOAuthProvider } from '@react-oauth/google';
+//import { GoogleOAuthProvider } from '@react-oauth/google';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -11,10 +11,10 @@ import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboar
 import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
 import PrivateRoute from './Utils/PrivateRoute';
 
-const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+//const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 ReactDOM.render(
-  <GoogleOAuthProvider clientId={googleClientId}>
+  // <GoogleOAuthProvider clientId={googleClientId}>
   <Router>
     <Routes>
       <Route path="/" element={<App />} />
@@ -26,6 +26,6 @@ ReactDOM.render(
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
     </Routes>
   </Router>,
-  </GoogleOAuthProvider>,
+  //</GoogleOAuthProvider> 
   document.getElementById('root')
 );

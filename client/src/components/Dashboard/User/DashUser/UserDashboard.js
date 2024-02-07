@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
+
 function AdminUser() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -15,7 +16,7 @@ function AdminUser() {
                 to="/login" 
                 style={{ marginTop: '20px', width: '300px', backgroundColor: 'orange' }}
             >
-                Click here to logout
+                Logout
             </Button>
         </div>
     );
