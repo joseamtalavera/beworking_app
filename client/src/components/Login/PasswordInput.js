@@ -2,8 +2,8 @@ import React from 'react';
 import { TextField, IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-const PasswordInput = ({ password, showPassword, setPassword, handleMouseDownPassword, setShowPassword, autoComplete, label, placeholder, required, ...props }) => {
-const toggleShowPassword = () => setPassword(!showPassword);
+const PasswordInput = ({ password, showPassword, setPassword, handleMouseDownPassword, setShowPassword, autoComplete, label, placeholder, required, handlePasswordChange, ...props }) => {
+const toggleShowPassword = () => setShowPassword(!showPassword);
 
     return (
         <TextField
@@ -15,7 +15,7 @@ const toggleShowPassword = () => setPassword(!showPassword);
             label={label}
             autoComplete={autoComplete}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             placeholder={placeholder}
             InputProps={{
                 style: { color: '#808080' },

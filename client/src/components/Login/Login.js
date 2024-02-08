@@ -7,31 +7,32 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
 
-
+//why do i need to import useEffect from react? 
 function Login(props) {
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
-  const [email, setEmail] = useState(() => {
-    try {
-        const rememberMe = document.cookie.split(';').find(row => row.startsWith('rememberMe='));
-        return rememberMe ? rememberMe.split('=')[1] : '';
-    } catch (error) {
-        console.error('Error parsing rememberMe cookie:', error);
-        return '';
-    }
-});
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
 
   const navigate = useNavigate();
  
   const { isAuthenticated, setIsAuthenticated } = useAuth(false);
+
 
   useEffect(() => {
     if (isAuthenticated) {
         navigate('/dashboard/user');
     }
   }, [isAuthenticated]);
+
+  // This hook checks to ckeck if a token is expired
+  useEffect(() => {
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    if (Date.now() > tokenExpiration) {
+      setIsAuthenticated(false);  
+    }
+  }, []);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -48,6 +49,25 @@ function Login(props) {
     if (!email || !password) {
         alert('Please fill out all fields');
         return;
+    }
+
+    function clearAllCookies() {
+      const cookies = document.cookie.split(";");
+
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        const trimmedName = name.trim();
+        if (trimmedName !== 'keepMeLoggedIn' && trimmedName !== 'G_ENABLED_IDPS' && trimmedName !== 'g_state') {
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+      }
+    }
+
+    if (keepMeLoggedIn) {
+      clearAllCookies();
+        document.cookie = `keepMeLoggedIn=${email}; path=/`;
     }
 
 
@@ -69,6 +89,7 @@ function Login(props) {
                 console.log('Login successful');
 
                 localStorage.setItem('token', JSON.stringify(data.token));
+                localStorage.setItem('toekenExpiration', Date.now() + 60 * 60 * 1000);
                 setIsAuthenticated(true);   
             } else {
             window.alert('Login failed');
@@ -140,7 +161,7 @@ function Login(props) {
 
           <PasswordInput
             password={password}
-            setPassword={setPassword}
+            handlePasswordChange={handlePasswordChange}
             showPassword={showPassword}
             setShowPassword={setShowPassword}
             handleMouseDownPassword={handleMouseDownPassword}
@@ -154,8 +175,8 @@ function Login(props) {
           
           <FormControlLabel
             control={<Checkbox 
-              checked={rememberMe} 
-              onChange={(e) => setRememberMe(e.target.checked)} 
+              checked={keepMeLoggedIn} 
+              onChange={(e) => setKeepMeLoggedIn(e.target.checked)} 
               name="remember"
               sx={{ 
                 color: 'orange', 
@@ -164,7 +185,7 @@ function Login(props) {
                 },
               }}
                />}
-            label={<Typography variant="body2" style={{color: '#808080'}}>Remember me</Typography>}
+            label={<Typography variant="body2" style={{color: '#808080'}}>Keep me logged in</Typography>}
           />
           
           <Typography variant='body2'>
