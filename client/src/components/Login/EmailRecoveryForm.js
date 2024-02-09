@@ -1,6 +1,7 @@
 // EmailRecoveryForm.js
 import React, {useState} from 'react';
 import {Box, Button, TextField, Grid, Typography, Link } from '@mui/material';
+import EmailInput from './EmailInput';
 
 const EmailRecoveryForm = () => {
     const [email, setEmail] = useState('');
@@ -11,8 +12,30 @@ const EmailRecoveryForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Handle email recovery here
+
+        try {
+
+            const response = fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email}),
+            });
+
+            const data = response.json();
+
+            if(data.user) {
+                alert('Recovery email sent. Please check your email');
+            } else {
+                throw new Error('HTTP error! status: ${response.status}');
+            }
+        } catch (error) {
+            console.error('Failed to send recovery email:', error);
+            alert('Failed to send recovery email. Please try again') 
+        }
     };
+
 
     const formContainerStyle = {
         minWidth: '500px', // Or any suitable width
@@ -38,37 +61,11 @@ const EmailRecoveryForm = () => {
                 </Grid>
 
                 <Grid item>
-                    <TextField
-                        required
-                        id="email"
-                        label="Email address"
-                        value={email}
-                        onChange={handleEmailChange}
-                        variant='outlined'
-                        fullWidth
-                        autoComplete='email'
-                        placeholder='Email address'
-                        InputProps={{
-                            style: {color: '#808080'},
-                        }}
-                        sx={
-                            {
-                                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'orange',
-                                },
-                                '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'orange',
-                                },
-                                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'orange',
-                                },
-                                '& .MuiInputLabel-outlined.Mui-focused': {
-                                    color: '#808080',
-                                },
-                            }
-                        }
-                        style={{ marginBottom: '20px' }}
+                <EmailInput
+                        email={email}
+                        handleEmailChange={handleEmailChange}
                     />
+
 
                     <Button 
                         type="submit" 
