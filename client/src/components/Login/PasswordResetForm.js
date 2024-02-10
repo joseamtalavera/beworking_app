@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, Typography, Link } from '@mui/material';
+import { Box, Button, Grid, Typography, Link, Dialog, DialogContentText } from '@mui/material';
 import PasswordInput from './PasswordInput';
-
+import { DialogTitle } from '@mui/material';
 
 
 const PasswordResetForm = (props) => {
@@ -9,12 +9,9 @@ const PasswordResetForm = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-
-    
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
+    const [ openDialog, setOpenDialog ] = useState(false);
+    const [ dialogTitle, setDialogTitle ] = useState('');
+    const [ dialogContent, setDialogContent ] = useState('');
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
@@ -24,18 +21,24 @@ const PasswordResetForm = (props) => {
         setConfirmPassword(event.target.value);
     };
 
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Handle registration here
-        // Make sure to use parameterized queries or prepared statements to prevent SQL injection
 
         if (!email || !password || !confirmPassword) {
-            alert('Please fill out all fields');
+            setDialogTitle('Error');
+            setDialogContent('Please fill in all the fields');
+            setOpenDialog(true);
             return;
         }
 
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            setDialogTitle('Error');
+            setDialogContent('Passwords do not match');
+            setOpenDialog(true);
             return;
         }
         // Send a request to the server for regsitration
@@ -53,7 +56,9 @@ const PasswordResetForm = (props) => {
             if (!response.ok) {
                 const data = await response.json();
                 if (response.status === 400 && data.message === 'User already exists') {
-                    alert('User already exists');
+                    setDialogTitle('Error');
+                    setDialogContent('User already exists');
+                    setOpenDialog(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -62,21 +67,22 @@ const PasswordResetForm = (props) => {
 
                 if (data.user) {
                     console.log('Registration successful');
-                
-                    // Store the token in the local storage
-                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('token', data.token); // Store the token in the local storage
                     props.onRegistrationSuccess();
+                    setDialogTitle('Success');
+                    setDialogContent('Registration successful');
+                    setOpenDialog(true);
                 } else {
                 console.log('Registration failed');
-                window.alert('Registration failed');
+                setDialogTitle('Error');
+                setDialogContent('Registration failed');
+                setOpenDialog(true);
                 }
             }
             } catch (error) {
             console.error('Error:', error);
         }
     };
-
-   
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -149,9 +155,15 @@ const PasswordResetForm = (props) => {
                     
                 </Grid>
             </Grid>
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContentText>
+                    {dialogContent}
+                </DialogContentText>
+            </Dialog>
         </Box>
 
     );
 };      
 
-export default RegistrationForm;
+export default PasswordResetForm;

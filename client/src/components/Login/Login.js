@@ -135,7 +135,7 @@ function Login(props) {
                   Login to BeWorking
               </Typography>
               <Typography variant="body1" sx={{mb:2, textAlign: 'center'}}>
-                  Please enter your emial address and password
+                  Please enter your email address and password
               </Typography>
             </Grid>
 

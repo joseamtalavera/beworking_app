@@ -38,7 +38,7 @@ const EmailRecoveryForm = () => {
 
 
     const formContainerStyle = {
-        minWidth: '500px', // Or any suitable width
+        maxWidth: '500px', // Or any suitable width
         margin: 'auto', // This centers the form
         padding: '20px', // Optional, for internal spacing
         boxSizing: 'border-box' // Ensures padding doesn't affect overall width
@@ -56,7 +56,7 @@ const EmailRecoveryForm = () => {
                         Forgot your password?
                     </Typography>
                     <Typography variant="body1" sx={{mb:2, textAlign: 'center'}}>
-                    Please enter your emial address                   
+                    Please enter your email address                   
                     </Typography>
                 </Grid>
 

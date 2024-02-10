@@ -4,6 +4,8 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const {createUser} = require('../model/queries');
 const { getUserByEmail } = require('../model/queries');
 const bcrypt = require('bcrypt');
+const { decrypt } = require('dotenv');
+const { getUserById } = require('../model/queries');
 
 
 
@@ -99,3 +101,73 @@ exports.loginEmail = async (req, res) => {
         }
     }
 }
+
+exports.resetPassword = async (req, res) => {
+    const { id, timestamp, password } = req.body;
+    try {
+        // Decrypt the id and timestamp
+        const decryptedId = decrypt(id);
+        const decryptedTimestamp = decrypt(timestamp);
+
+        // Check if the timestamp is not too old
+        const oneHour = 60 * 60 * 1000; 
+        if (Date.now() - decryptedTimestamp > oneHour) {
+            return res.status(400).send({message: 'The link has expired'});
+        }
+
+        //Find the user by id
+        const user = await getUserById(decryptedId);
+        if (!user) {
+            return res.status(400).send({message: 'User does not exist'});
+        }
+
+        // Update the user's password and save the user
+        user.password = password; // make sure to hash the password
+        await user.save();
+
+        res.status(200).send({message: 'Password reset successful'});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: 'Something went wrong'});
+    }
+}
+
+exports.sendResetEmail = async (req, res) => {
+    const {email} = req.body;
+
+    try {
+        //Find the user buy email
+        const user = await getUserByEmail(email);
+        if (!user){
+            return res.status(400).send({message: 'User does not exist'});
+        }
+
+        // Generate a tranporter for using the default SMTP 
+        let tranporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'info@globaltechno.io',
+                pass: '@Rakna6164',
+            }
+        });
+
+        //send email with defined transport object
+        let info = await tranporter.sendMail({
+            from: '"Globaltechono info@globaltechno.io', 
+            to: email,
+            subject: "Password Reset",
+            text: "Click the link to reset your password",
+            html: <a href="http://localhost:3003/reset" style="display: inline-block; width: 100%; padding: 16px 0; margin: 16px 0 8px; background-color: #32CD32; color: white; text-align: center; text-decoration: none; font-size: 16px; border: none; cursor: pointer;">
+                    Reset Password
+                </a>
+        });
+
+        console.log("Message sent: %s", info.messageId);
+        res.status(200).send({message: 'Password reset email sent'});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: 'Something went wrong'});
+    }
+}   

@@ -10,6 +10,9 @@ import LoginPage from './components/Login/LoginPage';
 import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboard';
 import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
 import PrivateRoute from './Utils/PrivateRoute';
+import PasswordResetForm from './components/Login/PasswordResetForm';
+import PasswordResetAlert from './components/Login/PasswordResetAlert';
+
 
 //const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -19,6 +22,8 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/reset" element={<PasswordResetForm />} />
+      <Route path="/reset-alert" element={<PasswordResetAlert />} />    
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
       {/*<Route path="/coworking" element={<CoWorking />} />*/}
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}

@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/token-signin', authController.loginWithGoogle);
 router.post('/register', authController.registerEmail);
 router.post('/login', authController.loginEmail);
+router.post('/reset', authController.resetPassword);
 
 
 // Error handler middleware

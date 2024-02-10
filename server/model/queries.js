@@ -42,7 +42,18 @@ const getUserByEmail = async (email) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    const existingUser = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    return existingUser.rows[0];
+  } catch (error) {
+    console.error('Error in getUserById:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
-  getUserByEmail
+  getUserByEmail,
+  getUserById
 };
