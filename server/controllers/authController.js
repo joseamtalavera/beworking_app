@@ -6,6 +6,7 @@ const { getUserByEmail } = require('../model/queries');
 const bcrypt = require('bcrypt');
 const { decrypt } = require('dotenv');
 const { getUserById } = require('../model/queries');
+const nodemailer = require('nodemailer');
 
 
 
@@ -144,24 +145,22 @@ exports.sendResetEmail = async (req, res) => {
 
         // Generate a tranporter for using the default SMTP 
         let tranporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
+            host: 'smtp.ionos.es',
+            port: 587,
+            secure: false,
             auth: {
-                user: 'info@globaltechno.io',
+                user: 'info@mo-rentals.com',
                 pass: '@Rakna6164',
             }
         });
 
         //send email with defined transport object
         let info = await tranporter.sendMail({
-            from: '"Globaltechono info@globaltechno.io', 
+            from: 'info@mo-rentals.com', 
             to: email,
             subject: "Password Reset",
             text: "Click the link to reset your password",
-            html: <a href="http://localhost:3003/reset" style="display: inline-block; width: 100%; padding: 16px 0; margin: 16px 0 8px; background-color: #32CD32; color: white; text-align: center; text-decoration: none; font-size: 16px; border: none; cursor: pointer;">
-                    Reset Password
-                </a>
+            html: '<a href="http://localhost:3003/reset" style="display: inline-block; width: 100%; padding: 16px 0; margin: 16px 0 8px; background-color: #32CD32; color: white; text-align: center; text-decoration: none; font-size: 16px; border: none; cursor: pointer;">Reset Password</a>'
         });
 
         console.log("Message sent: %s", info.messageId);

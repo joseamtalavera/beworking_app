@@ -2,33 +2,39 @@
 import React, {useState} from 'react';
 import {Box, Button, TextField, Grid, Typography, Link } from '@mui/material';
 import EmailInput from './EmailInput';
+import PasswordResetAlert from './PasswordResetAlert';
 
-const EmailRecoveryForm = () => {
+
+const EmailRecoveryForm = (props) => {
     const [email, setEmail] = useState('');
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        
+    
 
         try {
-
-            const response = fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({email}),
             });
 
-            const data = response.json();
-
-            if(data.user) {
-                alert('Recovery email sent. Please check your email');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log('Data:', data);
+            if(data.message === 'Password reset email sent') {
+               props.setEmailReset(true);
             } else {
-                throw new Error('HTTP error! status: ${response.status}');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
         } catch (error) {
             console.error('Failed to send recovery email:', error);
@@ -47,7 +53,8 @@ const EmailRecoveryForm = () => {
    
 
     return (
-        
+        <div>
+        {props.emailReset ? <PasswordResetAlert />:(
         <Box component="form" onSubmit={handleSubmit} sx={formContainerStyle} >
           
             <Grid container direction="column" spacing={2}>
@@ -83,8 +90,10 @@ const EmailRecoveryForm = () => {
             </Grid>
         
         </Box>
-
+        )}
+        </div>
     );
+    
 };
 
 export default EmailRecoveryForm;

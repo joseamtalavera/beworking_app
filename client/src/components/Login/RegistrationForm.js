@@ -126,7 +126,7 @@ const RegistrationForm = (props) => {
                 
                     <PasswordInput
                         password={password}
-                        setPassword={setPassword}
+                        handlePasswordChange={handlePasswordChange}
                         showPassword={showPassword}
                         setShowPassword={setShowPassword}
                         handleMouseDownPassword={handleMouseDownPassword}
@@ -138,7 +138,7 @@ const RegistrationForm = (props) => {
                 
                     <PasswordInput
                         password={confirmPassword}
-                        setPassword={setConfirmPassword}
+                        handlePasswordChange = {handleConfirmPasswordChange}
                         showPassword={showPassword}
                         setShowPassword={setShowPassword}
                         handleMouseDownPassword={handleMouseDownPassword}

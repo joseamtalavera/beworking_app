@@ -14,6 +14,7 @@ function Login(props) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
+  const [emailReset, setEmailReset] = useState(false);//what is this for?
 
   const navigate = useNavigate();
  
@@ -97,8 +98,8 @@ function Login(props) {
         }
         } catch (error) {
         console.error('Error:', error);
-    }
-};
+        }
+  };
 
 
 
@@ -108,14 +109,13 @@ function Login(props) {
   };
 
   const handleRecoveryClick = (event) => {
-    //console.log('Recovery clicked');
     event.preventDefault();
     setShowRecoveryForm(true);
   };
 
 
   if (showRecoveryForm) {
-    return <EmailRecoveryForm />;
+    return <EmailRecoveryForm setEmailReset={setEmailReset} />;
   }
 
   const formContainerStyle = {
