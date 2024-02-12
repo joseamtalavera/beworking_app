@@ -11,7 +11,7 @@ import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboar
 import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
 import PrivateRoute from './Utils/PrivateRoute';
 import PasswordResetForm from './components/Login/PasswordResetForm';
-import PasswordResetAlert from './components/Login/PasswordResetAlert';
+import PasswordResetPage from './components/Login/PasswordResetPage';
 
 
 //const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -22,8 +22,8 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/reset" element={<PasswordResetForm />} />
-      <Route path="/reset-alert" element={<PasswordResetAlert />} />    
+      {/* <Route path="/reset" element={<PasswordResetForm />} /> */}
+      <Route path="/reset" element={<PasswordResetPage />} />   
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
       {/*<Route path="/coworking" element={<CoWorking />} />*/}
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}

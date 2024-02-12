@@ -14,7 +14,7 @@ function Login(props) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
-  const [emailReset, setEmailReset] = useState(false);//what is this for?
+  const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
 
   const navigate = useNavigate();
  
@@ -115,7 +115,7 @@ function Login(props) {
 
 
   if (showRecoveryForm) {
-    return <EmailRecoveryForm setEmailReset={setEmailReset} />;
+    return <EmailRecoveryForm emailReset={emailReset} setEmailReset={setEmailReset} />;
   }
 
   const formContainerStyle = {

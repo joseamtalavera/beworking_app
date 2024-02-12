@@ -107,8 +107,7 @@ exports.resetPassword = async (req, res) => {
     const { id, timestamp, password } = req.body;
     try {
         // Decrypt the id and timestamp
-        const decryptedId = decrypt(id);
-        const decryptedTimestamp = decrypt(timestamp);
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
 
         // Check if the timestamp is not too old
         const oneHour = 60 * 60 * 1000; 
@@ -156,11 +155,16 @@ exports.sendResetEmail = async (req, res) => {
 
         //send email with defined transport object
         let info = await tranporter.sendMail({
-            from: 'info@mo-rentals.com', 
+            from: '"BeWorking" info@mo-rentals.com', 
             to: email,
-            subject: "Password Reset",
+            subject: "BeWorking: Please Password Reset",
             text: "Click the link to reset your password",
-            html: '<a href="http://localhost:3003/reset" style="display: inline-block; width: 100%; padding: 16px 0; margin: 16px 0 8px; background-color: #32CD32; color: white; text-align: center; text-decoration: none; font-size: 16px; border: none; cursor: pointer;">Reset Password</a>'
+            html: `
+            <div style="text-align: center;">
+                <p style="margin-top: 30px;">You have requested a password reset. Click the link below to reset your password. If you did not request a password reset, please ignore this email.</p>
+                <a href="http://localhost:3003/reset" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
+            </div>
+            `
         });
 
         console.log("Message sent: %s", info.messageId);

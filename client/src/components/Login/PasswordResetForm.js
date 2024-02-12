@@ -28,7 +28,7 @@ const PasswordResetForm = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!email || !password || !confirmPassword) {
+        if (!password || !confirmPassword) {
             setDialogTitle('Error');
             setDialogContent('Please fill in all the fields');
             setOpenDialog(true);
@@ -105,10 +105,10 @@ const PasswordResetForm = (props) => {
             <Grid container direction="column" spacing={2}>
                 <Grid item>
                     <Typography variant="h4" sx={{textAlign: 'center'}}>
-                        Create an account
+                        Reset your Password
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2, textAlign: 'center'}} >
-                        Please enter your email address and password 
+                        Please enter your password and confirm
                     </Typography>
                 </Grid>
 
@@ -116,20 +116,20 @@ const PasswordResetForm = (props) => {
                 
                 
                     <PasswordInput
-                        password={password}
-                        setPassword={setPassword}
-                        showPassword={showPassword}
-                        setShowPassword={setShowPassword}
-                        handleMouseDownPassword={handleMouseDownPassword}
-                        autoComplete="new-password"
-                        label="Password"
-                        placeholder="Password"
-                        required={true}
+                       password={password}
+                       handlePasswordChange={handlePasswordChange}
+                       showPassword={showPassword}
+                       setShowPassword={setShowPassword}
+                       handleMouseDownPassword={handleMouseDownPassword}
+                       autoComplete="new-password"
+                       label="Password"
+                       placeholder="Password"
+                       required={true}
                     />
                 
                     <PasswordInput
                         password={confirmPassword}
-                        setPassword={setConfirmPassword}
+                        handlePasswordChange = {handleConfirmPasswordChange}
                         showPassword={showPassword}
                         setShowPassword={setShowPassword}
                         handleMouseDownPassword={handleMouseDownPassword}
@@ -145,7 +145,7 @@ const PasswordResetForm = (props) => {
                         fullWidth
                         sx={{ mt: 0, mb: 2, backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' } }}
                     >
-                        Sign Up
+                        Reset Password
                     </Button>
                 
                     <Typography align="center" variant="body2" style={{color: '#808080'}}>
