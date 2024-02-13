@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, Typography, Link } from '@mui/material';
+import { Box, Button, Grid, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate} from 'react-router-dom';
@@ -10,6 +10,8 @@ const RegistrationForm = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // We will use this to display error messages
+    const [open, setOpen] = useState(false); // state for dialog box
 
     const navigate = useNavigate();
 
@@ -27,8 +29,6 @@ const RegistrationForm = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Handle registration here
-        // Make sure to use parameterized queries or prepared statements to prevent SQL injection
 
         if (!email || !password || !confirmPassword) {
             alert('Please fill out all fields');
@@ -63,17 +63,18 @@ const RegistrationForm = (props) => {
 
                 if (data.user) {
                     console.log('Registration successful');
-                
-                    // Store the token in the local storage
                     localStorage.setItem('token', data.token);
                     props.onRegistrationSuccess();
                 } else {
-                console.log('Registration failed');
-                window.alert('Registration failed');
+                    setErrorMessage('Registration failed'); // Update the error message
+                    setOpen(true); // Open the dialog box
+                
                 }
             }
             } catch (error) {
             console.error('Error:', error);
+            setErrorMessage(error.message); // Update the error message
+            setOpen(true); // Open the dialog box
         }
     };
 
@@ -93,8 +94,7 @@ const RegistrationForm = (props) => {
       
 
 
-    return (
-        
+    return (       
         <Box component="form" onSubmit={handleSubmit} sx={formContainerStyle}>
           
             <Grid container direction="column" spacing={2}>
@@ -164,8 +164,36 @@ const RegistrationForm = (props) => {
                     
                 </Grid>
             </Grid>
-        </Box>
 
+            <Dialog
+                open={open}
+                onclose={() => setOpen(false)}
+                PaperProps={{
+                    style: {
+                        width: "60%",
+                        maxHeight: '150px',
+                        textAlign: 'center'
+                    },
+                }}
+            >
+                <DialogTitle>{'Email with incorrect format'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please try again
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions style={{ display: 'flex', justifyContent: 'center', padding: '0' }}>
+                    <Button 
+                        onClick={() => setOpen(false)} 
+                        color="primary" 
+                        autoFocus
+                        style={{ marginTop: '20px', marginBottom: '20px', width: '150px', backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' }, color: 'white'}}
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
     );
 };      
 

@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const { decrypt } = require('dotenv');
 const { getUserById } = require('../model/queries');
 const nodemailer = require('nodemailer');
+const validator = require('validator');
 
 
 
@@ -54,6 +55,12 @@ exports.registerEmail = async (req, res) => {
     console.log(req.body);
     try {
         const {email, password} = req.body;
+
+        // Validate the email
+        if (!validator.isEmail(email)) {
+            return res.status(400).send({message: 'Invalid email'});
+        }
+
         const user = await createUser(null, email, password);
 
         // Generate a token for the user

@@ -37,9 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', authRoutes);
 
 
-// Use express-session middleware for session management.
-// Sessions are a way to store information to a particular client (web browser) 
-// for the duration of that client's visit.
+
 app.use(session({
     secret: 'some random secret', // In a production app, this should be a large unguessable string, stored in an environment variable.
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
@@ -48,18 +46,15 @@ app.use(session({
 
 
 
-// Initialize passport and restore authentication state, if any, from the session.
-// Passport middleware is a strategy invoked in every request that authenticates the request.
-app.use(passport.initialize()); //
+
+app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
 app.use(passport.session());
 
-// Configure passport to serialize users into and deserialize users out of the session
-passport.serializeUser(function(user, done) {
-    // This function is used to store the user object into the session
+
+passport.serializeUser(function(user, done) {// This function is used to store the user object into the session
     done(null, user);
 });
-passport.deserializeUser(function(user, done) {
-    // This function is used to retrieve the user object from the session
+passport.deserializeUser(function(user, done) {// This function is used to retrieve the user object from the session
     done(null, user);
 });
 
@@ -68,7 +63,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
     });
 
-// Error handler middleware
+
 app.use(function(err, req, res, next) {
     console.error(err.stack);
     res.status(500).send('Something went wrong');
