@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Button, Grid, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
-import { useNavigate} from 'react-router-dom';
 
 
 const RegistrationForm = (props) => {
@@ -12,8 +11,9 @@ const RegistrationForm = (props) => {
     const [showPassword, setShowPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); // We will use this to display error messages
     const [open, setOpen] = useState(false); // state for dialog box
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    const navigate = useNavigate();
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -31,16 +31,22 @@ const RegistrationForm = (props) => {
         event.preventDefault();
 
         if (!email || !password || !confirmPassword) {
-            alert('Please fill out all fields');
+            setErrorMessage('Please fill out all fields');
+            setOpen(true); // Open the dialog box
             return;
         }
 
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            setErrorMessage('Passwords do not match');
+            setOpen(true);
             return;
         }
-        // Send a request to the server for regsitration
-        // We need to replace it with our own server
+        
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
+            setOpen(true); // Open the dialog box
+            return;
+        }
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
@@ -54,7 +60,11 @@ const RegistrationForm = (props) => {
             if (!response.ok) {
                 const data = await response.json();
                 if (response.status === 400 && data.message === 'User already exists') {
-                    alert('User already exists');
+                    setErrorMessage('User already exists');
+                    setOpen(true); 
+                } else if (response.status === 400 && data.message === 'Invalid email') {
+                    setErrorMessage('Email with incorrect format');
+                    setOpen(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -71,7 +81,7 @@ const RegistrationForm = (props) => {
                 
                 }
             }
-            } catch (error) {
+        } catch (error) {
             console.error('Error:', error);
             setErrorMessage(error.message); // Update the error message
             setOpen(true); // Open the dialog box
@@ -159,7 +169,7 @@ const RegistrationForm = (props) => {
                 
                     <Typography align="center" variant="body2" style={{color: '#808080'}}>
                         By continuing you accept these 
-                        <Link href="#" underline='none'>Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
+                        <Link href="#" underline='none'> Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
                     </Typography>
                     
                 </Grid>
@@ -167,7 +177,7 @@ const RegistrationForm = (props) => {
 
             <Dialog
                 open={open}
-                onclose={() => setOpen(false)}
+                onClose={() => setOpen(false)}
                 PaperProps={{
                     style: {
                         width: "60%",
@@ -176,7 +186,7 @@ const RegistrationForm = (props) => {
                     },
                 }}
             >
-                <DialogTitle>{'Email with incorrect format'}</DialogTitle>
+                <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Please try again

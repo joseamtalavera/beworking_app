@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
@@ -15,10 +15,13 @@ function Login(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
   const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
+  const [errorMessage, setErrorMessage] = useState('');
+  const [open, setOpen] = useState(false); // state for dialog box
 
   const navigate = useNavigate();
  
   const { isAuthenticated, setIsAuthenticated } = useAuth(false);
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
   useEffect(() => {
@@ -48,8 +51,15 @@ function Login(props) {
     
 
     if (!email || !password) {
-        alert('Please fill out all fields');
-        return;
+      setErrorMessage('Please fill out all fields');
+      setOpen(true);
+      return;
+    }
+
+    if (passwordRegex.test(password)) {
+      setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
+      setOpen(true);
+      return;
     }
 
     function clearAllCookies() {
@@ -82,7 +92,9 @@ function Login(props) {
         });
 
         if (!response.ok) {
-          window.alert('Login failed');
+          //window.alert('Login failed');
+          setErrorMessage('Email or password is incorrect');
+          setOpen(true);
         } else {
             const data = await response.json();
             
@@ -93,11 +105,14 @@ function Login(props) {
                 localStorage.setItem('toekenExpiration', Date.now() + 60 * 60 * 1000);
                 setIsAuthenticated(true);   
             } else {
-            window.alert('Login failed');
+            setErrorMessage('Login failed');
+            setOpen(true);
             }
         }
         } catch (error) {
         console.error('Error:', error);
+        setErrorMessage(error.message);
+        setOpen(true);
         }
   };
 
@@ -208,11 +223,40 @@ function Login(props) {
 
           <Typography align="center" variant="body2" style={{color: '#808080'}}>
           By continuing you accept these 
-          <Link href="#" underline='none'>Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
+          <Link href="#" underline='none'> Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
           </Typography>
 
         </Grid>
       </Grid>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          style: {
+            width: "60%",
+            maxHeight: '150px',
+            textAlign: 'center'
+          },
+        }}
+      >
+        <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please try again
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ display: 'flex', justifyContent: 'center', padding: '0' }}>
+          <Button 
+            onClick={() => setOpen(false)} 
+            color="primary" 
+            autoFocus
+            style={{ marginTop: '20px', marginBottom: '20px', width: '150px', backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' }, color: 'white'}}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

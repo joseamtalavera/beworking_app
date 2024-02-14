@@ -8,6 +8,7 @@ const { decrypt } = require('dotenv');
 const { getUserById } = require('../model/queries');
 const nodemailer = require('nodemailer');
 const validator = require('validator');
+const saltRounds = 10;
 
 
 
@@ -61,7 +62,10 @@ exports.registerEmail = async (req, res) => {
             return res.status(400).send({message: 'Invalid email'});
         }
 
-        const user = await createUser(null, email, password);
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        const user = await createUser(null, email, hashedPassword);
 
         // Generate a token for the user
         const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
@@ -91,7 +95,9 @@ exports.loginEmail = async (req, res) => {
         }
 
         // Check if the password is correct
-        const isPasswordCorrect = password === user.password;
+        //const isPasswordCorrect = password === user.password;
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
         // If the password is incorrect, send an error message
         if (!isPasswordCorrect) {
             return res.status(400).send({message: 'Invalid email or password'});
@@ -128,8 +134,11 @@ exports.resetPassword = async (req, res) => {
             return res.status(400).send({message: 'User does not exist'});
         }
 
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         // Update the user's password and save the user
-        user.password = password; // make sure to hash the password
+        user.password = hashedPassword; // make sure to hash the password
         await user.save();
 
         res.status(200).send({message: 'Password reset successful'});

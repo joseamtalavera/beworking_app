@@ -117,9 +117,7 @@ const LoginPage = () => {
                                                 Close
                                                 </Button>
                                         </DialogActions>
-                        </Dialog>          
-                        
-                        
+                        </Dialog>                                
                 </Grid>
         );
 };
