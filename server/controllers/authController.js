@@ -1,39 +1,40 @@
 const jwt = require('jsonwebtoken');
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const {createUser} = require('../model/queries');
 const { getUserByEmail } = require('../model/queries');
+const { getUserById } = require('../model/queries');
+const { getUserByConfirmationToken, confirmUserEmail } = require('../model/queries');
+
 const bcrypt = require('bcrypt');
 const { decrypt } = require('dotenv');
-const { getUserById } = require('../model/queries');
 const nodemailer = require('nodemailer');
 const validator = require('validator');
 const saltRounds = 10;
+const crypto = require('crypto');
 
 
-
+// token verification
 async function verify(token){
-    console.log("Google Client ID (audience):", process.env.GOOGLE_CLIENT_ID); // Log the Google Client ID
+    console.log("Google Client ID (audience):", process.env.GOOGLE_CLIENT_ID); 
 
-    // This method is asynchronous and returns a Promise that resolves to the ticket.
-    const ticket = await client.verifyIdToken({ // This method verifies the ID token and returns the decoded token payload.
+    
+    const ticket = await client.verifyIdToken({ 
         idToken: token,
         audience: process.env.GOOGLE_CLIENT_ID,
     });
-    const payload = ticket.getPayload(); // Extract the payload from the ticket. This is ID token payload.
-    const userid = payload['sub']; // It stands for Subject. It is a unique identifier for the user. It is a claim in the JWT.
-    return userid; // Return the User ID. The user ID can be used to identify the user in the database.
- 
+    const payload = ticket.getPayload(); 
+    const userid = payload['sub']; 
+    return userid; 
 }
 
 
+// Google login
 exports.loginWithGoogle = async (req, res) => {
 
-    const {token} = req.body; // Get the token from the request body of the HTTP POST request.
-    
+    const {token} = req.body;   
     try {
-        // if the token is valid, we can send the user data to frontend. 
-        //And the user can be created in the database and the user login was successful.
         console.log('Verifying token:', token);
         const userid = await verify(token);
         console.log('Verified user id:', userid);
@@ -52,8 +53,8 @@ exports.loginWithGoogle = async (req, res) => {
 }; 
 
 
+// register new user
 exports.registerEmail = async (req, res) => {
-    console.log(req.body);
     try {
         const {email, password} = req.body;
 
@@ -65,11 +66,38 @@ exports.registerEmail = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const user = await createUser(null, email, hashedPassword);
+        // Generate a confirmation token
+        const confirmationToken = crypto.randomBytes(20).toString('hex');
 
-        // Generate a token for the user
-        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-        res.status(201).send({ user, token });
+        // Create a new user in the database
+        const user = await createUser(null, email, hashedPassword, confirmationToken);
+
+        // Generate a transporter for using the default SMTP
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.ionos.es',
+            port: 587,
+            secure: false,
+            auth: {
+                user: 'info@mo-rentals',
+                pass: '@Rakna6164',
+            }
+        });
+
+        // Send email with defined transport object
+        let info = await transporter.sendMail({
+            from: '"BeWorking" info@mo-rentals.com',
+            subject: "BeWorking: Please confirm your email",
+            text: "Click the link to confirm your email",
+            html: `
+            <div style="text-align: center;">
+                <p style="margin-top: 30px;">Thank you for registering. Please click the link below to confirm your email address.</p>
+                <a href="http://localhost:5005/confirm/${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
+            </div>
+            `
+        });
+
+        console.log("Confirmation email sent: %s", info.messageId);
+        res.status(201).send({user});
     } catch (error) {
         console.log(error);
         if (error.message === 'User already exists') {
@@ -80,13 +108,32 @@ exports.registerEmail = async (req, res) => {
     }
 };
 
+// confirm email
+exports.confirmEmail = async (req, res) => {
+    const {token} = req.params;
+    const user = await getUserByConfirmationToken(token);
+    if (!user) {
+        return res.status(400).send({message: 'Invalid token'});
+    }
+
+    // Update the user's email confirmation and save the user
+    user.confirmed = true;
+    await confirmUserEmail(user.id);
+    
+    res.redirect('http://localhost:3003/login');
+};
+
+
+
+
+// login user
 exports.loginEmail = async (req, res) => {
     console.log(req.body);
     try {
         const {email, password} = req.body;
+
         // Check if the user exists
         const user = await getUserByEmail(email);
-
         console.log('User:', user);
 
         // If the user doesn't exist, send an error message
@@ -116,6 +163,8 @@ exports.loginEmail = async (req, res) => {
     }
 }
 
+
+// reset password
 exports.resetPassword = async (req, res) => {
     const { id, timestamp, password } = req.body;
     try {
@@ -148,6 +197,8 @@ exports.resetPassword = async (req, res) => {
     }
 }
 
+
+//resend reset email
 exports.sendResetEmail = async (req, res) => {
     const {email} = req.body;
 

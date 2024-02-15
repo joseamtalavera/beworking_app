@@ -9,9 +9,10 @@ const RegistrationForm = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(''); // We will use this to display error messages
-    const [open, setOpen] = useState(false); // state for dialog box
+    const [errorMessage, setErrorMessage] = useState(''); 
+    const [open, setOpen] = useState(false); 
     
+    // Use regex to validate password format
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
@@ -32,7 +33,7 @@ const RegistrationForm = (props) => {
 
         if (!email || !password || !confirmPassword) {
             setErrorMessage('Please fill out all fields');
-            setOpen(true); // Open the dialog box
+            setOpen(true); 
             return;
         }
 
@@ -44,7 +45,7 @@ const RegistrationForm = (props) => {
         
         if (!passwordRegex.test(password)) {
             setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
-            setOpen(true); // Open the dialog box
+            setOpen(true); 
             return;
         }
 
@@ -74,17 +75,17 @@ const RegistrationForm = (props) => {
                 if (data.user) {
                     console.log('Registration successful');
                     localStorage.setItem('token', data.token);
-                    props.onRegistrationSuccess();
+                    props.onRegistrationSuccess(); // Call the onRegistrationSuccess function that was passed from the Login.js 
                 } else {
-                    setErrorMessage('Registration failed'); // Update the error message
-                    setOpen(true); // Open the dialog box
+                    setErrorMessage('Registration failed');
+                    setOpen(true); 
                 
                 }
             }
         } catch (error) {
             console.error('Error:', error);
-            setErrorMessage(error.message); // Update the error message
-            setOpen(true); // Open the dialog box
+            setErrorMessage(error.message); 
+            setOpen(true); 
         }
     };
 
@@ -96,10 +97,10 @@ const RegistrationForm = (props) => {
     }
 
     const formContainerStyle = {
-        maxWidth: '500px', // Or any suitable width
-        margin: 'auto', // This centers the form
-        padding: '20px', // Optional, for internal spacing
-        boxSizing: 'border-box' // Ensures padding doesn't affect overall width
+        maxWidth: '500px', 
+        margin: 'auto', 
+        padding: '20px', 
+        boxSizing: 'border-box' 
       };
       
 

@@ -1,7 +1,7 @@
 
 const pool = require('./db');
 
-const createUser = async (userid, email, password) => {
+const createUser = async (userid, email, password, hashedPassword, confirmationToken) => {
   console.log(email, password);
   try {
     // Check if the user already exists
@@ -21,7 +21,7 @@ const createUser = async (userid, email, password) => {
       if (userid) {
         newUser = await pool.query('INSERT INTO users(google_id) VALUES($1) RETURNING *', [userid]);
       } else if (email && password) {
-        newUser = await pool.query('INSERT INTO users(email, password) VALUES($1, $2) RETURNING *', [email, password]);
+        newUser = await pool.query('INSERT INTO users(email, password, confirmation_token, email_confirmed) VALUES($1, $2, $3, $4) RETURNING *', [email, password, confirmationToken, false]);
       }
       return newUser.rows[0];
   
@@ -52,8 +52,30 @@ const getUserById = async (id) => {
   }
 };
 
-module.exports = {
-  createUser,
-  getUserByEmail,
-  getUserById
+const getUserByConfirmationToken = async (token) => {
+    try {
+      const existingUser = await pool.query('SELECT * FROM users WHERE confirmation_token = $1', [confirmationToken]);
+      return existingUser.rows[0];
+    } catch (error) {
+      console.error('Error in getUserByConfirmationToken:', error);
+      throw error;
+    }
+  };
+
+// confirm email in db
+const confirmUserEmail = async (id) => {
+  try {
+    await pool.query('UPADATE users SET email_confirmed = true WHERE id = $1', [true, id]);
+  } catch (error) {
+    console.error('Error in confirmUserEmail:', error);
+    throw error;
+  }
 };
+
+  module.exports = {
+    createUser,
+    getUserByEmail,
+    getUserById,
+    getUserByConfirmationToken,
+    confirmUserEmail
+  };

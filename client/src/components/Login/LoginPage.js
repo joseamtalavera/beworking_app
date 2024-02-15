@@ -1,4 +1,4 @@
-// LoginPage.js
+
 import React, {useState} from 'react';
 import { Grid,Box, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from '@mui/material';
 import Login from './Login'; 
@@ -9,7 +9,7 @@ const LoginPage = () => {
 
         const [showRegistrationForm, setShowRegistrationForm] = useState(false);
         const [showSignUpLink, setShowSignUpLink] = useState(true);
-        const [open, setOpen] = useState(false); // state for dialog box
+        const [open, setOpen] = useState(false); 
 
 
         
@@ -58,11 +58,11 @@ const LoginPage = () => {
         return (
                 <Grid container style={{ height: '100vh', position: 'relative' }}>
                         <Grid item xs={4} style={backgroundImageStyle}>
-                        {/* Orange Background Here */}
                         </Grid>
                         <Grid item xs={8} style={loginContainerStyle}>
                                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                                        {showRegistrationForm ? <RegistrationForm onRegistrationSuccess={handleRegistrationSuccess} /> : <Login />}
+                                        {/* onRegistration toggle the Register to Login */}
+                                        {showRegistrationForm ? <RegistrationForm onRegistrationSuccess={handleRegistrationSuccess} /> : <Login />} 
                                 </Box>
                                 <Box position="absolute" top={2} left={2}>
                                         <Link href="/">
