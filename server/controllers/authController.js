@@ -55,10 +55,12 @@ exports.loginWithGoogle = async (req, res) => {
 
 // register new user
 exports.registerEmail = async (req, res) => {
+    console.log(req.body);
     try {
-        const {email, password} = req.body;
+        let {email, password} = req.body;
 
         // Validate the email
+        email = email.trim();
         if (!validator.isEmail(email)) {
             return res.status(400).send({message: 'Invalid email'});
         }
@@ -78,14 +80,16 @@ exports.registerEmail = async (req, res) => {
             port: 587,
             secure: false,
             auth: {
-                user: 'info@mo-rentals',
+                user: 'info@mo-rentals.com',
                 pass: '@Rakna6164',
             }
         });
 
         // Send email with defined transport object
+        try{
         let info = await transporter.sendMail({
             from: '"BeWorking" info@mo-rentals.com',
+            to: email,
             subject: "BeWorking: Please confirm your email",
             text: "Click the link to confirm your email",
             html: `
@@ -96,7 +100,12 @@ exports.registerEmail = async (req, res) => {
             `
         });
 
-        console.log("Confirmation email sent: %s", info.messageId);
+        
+    } catch (error) {
+        console.log('Error sending email:', error);
+    }
+
+        //console.log("Confirmation email sent: %s", info.messageId);
         res.status(201).send({user});
     } catch (error) {
         console.log(error);
@@ -111,14 +120,20 @@ exports.registerEmail = async (req, res) => {
 // confirm email
 exports.confirmEmail = async (req, res) => {
     const {token} = req.params;
+    console.log('Token:', token);
     const user = await getUserByConfirmationToken(token);
     if (!user) {
         return res.status(400).send({message: 'Invalid token'});
     }
 
     // Update the user's email confirmation and save the user
+    try{
     user.confirmed = true;
     await confirmUserEmail(user.id);
+    } catch (error){
+        console.log('Error confirming email:', error);
+        return res.status(500).send({message: 'Something went wrong'});
+    }
     
     res.redirect('http://localhost:3003/login');
 };
@@ -210,7 +225,7 @@ exports.sendResetEmail = async (req, res) => {
         }
 
         // Generate a tranporter for using the default SMTP 
-        let tranporter = nodemailer.createTransport({
+        let transporter = nodemailer.createTransport({
             host: 'smtp.ionos.es',
             port: 587,
             secure: false,
@@ -221,7 +236,7 @@ exports.sendResetEmail = async (req, res) => {
         });
 
         //send email with defined transport object
-        let info = await tranporter.sendMail({
+        let info = await transporter.sendMail({
             from: '"BeWorking" info@mo-rentals.com', 
             to: email,
             subject: "BeWorking: Please Password Reset",
