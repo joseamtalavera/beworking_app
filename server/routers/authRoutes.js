@@ -9,7 +9,7 @@ router.post('/register', authController.registerEmail);
 router.post('/login', authController.loginEmail);
 router.post('/recover', authController.sendResetEmail)
 router.post('/reset', authController.resetPassword);
-router.get('/confirm/:token', authController.confirmEmail);
+//router.get('/confirm/:token', authController.confirmEmail);
 
 
 

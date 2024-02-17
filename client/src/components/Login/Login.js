@@ -56,7 +56,7 @@ function Login(props) {
       return;
     }
 
-    if (passwordRegex.test(password)) {
+    if (!passwordRegex.test(password)) {
       setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
       setOpen(true);
       return;

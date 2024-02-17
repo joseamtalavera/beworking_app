@@ -13,6 +13,7 @@ const nodemailer = require('nodemailer');
 const validator = require('validator');
 const saltRounds = 10;
 const crypto = require('crypto');
+const { use } = require('passport');
 
 
 // token verification
@@ -70,9 +71,15 @@ exports.registerEmail = async (req, res) => {
 
         // Generate a confirmation token
         const confirmationToken = crypto.randomBytes(20).toString('hex');
+        console.log('Confirmation token:', confirmationToken);
 
         // Create a new user in the database
         const user = await createUser(null, email, hashedPassword, confirmationToken);
+        if (user.error) {
+            console.log('Error Createing user:', user.error);
+        } else {
+            console.log('Created user:', user);
+        }
 
         // Generate a transporter for using the default SMTP
         let transporter = nodemailer.createTransport({
@@ -95,7 +102,7 @@ exports.registerEmail = async (req, res) => {
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">Thank you for registering. Please click the link below to confirm your email address.</p>
-                <a href="http://localhost:5005/confirm/${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
+                <a href="http://localhost:3003/login?confirm_email=true&token=${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
             </div>
             `
         });
@@ -117,11 +124,12 @@ exports.registerEmail = async (req, res) => {
     }
 };
 
-// confirm email
+/* // confirm email
 exports.confirmEmail = async (req, res) => {
     const {token} = req.params;
     console.log('Token:', token);
     const user = await getUserByConfirmationToken(token);
+    console.log('User:', user);
     if (!user) {
         return res.status(400).send({message: 'Invalid token'});
     }
@@ -137,12 +145,27 @@ exports.confirmEmail = async (req, res) => {
     
     res.redirect('http://localhost:3003/login');
 };
-
+ */
 
 
 
 // login user
 exports.loginEmail = async (req, res) => {
+
+    //Check first it the confirmation_email and token pararameter are present
+    if (req.query.confirm_email && req.query.token) {
+        const token = req.query.token;
+        const user = await getUserByConfirmationToken(token);
+        if(user){
+            await confirmUserEmail(user.id);
+            res.status(200).json({ success: true, message: 'Email confirmed' });
+        } else {
+            res.status(400).json({ success: false, message: 'Invalid token' });
+        }
+        
+    }
+
+
     console.log(req.body);
     try {
         const {email, password} = req.body;
