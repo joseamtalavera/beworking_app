@@ -44,11 +44,15 @@ const PasswordResetForm = (props) => {
         // Send a request to the server for regsitration
         // We need to replace it with our own server
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/reset`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/resetEmail`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ email, password }),
             });
@@ -81,6 +85,8 @@ const PasswordResetForm = (props) => {
             }
             } catch (error) {
             console.error('Error:', error);
+            console.log('Error message:', error.message);
+            console.log('Error trace;', error.stack);
         }
     };
 

@@ -102,7 +102,7 @@ exports.registerEmail = async (req, res) => {
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">Thank you for registering. Please click the link below to confirm your email address.</p>
-                <a href="http://localhost:3003/login?confirm_email=true&token=${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
+                <a href="http://localhost:3003/confirm-email/${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
             </div>
             `
         });
@@ -124,47 +124,32 @@ exports.registerEmail = async (req, res) => {
     }
 };
 
-/* // confirm email
+// confirm email
 exports.confirmEmail = async (req, res) => {
     const {token} = req.params;
-    console.log('Token:', token);
-    const user = await getUserByConfirmationToken(token);
-    console.log('User:', user);
-    if (!user) {
-        return res.status(400).send({message: 'Invalid token'});
-    }
-
-    // Update the user's email confirmation and save the user
-    try{
-    user.confirmed = true;
-    await confirmUserEmail(user.id);
+    try {
+        const user = await getUserByConfirmationToken(token);
+        if (!user) {
+            return res.status(400).send({message: 'Invalid token'});
+        }
+        const updated = await confirmUserEmail(user.id);
+        if (updated){
+            res.status(200).json({ success: true, message: 'Email confirmed' });
+        } else {
+            throw new Error('Error confirming email');
+        }
     } catch (error){
         console.log('Error confirming email:', error);
         return res.status(500).send({message: 'Something went wrong'});
     }
     
-    res.redirect('http://localhost:3003/login');
 };
- */
+
 
 
 
 // login user
 exports.loginEmail = async (req, res) => {
-
-    //Check first it the confirmation_email and token pararameter are present
-    if (req.query.confirm_email && req.query.token) {
-        const token = req.query.token;
-        const user = await getUserByConfirmationToken(token);
-        if(user){
-            await confirmUserEmail(user.id);
-            res.status(200).json({ success: true, message: 'Email confirmed' });
-        } else {
-            res.status(400).json({ success: false, message: 'Invalid token' });
-        }
-        
-    }
-
 
     console.log(req.body);
     try {
@@ -204,10 +189,11 @@ exports.loginEmail = async (req, res) => {
 
 // reset password
 exports.resetPassword = async (req, res) => {
-    const { id, timestamp, password } = req.body;
+    const { token, password } = req.body;
     try {
         // Decrypt the id and timestamp
         const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const {id, timestamp} = payload;
 
         // Check if the timestamp is not too old
         const oneHour = 60 * 60 * 1000; 
@@ -222,6 +208,7 @@ exports.resetPassword = async (req, res) => {
         }
 
         // Hash the password
+        const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Update the user's password and save the user
@@ -247,6 +234,9 @@ exports.sendResetEmail = async (req, res) => {
             return res.status(400).send({message: 'User does not exist'});
         }
 
+        // Generate a token for the user
+        const token = jwt.sign({id: user._id, timestamp: Date.now()}, process.env.JWT_SECRET, {expiresIn: '1h'});
+
         // Generate a tranporter for using the default SMTP 
         let transporter = nodemailer.createTransport({
             host: 'smtp.ionos.es',
@@ -267,7 +257,7 @@ exports.sendResetEmail = async (req, res) => {
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">You have requested a password reset. Click the link below to reset your password. If you did not request a password reset, please ignore this email.</p>
-                <a href="http://localhost:3003/reset" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
+                <a href="http://localhost:3003/reset/${token}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
             </div>
             `
         });
