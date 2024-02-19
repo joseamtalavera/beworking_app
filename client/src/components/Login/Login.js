@@ -23,14 +23,14 @@ function Login(props) {
   const { isAuthenticated, setIsAuthenticated } = useAuth(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-
+  // This hook checks if the user is already authenticated
   useEffect(() => {
     if (isAuthenticated) {
         navigate('/dashboard/user');
     }
   }, [isAuthenticated]);
 
-  // This hook checks to ckeck if a token is expired
+  // This hook checks if a token is expired
   useEffect(() => {
     const tokenExpiration = localStorage.getItem('tokenExpiration');
     if (Date.now() > tokenExpiration) {
@@ -38,6 +38,7 @@ function Login(props) {
     }
   }, []);
 
+  
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };

@@ -1,7 +1,7 @@
 //import { GoogleOAuthProvider } from '@react-oauth/google';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ReactDOM from 'react-dom'; // package for working with the DOM
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';// components for setting up routes
 import App from './App';
 import LoginPage from './components/Login/LoginPage';
 //import VirtualOffice from './components/VirtualOffice/VirtualOffice';
@@ -25,7 +25,7 @@ ReactDOM.render(
       <Route path="/" element={<App />} />
       <Route path="/login" element={<LoginPage />} />
       {/* <Route path="/reset" element={<PasswordResetForm />} /> */}
-      <Route path="/confirm-email/:token" element={<ConfirmationPage />} />
+      <Route path="/confirm-email/:confirmationToken" element={<ConfirmationPage />} />
       <Route path="/thanks" element={<ThanksPage />} />
       <Route path="/reset/:token" element={<PasswordResetPage />} />   
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
@@ -36,5 +36,5 @@ ReactDOM.render(
     </Routes>
   </Router>,
   //</GoogleOAuthProvider> 
-  document.getElementById('root')
+  document.getElementById('root')// mount the app to the root element
 );

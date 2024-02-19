@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {OAuth2Client} = require('google-auth-library');
+//const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const {createUser} = require('../model/queries');
@@ -8,7 +8,7 @@ const { getUserById } = require('../model/queries');
 const { getUserByConfirmationToken, confirmUserEmail } = require('../model/queries');
 
 const bcrypt = require('bcrypt');
-const { decrypt } = require('dotenv');
+//const { decrypt } = require('dotenv');
 const nodemailer = require('nodemailer');
 const validator = require('validator');
 const saltRounds = 10;
@@ -16,8 +16,8 @@ const crypto = require('crypto');
 const { use } = require('passport');
 
 
-// token verification
-async function verify(token){
+// token verification for google login
+/* async function verify(token){
     console.log("Google Client ID (audience):", process.env.GOOGLE_CLIENT_ID); 
 
     
@@ -28,11 +28,11 @@ async function verify(token){
     const payload = ticket.getPayload(); 
     const userid = payload['sub']; 
     return userid; 
-}
+} */
 
 
 // Google login
-exports.loginWithGoogle = async (req, res) => {
+/* exports.loginWithGoogle = async (req, res) => {
 
     const {token} = req.body;   
     try {
@@ -52,11 +52,10 @@ exports.loginWithGoogle = async (req, res) => {
     } 
 
 }; 
-
+ */
 
 // register new user
 exports.registerEmail = async (req, res) => {
-    console.log(req.body);
     try {
         let {email, password} = req.body;
 
@@ -70,7 +69,7 @@ exports.registerEmail = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Generate a confirmation token
-        const confirmationToken = crypto.randomBytes(20).toString('hex');
+        const confirmationToken = crypto.randomBytes(20).toString('hex'); //this is the token that we keep in the database and send to the user's email and sent to the user in the email
         console.log('Confirmation token:', confirmationToken);
 
         // Create a new user in the database
@@ -105,12 +104,10 @@ exports.registerEmail = async (req, res) => {
                 <a href="http://localhost:3003/confirm-email/${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
             </div>
             `
-        });
-
-        
-    } catch (error) {
+        });       
+        } catch (error) {
         console.log('Error sending email:', error);
-    }
+        }
 
         //console.log("Confirmation email sent: %s", info.messageId);
         res.status(201).send({user});
@@ -126,9 +123,9 @@ exports.registerEmail = async (req, res) => {
 
 // confirm email
 exports.confirmEmail = async (req, res) => {
-    const {token} = req.params;
+    const {confirmationToken} = req.params;
     try {
-        const user = await getUserByConfirmationToken(token);
+        const user = await getUserByConfirmationToken(confirmationToken);
         if (!user) {
             return res.status(400).send({message: 'Invalid token'});
         }
@@ -150,8 +147,6 @@ exports.confirmEmail = async (req, res) => {
 
 // login user
 exports.loginEmail = async (req, res) => {
-
-    console.log(req.body);
     try {
         const {email, password} = req.body;
 
@@ -161,20 +156,19 @@ exports.loginEmail = async (req, res) => {
 
         // If the user doesn't exist, send an error message
         if (!user) {
-            return res.status(400).send({message: 'Invalid email or password'});
+            return res.status(400).send({message: 'Invalid email'});
         }
 
         // Check if the password is correct
-        //const isPasswordCorrect = password === user.password;
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         // If the password is incorrect, send an error message
         if (!isPasswordCorrect) {
-            return res.status(400).send({message: 'Invalid email or password'});
+            return res.status(400).send({message: 'password'});
         }
 
         // Generate a token for the user
-        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}); //this token is sent to the RegistrationForm.js, in line 76 and stored in localStorage
         res.status(201).send({ user, token });
     } catch (error) {
         console.log(error);

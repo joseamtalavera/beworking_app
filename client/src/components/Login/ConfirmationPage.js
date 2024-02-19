@@ -6,16 +6,16 @@ import ThanksPage from './ThanksPage';
 import  CircularProgress from '@mui/material/CircularProgress';
 
 const ConfirmationPage = () => {
-  const { token } = useParams();
+  const { confirmationToken } = useParams();
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     const confirmFrontEmail = async () => {
-      if (token) {
-        console.log('Token:', token);
+      if (confirmationToken) {
+        console.log('Token:', confirmationToken);
         try {
-          const response = await fetch(`http://localhost:5005/api/confirm/${token}`, {
-            method: 'GET', // Or 'POST', depending on your backend
+          const response = await fetch(`http://localhost:5005/api/confirm/${confirmationToken}`, {
+            method: 'GET', 
           });
           console.log('Response:', response);
           const data = await response.json();
@@ -35,7 +35,7 @@ const ConfirmationPage = () => {
     };
 
     confirmFrontEmail();
-  }, [token]);
+  }, [confirmationToken]);
 
   if (isConfirmed) {
     return <ThanksPage />;

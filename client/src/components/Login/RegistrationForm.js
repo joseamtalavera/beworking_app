@@ -71,10 +71,10 @@ const RegistrationForm = (props) => {
                 }
             } else {
                 const data = await response.json();
-
                 if (data.user) {
                     console.log('Registration successful');
-                    localStorage.setItem('token', data.token);
+                    // we will modify this to use cookies *****
+                    //localStorage.setItem('token', data.token); // this token is generated for authentication in authController.js (loginEmail function), in line 177, using jwt.sign
                     props.onRegistrationSuccess(); // Call the onRegistrationSuccess function that was passed from the Login.js 
                 } else {
                     setErrorMessage('Registration failed');
