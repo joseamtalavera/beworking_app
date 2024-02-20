@@ -1,6 +1,6 @@
 // EmailRecoveryForm.js
 import React, {useState} from 'react';
-import {Box, Button, TextField, Grid, Typography, Link } from '@mui/material';
+import {Box, Button, Grid, Typography, Link } from '@mui/material';
 import EmailInput from './EmailInput';
 import PasswordResetAlert from './PasswordResetAlert';
 
@@ -8,15 +8,13 @@ import PasswordResetAlert from './PasswordResetAlert';
 const EmailRecoveryForm = (props) => {
     const [email, setEmail] = useState('');
 
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
-    
-
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
                 method: 'POST',

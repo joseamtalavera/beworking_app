@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Box, Button, Grid, Typography, Link, Dialog, DialogContentText } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import { DialogTitle } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 
 const PasswordResetForm = (props) => {
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +25,9 @@ const PasswordResetForm = (props) => {
         setOpenDialog(false);
     };
 
+    const { resetToken } = useParams();
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -41,45 +44,45 @@ const PasswordResetForm = (props) => {
             setOpenDialog(true);
             return;
         }
-        // Send a request to the server for regsitration
-        // We need to replace it with our own server
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
 
         try {
+            console.log('Reset token:', resetToken);
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/resetEmail`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ resetToken: resetToken, password }), // check this option of sending the token. Maybe more secure than in the URL.
             });
 
             if (!response.ok) {
                 const data = await response.json();
-                if (response.status === 400 && data.message === 'User already exists') {
+                if (response.status === 400 && data.message === 'Invalid token') {
                     setDialogTitle('Error');
-                    setDialogContent('User already exists');
+                    setDialogContent('Invalid token');
                     setOpenDialog(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
             } else {
                 const data = await response.json();
+                console.log('Data problema:', data);
 
-                if (data.user) {
-                    console.log('Registration successful');
-                    localStorage.setItem('token', data.token); // Store the token in the local storage
-                    props.onRegistrationSuccess();
+                if (data.message === 'Password reset successful') {
+                    console.log('Password reset successful');
+                    //localStorage.setItem('token', data.token); // Store the token in the local storage
+                    //props.onRegistrationSuccess();
                     setDialogTitle('Success');
                     setDialogContent('Registration successful');
                     setOpenDialog(true);
+
+                    setPassword('');
+                    setConfirmPassword('');
                 } else {
-                console.log('Registration failed');
+                console.log('Password reset failed');
                 setDialogTitle('Error');
-                setDialogContent('Registration failed');
+                setDialogContent('Password reset failed');
                 setOpenDialog(true);
                 }
             }

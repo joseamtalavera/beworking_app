@@ -10,7 +10,7 @@ const ThanksPage = () => {
                 {/* You can add more content here as needed */}
             </Box>
             <Typography variant="h5" style={{marginTop:'30px'}}>
-                Thank you for confirming your email!
+                Thank you!
             </Typography>
             <Button 
                 variant="contained" 

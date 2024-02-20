@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 //const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+//const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const {createUser} = require('../model/queries');
 const { getUserByEmail } = require('../model/queries');
 const { getUserById } = require('../model/queries');
 const { getUserByConfirmationToken, confirmUserEmail } = require('../model/queries');
+const { updateUserPassword } = require('../model/queries');
 
 const bcrypt = require('bcrypt');
 //const { decrypt } = require('dotenv');
@@ -183,21 +184,26 @@ exports.loginEmail = async (req, res) => {
 
 // reset password
 exports.resetPassword = async (req, res) => {
-    const { token, password } = req.body;
+    console.log('Reset password:', req.body);
+    const { resetToken, password } = req.body;
+
     try {
         // Decrypt the id and timestamp
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const payload = jwt.verify(resetToken, process.env.JWT_SECRET);
         const {id, timestamp} = payload;
+        console.log('Payload:', payload);
 
         // Check if the timestamp is not too old
         const oneHour = 60 * 60 * 1000; 
-        if (Date.now() - decryptedTimestamp > oneHour) {
+        if (Date.now() - timestamp > oneHour) {
+            console.log('The link has expired');
             return res.status(400).send({message: 'The link has expired'});
         }
 
         //Find the user by id
-        const user = await getUserById(decryptedId);
+        const user = await getUserById(id);
         if (!user) {
+            console.log('User does not exist');
             return res.status(400).send({message: 'User does not exist'});
         }
 
@@ -206,12 +212,12 @@ exports.resetPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Update the user's password and save the user
-        user.password = hashedPassword; // make sure to hash the password
-        await user.save();
+        await updateUserPassword(id, hashedPassword);
 
         res.status(200).send({message: 'Password reset successful'});
     } catch (error) {
         console.log(error);
+        console.log('Error resetting password:', error);
         res.status(500).send({message: 'Something went wrong'});
     }
 }
@@ -229,7 +235,7 @@ exports.sendResetEmail = async (req, res) => {
         }
 
         // Generate a token for the user
-        const token = jwt.sign({id: user._id, timestamp: Date.now()}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        const resetToken = jwt.sign({id: user.id, timestamp: Date.now()}, process.env.JWT_SECRET, {expiresIn: '10h'});
 
         // Generate a tranporter for using the default SMTP 
         let transporter = nodemailer.createTransport({
@@ -251,7 +257,7 @@ exports.sendResetEmail = async (req, res) => {
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">You have requested a password reset. Click the link below to reset your password. If you did not request a password reset, please ignore this email.</p>
-                <a href="http://localhost:3003/reset/${token}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
+                <a href="http://localhost:3003/reset/${resetToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
             </div>
             `
         });

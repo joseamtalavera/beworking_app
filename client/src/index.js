@@ -27,7 +27,7 @@ ReactDOM.render(
       {/* <Route path="/reset" element={<PasswordResetForm />} /> */}
       <Route path="/confirm-email/:confirmationToken" element={<ConfirmationPage />} />
       <Route path="/thanks" element={<ThanksPage />} />
-      <Route path="/reset/:token" element={<PasswordResetPage />} />   
+      <Route path="/reset/:resetToken" element={<PasswordResetPage />} />   
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
       {/*<Route path="/coworking" element={<CoWorking />} />*/}
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}

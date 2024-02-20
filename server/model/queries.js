@@ -51,7 +51,9 @@ const getUserByEmail = async (email) => {
 
 const getUserById = async (id) => {
   try {
+    console.log('getUserById:', id);
     const existingUser = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    console.log('Query result:', existingUser.rows[0]);
     return existingUser.rows[0];
   } catch (error) {
     console.error('Error in getUserById:', error);
@@ -83,10 +85,20 @@ const confirmUserEmail = async (id) => {
   }
 };
 
+const updateUserPassword = async (id, hashedPassword) => {
+  try {
+    await pool.query('UPDATE users SET password = $1 WHERE email = $2', [hashedPassword, id]);
+  } catch(error) {
+    console.error('Error in resetPassword:', error);
+    throw error;
+  }
+}
+
   module.exports = {
     createUser,
     getUserByEmail,
     getUserById,
     getUserByConfirmationToken,
-    confirmUserEmail
+    confirmUserEmail,
+    updateUserPassword
   };
