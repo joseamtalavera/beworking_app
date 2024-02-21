@@ -71,14 +71,13 @@ const PasswordResetForm = (props) => {
 
                 if (data.message === 'Password reset successful') {
                     console.log('Password reset successful');
-                    //localStorage.setItem('token', data.token); // Store the token in the local storage
-                    //props.onRegistrationSuccess();
                     setDialogTitle('Success');
-                    setDialogContent('Registration successful');
+                    setDialogContent('Password reset successful');
                     setOpenDialog(true);
 
                     setPassword('');
                     setConfirmPassword('');
+                    props.onResetSuccess(true);
                 } else {
                 console.log('Password reset failed');
                 setDialogTitle('Error');
@@ -86,7 +85,7 @@ const PasswordResetForm = (props) => {
                 setOpenDialog(true);
                 }
             }
-            } catch (error) {
+        } catch (error) {
             console.error('Error:', error);
             console.log('Error message:', error.message);
             console.log('Error trace;', error.stack);

@@ -212,7 +212,9 @@ exports.resetPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Update the user's password and save the user
+        console.log('Updating password:', id, hashedPassword);
         await updateUserPassword(id, hashedPassword);
+        console.log('Password updated');
 
         res.status(200).send({message: 'Password reset successful'});
     } catch (error) {
@@ -235,7 +237,7 @@ exports.sendResetEmail = async (req, res) => {
         }
 
         // Generate a token for the user
-        const resetToken = jwt.sign({id: user.id, timestamp: Date.now()}, process.env.JWT_SECRET, {expiresIn: '10h'});
+        const resetToken = jwt.sign({id: user.id, timestamp: Date.now()}, process.env.JWT_SECRET, {expiresIn: '1h'});
 
         // Generate a tranporter for using the default SMTP 
         let transporter = nodemailer.createTransport({

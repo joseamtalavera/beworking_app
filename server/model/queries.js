@@ -87,7 +87,7 @@ const confirmUserEmail = async (id) => {
 
 const updateUserPassword = async (id, hashedPassword) => {
   try {
-    await pool.query('UPDATE users SET password = $1 WHERE email = $2', [hashedPassword, id]);
+    await pool.query('UPDATE users SET password = $1 WHERE id = $2', [hashedPassword, id]);
   } catch(error) {
     console.error('Error in resetPassword:', error);
     throw error;

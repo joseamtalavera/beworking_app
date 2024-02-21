@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 
 const port = process.env.PORT || 5005;
 
+// use cors to allow cross origin resource sharing
 const allowedOrigins = ['http://localhost:3003', 'https://emailcall.onrender.com', 'http://localhost:3000'];
 app.use(cors({
     origin: function(origin, callback){
@@ -37,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', authRoutes);
 
 
-
+// use express-session to maintain session data
 app.use(session({
     secret: 'some random secret', // In a production app, this should be a large unguessable string, stored in an environment variable.
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.

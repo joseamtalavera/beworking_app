@@ -6,7 +6,7 @@ import ThanksPage from './ThanksPage';
 
 const PasswordResetPage = () => {
     const [showPasswordResetForm, setShowPasswordResetForm] = useState(true);
-    const [showThanksPage, setShowThanksPage] = useState(false);
+    //const [showThanksPage, setShowThanksPage] = useState(false);
 
     const backgroundImageStyle = {
         height: '100vh',
@@ -31,8 +31,7 @@ const PasswordResetPage = () => {
 
     const handleResetSuccess = () => {
         setShowPasswordResetForm(false);
-        setShowThanksPage(true);
-        window.alert('Password reset successful. Please login to continue.');
+        //setShowThanksPage(true);
     }
 
     return (
