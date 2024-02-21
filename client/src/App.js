@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-
+// Main component
 function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -22,3 +22,4 @@ function App() {
 }
 
 export default App;
+
