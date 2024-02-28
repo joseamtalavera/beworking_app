@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -27,8 +27,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-        application_name: your-application-name
-        environment_name: your-environment-name
+        application_name: beworking_app
+        environment_name: Beworkingapp-env
         version_label: ${{ github.run_number }}
-        region: your-region
+        region: eu-west-1
         source_bundle: file.zip
