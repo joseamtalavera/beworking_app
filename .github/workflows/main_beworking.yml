@@ -1,0 +1,53 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install root dependencies
+      run: npm ci
+    - name: Install server dependencies
+      run: |
+        cd server
+        npm ci
+    - name: Install client dependencies
+      run: |
+        cd client
+        npm ci
+    - name: Build server
+      run: |
+        cd server
+        npm run build --if-present
+    - name: Test server
+      run: |
+        cd server
+        npm test
+    - name: Archive server code
+      run: |
+        cd server
+        zip -r server.zip .
+    - name: 'Deploy server to AWS Elastic Beanstalk'
+      uses: einaregilsson/beanstalk-deploy@v14
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+        application_name: beworking_app
+        environment_name: Beworkingapp-env
+        version_label: ${{ github.run_number }}
+        region: eu-west-1
+        source_bundle: server/server.zip
