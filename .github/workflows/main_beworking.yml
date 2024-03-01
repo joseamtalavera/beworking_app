@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,30 +14,44 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm' # Enable npm caching
+
+    - name: Clear npm cache
+      run: npm cache clean --force
+
+    - name: Upgrade npm
+      run: npm install -g npm
+
     - name: Install server dependencies
       run: |
         cd server
         npm ci
+
     - name: Install client dependencies
       run: |
         cd client
         npm ci
+
     - name: Build server
       run: |
         cd server
         npm run build --if-present
+
     - name: Test server
       run: |
         cd server
         npm test
+
     - name: Archive server code
       run: |
         cd server
         zip -r server.zip .
+
     - name: 'Deploy server to AWS Elastic Beanstalk'
       uses: einaregilsson/beanstalk-deploy@v14
       with:
