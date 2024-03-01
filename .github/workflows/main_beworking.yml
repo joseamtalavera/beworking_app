@@ -1,11 +1,11 @@
-name: Node.js CI
+name: Node.js CI/CD to AWS
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,44 +15,39 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm' # Enable npm caching
-
+        cache: 'npm'
+    
     - name: Clear npm cache
       run: npm cache clean --force
-
+    
     - name: Upgrade npm
       run: npm install -g npm
 
     - name: Install server dependencies
-      run: |
-        cd server
-        npm ci
+      run: npm ci
+      working-directory: ./server
 
     - name: Install client dependencies
-      run: |
-        cd client
-        npm ci
+      run: npm ci
+      working-directory: ./client
 
     - name: Build server
-      run: |
-        cd server
-        npm run build --if-present
+      run: npm run build --if-present
+      working-directory: ./server
 
     - name: Test server
-      run: |
-        cd server
-        npm test
+      run: npm test
+      working-directory: ./server
 
-    - name: Archive server code
-      run: |
-        cd server
-        zip -r server.zip .
+    - name: Archive server code for deployment
+      run: zip -r server.zip .
+      working-directory: ./server
 
-    - name: 'Deploy server to AWS Elastic Beanstalk'
+    - name: Deploy server to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v14
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
@@ -61,4 +56,5 @@ jobs:
         environment_name: Beworkingapp-env
         version_label: ${{ github.run_number }}
         region: eu-west-1
-        source_bundle: server/server.zip
+        source_bundle: server.zip
+      working-directory: ./server
