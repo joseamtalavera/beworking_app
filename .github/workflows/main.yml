@@ -1,0 +1,59 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install client dependencies
+      run: cd client && npm ci
+
+    - name: Build client
+      run: cd client && npm run build --if-present
+
+    - name: Test client
+      run: cd client && npm test
+
+    - name: Install server dependencies
+      run: cd server && npm ci
+
+    - name: Build server
+      run: cd server && npm run build --if-present
+
+    - name: Test server
+      run: cd server && npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Deploy to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v14
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+        application_name: beworking_app
+        environment_name: beworkingapp-env-1
+        version_label: ${{ github.run_id }}
+        region: us-east-1
+        source_bundle: server
