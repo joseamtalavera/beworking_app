@@ -44,7 +44,7 @@ jobs:
       working-directory: ./server
 
     - name: Archive server code for deployment
-      run: zip -r server.zip .
+      run: zip -r ../server.zip .
       working-directory: ./server
 
     - name: Deploy server to AWS Elastic Beanstalk
@@ -57,4 +57,3 @@ jobs:
         version_label: ${{ github.run_number }}
         region: eu-west-1
         source_bundle: server.zip
-      working-directory: ./server
