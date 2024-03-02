@@ -55,5 +55,5 @@ jobs:
         environment_name: beworkingapp-env-1
         version_label: ${{ github.run_id }}
         region: us-east-1
-        source_bundle: ./server # Assuming server build outputs are in root
+        deployment_package: ./server # Assuming server build outputs are in root
 
