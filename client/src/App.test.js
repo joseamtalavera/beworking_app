@@ -1,20 +1,23 @@
-
-// Remove the outdated test
-// test('renders learn react link', () => { /* ... */ });
-
-// Optionally, add new tests for your updated app
-// ... (new tests specific to your current application)
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
-test('renders the main heading', () => {
-  render(<App />);
-  const headingElement = screen.getByText(/My App Title/i);
-  expect(headingElement).toBeInTheDocument();
+test('renders welcome message', () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const welcomeElement = screen.getByText(/Welcome to the BeWorking new Website!/i);
+  expect(welcomeElement).toBeInTheDocument();
 });
 
-test('renders the navigation menu', () => {
-  // ... test for navigation elements
+test('renders login button', () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const buttonElement = screen.getByText(/Click here to login/i);
+  expect(buttonElement).toBeInTheDocument();
 });
-
-// ... other relevant tests
