@@ -6,23 +6,22 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install client dependencies
-      run: cd client && npm ci
+    - name: Install dependencies (use npm install for potential consistency)
+      run: |
+        cd client
+        npm install
 
     - name: Build client
       run: cd client && npm run build --if-present
@@ -30,8 +29,10 @@ jobs:
     - name: Test client
       run: cd client && npm test
 
-    - name: Install server dependencies
-      run: cd server && npm ci
+    - name: Install server dependencies (use npm install for potential consistency)
+      run: |
+        cd server
+        npm install
 
     - name: Build server
       run: cd server && npm run build --if-present
@@ -42,18 +43,17 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v14
       with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: beworking_app
         environment_name: beworkingapp-env-1
         version_label: ${{ github.run_id }}
         region: us-east-1
-        source_bundle: server
+        source_bundle: ./server # Assuming server build outputs are in root
+
