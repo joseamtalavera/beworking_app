@@ -45,6 +45,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Install zip
+      run: sudo apt-get install zip
+
+    - name: Package application
+      run: zip -r beworking_app.zip 
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v14
