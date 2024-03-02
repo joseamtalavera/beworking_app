@@ -28,7 +28,7 @@ function Login(props) {
     if (isAuthenticated) {
         navigate('/dashboard/user');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   // This hook checks if a token is expired
   useEffect(() => {
@@ -36,7 +36,7 @@ function Login(props) {
     if (Date.now() > tokenExpiration) {
       setIsAuthenticated(false);  
     }
-  }, []);
+  }, [setIsAuthenticated]);
 
   
   const handleEmailChange = (event) => {
@@ -103,7 +103,7 @@ function Login(props) {
                 console.log('Login successful');
 
                 localStorage.setItem('token', JSON.stringify(data.token));
-                localStorage.setItem('toekenExpiration', Date.now() + 60 * 60 * 1000);
+                localStorage.setItem('tokenExpiration', Date.now() + 60 * 60 * 1000);
                 setIsAuthenticated(true);   
             } else {
             setErrorMessage('Login failed');

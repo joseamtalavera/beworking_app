@@ -1,11 +1,11 @@
 
 //import {GoogleLogin} from '@react-oauth/google';
 //import { Button } from '@mui/material'; 
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
-import { sendGoogleToken } from '../../Utils/sendGoogleToken';
+// import { useNavigate } from 'react-router-dom';
+// import React from 'react';
+// import { sendGoogleToken } from '../../Utils/sendGoogleToken';
 
-const GoogleIcon = () => {
+/* const GoogleIcon = () => {
 
   return(
       // This is the Google logo SVG from https://developers.google.com/identity/branding-guidelines
@@ -16,12 +16,12 @@ const GoogleIcon = () => {
       <path d="M12.2147 5.55997C14.2266 5.55997 15.5837 6.41163 16.3576 7.12335L19.3814 4.23C17.5243 2.53834 15.1075 1.5 12.2147 1.5C8.0242 1.5 4.40514 3.85665 2.64325 7.28662L6.10753 9.92332C6.97665 7.39166 9.3814 5.55997 12.2147 5.55997Z" fill="#EB4335"></path>
     </svg>
   );
-};
+}; */
 
 
 
 
-const GoogleButton = ({buttonText}) => {      
+/* const GoogleButton = ({buttonText}) => {      
 
 
   //it uses the useNavigate hook to navigate to the dashboard page.
@@ -52,17 +52,17 @@ const GoogleButton = ({buttonText}) => {
   };
 
   
-
+ 
 
   return (
     <div>
-      {/* <GoogleLogin
+      <GoogleLogin
         onSuccess={handleLogin}
         // onError={handleLogin}
         onError={(error) => console.log('Google Login Error:', error)}
-      /> */}
+      />
       
-      {/* <Button
+      <Button
         variant="outlined"
         fullWidth
         startIcon={<GoogleIcon />}
@@ -70,12 +70,12 @@ const GoogleButton = ({buttonText}) => {
         style={{ textTransform: 'none', marginBottom: '16px', color: '#808080', borderColor: 'orange', cursor: 'pointer' }}
         >
         {buttonText}
-      </Button>  */}
+      </Button>  
     </div> 
-  ); 
-};
+  );  
+}; */
 
-export default GoogleButton;
+//export default GoogleButton;
 
 
 

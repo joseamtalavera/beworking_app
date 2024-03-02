@@ -10,7 +10,7 @@ import LoginPage from './components/Login/LoginPage';
 import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboard';
 import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
 import PrivateRoute from './Utils/PrivateRoute';
-import PasswordResetForm from './components/Login/PasswordResetForm';
+//import PasswordResetForm from './components/Login/PasswordResetForm';
 import PasswordResetPage from './components/Login/PasswordResetPage';
 import ConfirmationPage from './components/Login/ConfirmationPage';
 import ThanksPage from './components/Login/ThanksPage';
