@@ -1,8 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+// Remove the outdated test
+// test('renders learn react link', () => { /* ... */ });
+
+// Optionally, add new tests for your updated app
+// ... (new tests specific to your current application)
