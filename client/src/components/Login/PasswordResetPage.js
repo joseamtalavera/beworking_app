@@ -1,6 +1,6 @@
 // PasswordResetForm.js
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Link } from '@mui/material';
+import { Grid, Box, Link } from '@mui/material';
 import PasswordResetForm from './PasswordResetForm';
 import ThanksPage from './ThanksPage';
 
