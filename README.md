@@ -1,6 +1,6 @@
 # BeWorkig Virtual Offices Platform
 
-This project is a full-stack web application designed to facilitate the booking of coworking spaces. It leverages a React.js frontend, Node.js-Express backend, and PostgreSQL database to provide a seamless user experience for registering, logging in, and managing bookings.
+This project is a full-stack web application designed to facilitate the registering of Virtual Offices. It leverages a React.js frontend, Node.js-Express backend, and PostgreSQL database to provide a seamless user experience for registering, logging in, and managing bookings.
 
 ## Development Setup
 
