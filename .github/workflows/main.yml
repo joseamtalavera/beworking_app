@@ -52,6 +52,10 @@ jobs:
     - name: Package application
       run: zip -r beworking_app.zip client server 
 
+    - name: Get current time
+      id: current_time
+      run: echo "::set-output name=time::$(date +%s)"
+
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v14
       with:
@@ -59,7 +63,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: beworking_app
         environment_name: beworkingapp-env-1
-        version_label: ci-cd-${{ github.run_number }}-${{ github.run_id }}
+        version_label: ci-cd-${{ github.run_number }}-${{ github.run_id }}-${{ steps.current_time.outputs.time }}
         region: us-east-1
         deployment_package: beworking_app.zip
 
