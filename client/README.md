@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Coworking Spaces Booking Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a full-stack web application designed to facilitate the booking of coworking spaces. It leverages a React.js frontend, Node.js-Express backend, and PostgreSQL database to provide a seamless user experience for registering, logging in, and managing bookings.
 
-## Available Scripts
+## Development Setup
 
-In the project directory, you can run:
+### Starting the Backend Server
 
-### `npm start`
+1. Navigate to the backend directory.
+2. Run `npm run dev` to start the server on port 5005.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Starting the React Frontend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Navigate to the frontend directory.
+2. Run `npm start` to start the React app on port 3003.
 
-### `npm test`
+### Index.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Utilizes `document.getElementById('root')` to select where the app will be rendered in `index.html`.
 
-### `npm run build`
+### App.js
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Serves as the homepage and displays the navigation menu.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Workflow
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Registration Process
 
-### `npm run eject`
+1. `RegistrationForm.js` initiates registration with email and password, calling `authController.js /registerEmail` function.
+2. Email Validation and Password Hashing are performed.
+3. A JWT Confirmation Token is generated and emailed to the user.
+4. The user confirms their email via a link, triggering the `ConfirmationPage.js`.
+5. Upon confirmation, the backend marks the email as confirmed in the database.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Login Process
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. `Login.js` manages user login, validating credentials and generating a JWT for session management.
+2. Successful login updates authentication state, redirecting the user to their dashboard.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Password Reset
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. `EmailRecoveryForm` initiates the password recovery process.
+2. The backend sends a reset link to the user's email.
+3. `ResetPasswordForm.js` allows the user to input a new password, updating the database accordingly.
 
-## Learn More
+## Security Considerations
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Implement lockout mechanisms after multiple failed login attempts to prevent brute force attacks.
+- Protect against SQL injections by sanitizing inputs.
+- Ensure CSRF protection to verify requests originate from your site.
+- Address XSS vulnerabilities by sanitizing user inputs.
+- Utilize CSP and helmet for enhanced security in Express apps.
+- Consider rate limiting to mitigate DDOS attacks.
+- Evaluate the use of cookies versus localStorage for storing tokens securely.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Problems & Solutions
 
-### Code Splitting
+- Address common security vulnerabilities (SQL Injection, CSRF, XSS).
+- Implement best practices for user authentication and data validation.
+- Consider UI/UX improvements for a more cohesive style and better user flow.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Conclusion
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project aims to provide a comprehensive solution for booking coworking spaces, with a strong emphasis on security, user experience, and efficient data management. Contributions and feedback are welcome to enhance its functionality and security posture.
