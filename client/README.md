@@ -61,4 +61,4 @@ This project is a full-stack web application designed to facilitate the booking 
 
 ## Conclusion
 
-This project aims to provide a comprehensive solution for booking coworking spaces, with a strong emphasis on security, user experience, and efficient data management. Contributions and feedback are welcome to enhance its functionality and security posture.
+This project aims to provide a comprehensive solution for booking coworking spaces, with a strong emphasis on security, user experience, and efficient data management. Contributions and feedback are welcome to enhance its functionality and security posture
