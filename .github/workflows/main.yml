@@ -50,20 +50,16 @@ jobs:
       run: sudo apt-get install zip
 
     - name: Package application
-      run: zip -r beworking_app.zip client server 
-
-    - name: Get current time
-      id: current_time
-      run: echo "::set-output name=time::$(date +%s)"
+      run: zip -r beworking_app.zip client server  
 
     - name: Deploy to Elastic Beanstalk
-      uses: einaregilsson/beanstalk-deploy@v14
+      uses: einaregilsson/beanstalk-deploy@v21
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: beworking_app
         environment_name: beworkingapp-env-1
-        version_label: ci-cd-${{ github.run_number }}-${{ github.run_id }}-${{ steps.current_time.outputs.time }}
+        version_label: ci-cd-${{ github.run_number }}-${{ github.run_id }}
         region: us-east-1
-        deployment_package: beworking_app.zip
+        deployment_package: deploy.zip
 
