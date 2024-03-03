@@ -50,7 +50,8 @@ jobs:
       run: sudo apt-get install zip
 
     - name: Package application
-      run: zip -r beworking_app.zip client server  
+      run: |
+        zip -r deploy.zip client server -x '*.git*'
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
