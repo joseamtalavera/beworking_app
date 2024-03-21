@@ -58,8 +58,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: beworking_app2
-        environment_name: beworkingapp2-env
+        application_name: beworking_app
+        environment_name: beworkingapp-env-1
         version_label: Sample  
         region: us-east-1
         deployment_package: deploy.zip
