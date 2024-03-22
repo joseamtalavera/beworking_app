@@ -51,7 +51,7 @@ jobs:
 
     - name: Package application
       run: |
-        zip -r beworking_app.zip client server -x "client/node_modules/*" "server/node_modules/*" "*.git*"
+        zip -r beworking_app.zip Procfile client server -x "client/node_modules/*" "server/node_modules/*" "*.git*"
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
