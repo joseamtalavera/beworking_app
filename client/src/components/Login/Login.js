@@ -114,7 +114,7 @@ function Login(props) {
         console.error('Error:', error);
         setErrorMessage(error.message);
         setOpen(true);
-        }
+      }
   };
 
 
