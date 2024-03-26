@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 const port = process.env.PORT || 5005;
 
 // use cors to allow cross origin resource sharing
-const allowedOrigins = ['http://localhost:3003', 'https://emailcall.onrender.com', 'http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3003', 'https://emailcall.onrender.com', 'http://localhost:3000', 'https://main.drus08ferfq2w.amplifyapp.com/'];
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);
