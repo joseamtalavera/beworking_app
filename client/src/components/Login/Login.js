@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
 
-//why do i need to import useEffect from react? 
+
 function Login(props) {
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [email, setEmail] = useState('');
@@ -17,18 +17,20 @@ function Login(props) {
   const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); // state for dialog box
-
-  const navigate = useNavigate();
- 
-  const { isAuthenticated, setIsAuthenticated } = useAuth(false);
+  const navigate = useNavigate(); 
+  const { isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin } = useAuth(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   // This hook checks if the user is already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-        navigate('/dashboard/user');
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     if (isAdmin) {
+  //       navigate('/dashboard/admin');
+  //     }else {
+  //       navigate('/dashboard/user');
+  //     }
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   // This hook checks if a token is expired
   useEffect(() => {
@@ -101,10 +103,20 @@ function Login(props) {
             
             if (data.user) {
                 console.log('Login successful');
-
+                console.log('is_admin:', data.user.is_admin);
                 localStorage.setItem('token', JSON.stringify(data.token));
                 localStorage.setItem('tokenExpiration', Date.now() + 60 * 60 * 1000);
-                setIsAuthenticated(true);   
+                localStorage.setItem('isAdmin', JSON.stringify(data.user.is_admin));
+                console.log('isAdmin in local storage:, JSO.parse:', JSON.parse(localStorage.getItem('isAdmin')));
+                setIsAuthenticated(true); 
+                setIsAdmin(data.user.is_admin);  
+
+                // navigation logic
+                if (data.user.is_admin) {
+                  navigate('/dashboard/admin');
+                } else {
+                  navigate('/dashboard/user');
+                }
             } else {
             setErrorMessage('Login failed');
             setOpen(true);

@@ -54,7 +54,7 @@ if (isProduction) {
         password: process.env.AWS_PASSWORD,
         ssl: process.env.AWS_SSL,
     };
-    console.log('Production DATABASE_URL:', process.env.DATABASE_URL);
+    //console.log('Production DATABASE_URL:', process.env.DATABASE_URL);
 } else {
     // For local development, use individual environment variables
     poolConfig = {
@@ -80,6 +80,38 @@ pool.query('INSERT INTO users(email, password) VALUES($1, $2) RETURNING *', [ema
         console.log('Email inserted successfully');
     }
 }); */
+
+const createTableQuery = `
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    google_id VARCHAR(255),
+    confirmation_token VARCHAR(255),
+    email_confirmed BOOLEAN DEFAULT false
+);
+`;
+
+pool.query(createTableQuery, (err, res) => {
+    if (err){
+        console.error('Error executing table', err.stack);
+    }else {
+        console.log('Table created successfully');
+        const addIsAdminColumnQuery = ` 
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+        `;
+        pool.query(addIsAdminColumnQuery, (err, res) => {
+            if (err){
+                console.error('Error executing query', err.stack);
+            } else {
+                console.log('is_admin column added successfully');
+            }
+        });
+    }
+});
+
+
 
 module.exports = pool;
 

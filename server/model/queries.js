@@ -42,7 +42,7 @@ const createUser = async (userid, email, hashedPassword, confirmationToken) => {
 const getUserByEmail = async (email) => {
   console.log('getUserByEmail:', email);
   try {
-    const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const existingUser = await pool.query('SELECT *, is_admin FROM users WHERE email = $1', [email]);
     console.log('getUserByEmail result:', existingUser.rows);
     return existingUser.rows[0];
   } catch (error) {

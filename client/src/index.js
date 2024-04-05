@@ -31,7 +31,7 @@ ReactDOM.render(
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
       {/*<Route path="/coworking" element={<CoWorking />} />*/}
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}
-      <Route path='/dashboard/admin' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+      <Route path='/dashboard/admin' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} /> 
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
     </Routes>
   </Router>,

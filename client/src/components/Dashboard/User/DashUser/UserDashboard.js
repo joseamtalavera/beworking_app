@@ -8,7 +8,7 @@ function AdminUser() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Typography variant="h4">
-                Welcome to the BeWorking new Dashboard!
+                Welcome to the user Dashboard!
             </Typography>
             <Button 
                 variant="contained" 
