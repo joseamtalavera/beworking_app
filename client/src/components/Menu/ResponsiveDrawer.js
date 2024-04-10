@@ -7,7 +7,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 function ResponsiveDrawer() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const theme = useTheme();
-    // Change the breakpoint to custom value (900px)
     const isMobile = useMediaQuery(theme.breakpoints.down(900));
 
     const handleDrawerToggle = () => {
@@ -23,8 +22,8 @@ function ResponsiveDrawer() {
                         <ListItemText primary={text} style={{color:'white'}} />
                     </ListItem>
                 ))}
-                <ListItem button key="Register" components={Link} to="/login">
-                    <ListItemText primary="Register" style={{color:'white'}} />
+                <ListItem button key="Login" component={Link} to="/login">
+                    <ListItemText primary="Login" style={{color:'white'}} />
                 </ListItem>
             </List>
         </div>
@@ -63,7 +62,7 @@ function ResponsiveDrawer() {
                                 style={{ marginTop: '-5px', width: '100px', backgroundColor: 'orange', textTransform: 'none', borderRadius: '20px'}}
                             >
                                 <Typography style={{ color: 'white'}}>
-                                    Register
+                                    Login
                                 </Typography>  
                             </Button>
                         </div>
