@@ -2,12 +2,15 @@
   "name": "beworking_app",
   "version": "1.0.0",
   "description": "This project is a full-stack web application designed to facilitate the registering of Virtual Offices. It leverages a React.js frontend, Node.js-Express backend, and PostgreSQL database to provide a seamless user experience for registering, logging in, and managing bookings.",
-  "devDependencies": {},
   "scripts": {
     "start": "npm --prefix server start & npm --prefix client start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@mui/styles": "^5.15.15",
+    "react-icons": "^5.1.0"
+  }
 }
