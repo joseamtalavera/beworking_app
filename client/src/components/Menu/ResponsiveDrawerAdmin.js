@@ -56,7 +56,7 @@ function ResponsiveDrawerAdmin() {
     };
 
     const listItems = [
-        { text: 'Users', icon: <UsersIcon sx={{fontSize: 20}} /> },
+        { text: 'Users', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/admin/users'},
         { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} /> },
         { text: 'Bookings', icon: <BookingsIcon sx={{fontSize: 20}} /> },
         { text: 'Invoicing', icon: <InvoicingIcon sx={{fontSize: 20}} /> },
@@ -75,12 +75,14 @@ function ResponsiveDrawerAdmin() {
     const drawer = (
         <div> 
             <List>
-                {listItems.map(({text, icon }, index) => (
+                {listItems.map(({text, icon, path }, index) => (
 
                     <ListItem
                         button 
                         key={text}
                         onClick={() => setActiveItem(text)}
+                        component={path ? Link : 'div'}
+                        to={path}
                         sx={{
                             color: 'black',
                             '&:hover, &:focus': {
@@ -216,7 +218,7 @@ function ResponsiveDrawerAdmin() {
                     }}
                 >
                 <Toolbar style={{ display: 'flex', justifyContent: 'space-between'}}>
-                <Link to="/">
+                    <Link to="/">
                         <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '50px', marginTop: '0px'}} /> {/* Logo image */}
                     </Link>
                     
@@ -247,8 +249,7 @@ function ResponsiveDrawerAdmin() {
                         background: 'white',
                         color: 'black',
                         border: 'none',
-                        //boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
-                        marginTop: 56 // Adjust this value as needed to position the drawer below the header
+                        marginTop: 56 
                     }
                 }}
             >
