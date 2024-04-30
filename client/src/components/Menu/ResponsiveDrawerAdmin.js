@@ -22,7 +22,7 @@ import {
     HelpOutline as HelpIcon,
   } from '@mui/icons-material';
 
-const DRAWER_WIDTH = 'auto';
+const DRAWER_WIDTH = 250;
 const MOBILE_BREAKPOINT = 900;
 const APPBAR_HEIGHT = 64;
 
@@ -95,6 +95,7 @@ function ResponsiveDrawerAdmin() {
                             sx={{
                                 minWidth: '30px', 
                                 color: 'inherit', 
+                                paddingLeft: '20px',
                             }}
                         >
                             {icon}
@@ -152,7 +153,8 @@ function ResponsiveDrawerAdmin() {
                                 <ListItemIcon 
                                     sx={{
                                         minWidth: '30px', 
-                                        color: 'inherit'
+                                        color: 'inherit',
+                                        paddingLeft: '20px',
                                     }}
                                 >
                                     {icon}
@@ -219,7 +221,7 @@ function ResponsiveDrawerAdmin() {
                 >
                 <Toolbar style={{ display: 'flex', justifyContent: 'space-between'}}>
                     <Link to="/">
-                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '50px', marginTop: '0px'}} /> {/* Logo image */}
+                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '20px', marginTop: '0px'}} /> {/* Logo image */}
                     </Link>
                     
                     {isMobile ? (
@@ -245,7 +247,7 @@ function ResponsiveDrawerAdmin() {
                 }}
                 PaperProps={{
                     style: {
-                        width: windowWith < MOBILE_BREAKPOINT ? '100%' : 'DRAWER_WIDTH',
+                        width: windowWith < MOBILE_BREAKPOINT ? '100%' : DRAWER_WIDTH,
                         background: 'white',
                         color: 'black',
                         border: 'none',

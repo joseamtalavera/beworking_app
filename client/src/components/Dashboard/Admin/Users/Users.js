@@ -1,68 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
+import React , {useState} from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
+import { Pagination } from '@mui/lab';
+import { Link } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
+import MenuLayout from '../../../Menu/MenuLayout';
+import { CircularProgress } from '@mui/material';
+import { Typography } from '@mui/material';
+import FilterBox from './FilterBox';
 
-function Users() {
-  /* const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); */
 
-  const users = [
-    { id: 1, email: 'user1@example.com', name: 'User One', is_admin: false },
-    { id: 2, email: 'user2@example.com', name: 'User Two', is_admin: true },
+const Users = () => {
+  // Your existing code here
+
+  // Pagination state
+  const[loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([
+    { id: 1, name: 'User 1', email: 'user1@example.com' },
+    { id: 2, name: 'User 2', email: 'user2@example.com' },
     // Add more users as needed
-  ];
+  ]);
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
-  /* useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/users`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      setUsers(data);
-      setLoading(false);
-    })
-    .catch(error => {
-      setError(error.message);
-      setLoading(false);
-    });
-  }, []);
+  const handleFilter = (filteredUsers) => {
+    setUsers(filteredUsers);
+  };
 
+  // Your existing code here
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <MenuLayout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
+          <CircularProgress />
+        </Box>
+      </MenuLayout>
+    );
   }
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  } */
-
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <MenuLayout>
+      {/* <Box maxWidth="30%" m="auto"> 
+        <FilterBox onFilter={handleFilter} />
+      </Box> */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+        <Button 
+          variant="contained" 
+          startIcon={<AddIcon />} 
+          component={Link} 
+          to="/dashboard/admin/users/user"
+          style={{ marginTop: '-5px', width: '100px', backgroundColor: 'orange', textTransform: 'none', borderRadius: '20px'}}
+          >
+            <Typography style={{ color: 'white' }}>
+              User
+            </Typography>
+        </Button>
+      </Box>
+      <TableContainer component={Paper}>
+      <Table>
         <TableHead>
           <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Admin</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {users.map((user) => (
             <TableRow key={user.id}>
-              <TableCell component="th" scope="row">
-                {user.email}
-              </TableCell>
-              <TableCell align="right">{user.name}</TableCell>
-              <TableCell align="right">{user.is_admin ? 'Yes' : 'No'}</TableCell>
+              <TableCell>{user.id}</TableCell>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+      </TableContainer>
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+        <Pagination count={Math.ceil(users.length / 10)} page={page} onChange={handleChange} />
+      </Box>
+    </MenuLayout>
   );
-}
+};
 
 export default Users;
