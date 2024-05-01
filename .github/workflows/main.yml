@@ -1,31 +1,26 @@
-name: Deploy to EC2
+name: Deploy Application
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ubuntu
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          mkdir -p /home/ubuntu/beworking_app/client
-          mkdir -p /home/ubuntu/beworking_app/server
-          cd /home/ubuntu/beworking_app/client
-          git pull origin main
-          npm install
-          npm run build
-          pm2 restart all
-          cd /home/ubuntu/beworking_app/server
-          git pull origin main
-          npm install
-          npm run build
-          pm2 restart all
+    - name: Install client dependencies and build
+      run: |
+        cd client
+        npm install
+        npm run build
+
+    - name: Start server
+      run: |
+        cd ../server
+        npm install
+        npm start
