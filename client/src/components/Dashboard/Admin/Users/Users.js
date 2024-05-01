@@ -4,7 +4,6 @@ import { Pagination } from '@mui/lab';
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MenuLayout from '../../../Menu/MenuLayout';
-import { CircularProgress } from '@mui/material';
 import { Typography } from '@mui/material';
 
 
@@ -13,7 +12,7 @@ const Users = () => {
 
   // Pagination state
   //const[loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([
+  const [users] = useState([
     { id: 1, name: 'User 1', email: 'user1@example.com' },
     { id: 2, name: 'User 2', email: 'user2@example.com' },
     // Add more users as needed
