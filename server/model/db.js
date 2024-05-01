@@ -16,7 +16,9 @@ if (isProduction) {
         database: process.env.AWS_DATABASE,
         user: process.env.AWS_USER,
         password: process.env.AWS_PASSWORD,
-        ssl: process.env.AWS_SSL,
+        ssl: {
+            rejectUnauthorized: false
+        },
     };
 } else {
     poolConfig = {
