@@ -18,7 +18,8 @@ function Login(props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); // state for dialog box
   const navigate = useNavigate(); 
-  const { isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin } = useAuth(false);
+  const { setIsAuthenticated, setIsAdmin } = useAuth(false);
+  //const { isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin } = useAuth(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   // This hook checks if the user is already authenticated

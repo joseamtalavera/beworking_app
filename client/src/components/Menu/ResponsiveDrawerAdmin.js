@@ -165,7 +165,7 @@ function ResponsiveDrawerAdmin() {
                                         sx={{
                                             color:'grey', 
                                             fontSize:'13px', 
-                                            color: 'inherit',
+                                            //color: 'inherit',
                                             fontWeight: activeItem === text ? 'bold' : 'normal',
                                             }}
                                         >

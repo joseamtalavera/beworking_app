@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Menu } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import MenuLayout from '../../../Menu/MenuLayout';
 
 const AddUser = () => {

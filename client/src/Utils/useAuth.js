@@ -13,7 +13,7 @@ function useAuth(autoCheck = true) {
         const checkAuth = () => {
             if (autoCheck){
             const token = localStorage.getItem('googleToken') || localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user'));
+            //const user = JSON.parse(localStorage.getItem('user'));
             const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
             setIsAuthenticated(!!token);
             setIsLoading(false);  

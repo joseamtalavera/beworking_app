@@ -6,14 +6,13 @@ import AddIcon from '@mui/icons-material/Add';
 import MenuLayout from '../../../Menu/MenuLayout';
 import { CircularProgress } from '@mui/material';
 import { Typography } from '@mui/material';
-import FilterBox from './FilterBox';
 
 
 const Users = () => {
   // Your existing code here
 
   // Pagination state
-  const[loading, setLoading] = useState(false);
+  //const[loading, setLoading] = useState(false);
   const [users, setUsers] = useState([
     { id: 1, name: 'User 1', email: 'user1@example.com' },
     { id: 2, name: 'User 2', email: 'user2@example.com' },
@@ -24,9 +23,9 @@ const Users = () => {
     setPage(value);
   };
 
-  const handleFilter = (filteredUsers) => {
-    setUsers(filteredUsers);
-  };
+  //const handleFilter = (filteredUsers) => {
+  //  setUsers(filteredUsers);
+  //};
 
   // Your existing code here
   if (loading) {
