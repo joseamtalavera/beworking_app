@@ -28,7 +28,7 @@ const Users = () => {
   //};
 
   // Your existing code here
-  if (loading) {
+  /* if (loading) {
     return (
       <MenuLayout>
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
@@ -36,7 +36,7 @@ const Users = () => {
         </Box>
       </MenuLayout>
     );
-  }
+  } */
 
   return (
     <MenuLayout>
