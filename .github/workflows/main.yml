@@ -25,8 +25,8 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "client/build"
-        target: "/home/ubuntu/beworking_app/client"
+        source: "client"
+        target: "/home/ubuntu/beworking_app"
 
     - name: Install server dependencies
       run: |
@@ -40,4 +40,4 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "server"
-        target: "/home/ubuntu/beworking_app/server"
+        target: "/home/ubuntu/beworking_app"
