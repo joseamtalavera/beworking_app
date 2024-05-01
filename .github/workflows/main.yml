@@ -30,7 +30,7 @@ jobs:
 
     - name: Install server dependencies
       run: |
-        cd ../server
+        cd server
         npm install
 
     - name: Transfer server files to EC2
