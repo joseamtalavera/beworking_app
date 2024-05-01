@@ -17,13 +17,15 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          mkdir -p /home/ubuntu/beworking_app/client
+          mkdir -p /home/ubuntu/beworking_app/server
           cd /home/ubuntu/beworking_app/client
-          git pull
-          npm init -y
+          git pull origin main
           npm install
           npm run build
           pm2 restart all
-          cd ../server
+          cd /home/ubuntu/beworking_app/server
+          git pull origin main
           npm install
           npm run build
           pm2 restart all
