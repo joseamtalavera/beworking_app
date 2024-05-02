@@ -1,5 +1,5 @@
 {
-  "name": "beworking_app",
+  "name": "beworking",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,7 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts start",
     "build": "node --max-old-space-size=4096 ./node_modules/react-scripts/scripts/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
