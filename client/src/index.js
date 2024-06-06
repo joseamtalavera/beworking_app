@@ -16,6 +16,7 @@ import ConfirmationPage from './components/Login/ConfirmationPage';
 import ThanksPage from './components/Login/ThanksPage';
 import Users from './components/Dashboard/Admin/Users/Users';
 import User from './components/Dashboard/Admin/Users/User';
+import AddUser from './components/Dashboard/Admin/Users/AddUser';
 
 
 //const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -35,7 +36,8 @@ ReactDOM.render(
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}
       <Route path='/dashboard/admin' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
       <Route path='/dashboard/admin/users' element={<PrivateRoute><Users /></PrivateRoute>} />
-      <Route path='/dashboard/admin/users/user' element={<PrivateRoute><User /></PrivateRoute>} />
+      <Route path='/dashboard/admin/users/:id' element={<PrivateRoute><User /></PrivateRoute>} />
+      <Route path='/dashboard/admin/users/add-user' element={<PrivateRoute><AddUser /></PrivateRoute>} />
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
     </Routes>
   </Router>,

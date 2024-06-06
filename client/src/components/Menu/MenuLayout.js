@@ -1,12 +1,11 @@
 // MenuLayout.js
 import React from 'react';
-import ResponsiveDrawerAdmin from './ResponsiveDrawerAdmin';
+import Layout from './Layout';
 
 const MenuLayout = ({ children }) => (
-  <div>
-    <ResponsiveDrawerAdmin />
+  <Layout>
     {children}
-  </div>
+  </Layout>
 );
 
 export default MenuLayout;

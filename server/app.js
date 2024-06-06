@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 const authRoutes = require('./routers/authRoutes');
+const userRoutes = require('./routers/userRoutes');
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 const port = process.env.PORT || 5005;
 
 // use cors to allow cross origin resource sharing
-const allowedOrigins = ['http://localhost:3003', 'https://emailcall.onrender.com', 'http://localhost:3000', 'https://main.drus08ferfq2w.amplifyapp.com/'];
+const allowedOrigins = ['http://localhost:3003', 'http://localhost:3000', 'https://be-working.com/'];
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);
@@ -36,6 +37,7 @@ app.use(cors({
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 
 // use express-session to maintain session data

@@ -1,83 +1,69 @@
-import React , {useState} from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
-import { Pagination } from '@mui/lab';
+//Users.js
+import React, { useState }from 'react';
+import MenuLayout from '../../../Menu/MenuLayout'; 
+import BasicTable from './BasicTable';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import MenuLayout from '../../../Menu/MenuLayout';
-import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import {useTheme } from '@mui/material/styles';
 
+import Modal from '@mui/material/Modal';
+import AddUser from './AddUser';
 
 const Users = () => {
-  // Your existing code here
-
-  // Pagination state
-  //const[loading, setLoading] = useState(false);
-  const [users] = useState([
-    { id: 1, name: 'User 1', email: 'user1@example.com' },
-    { id: 2, name: 'User 2', email: 'user2@example.com' },
-    // Add more users as needed
-  ]);
-  const [page, setPage] = useState(1);
-  const handleChange = (event, value) => {
-    setPage(value);
+  const handleAddUser = () => {
+    // logic for adding a new user goes here
   };
 
-  //const handleFilter = (filteredUsers) => {
-  //  setUsers(filteredUsers);
-  //};
-
-  // Your existing code here
-  /* if (loading) {
-    return (
-      <MenuLayout>
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
-          <CircularProgress />
-        </Box>
-      </MenuLayout>
-    );
-  } */
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const theme = useTheme();
 
   return (
     <MenuLayout>
-      {/* <Box maxWidth="30%" m="auto"> 
-        <FilterBox onFilter={handleFilter} />
-      </Box> */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
-        <Button 
-          variant="contained" 
-          startIcon={<AddIcon />} 
-          component={Link} 
-          to="/dashboard/admin/users/user"
-          style={{ marginTop: '-5px', width: '100px', backgroundColor: 'orange', textTransform: 'none', borderRadius: '20px'}}
+    <Box display="flex" flexDirection="column" alignItems="center" width="100%" marginTop="64px">
+      <Box display="flex" justifyContent="flex-end" width="100%" maxWidth="lg" marginBottom="1rem">
+       {/*  <Link to="/dashboard/admin/users/add-user" style={{ textDecoration: 'none' }}> */}
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleOpen}
+            sx={{ backgroundColor: '#4caf50', color: 'white', marginBottom: '1rem', '&:hover': { backgroundColor: 'darkgreen' } }}
           >
-            <Typography style={{ color: 'white' }}>
-              User
-            </Typography>
-        </Button>
+            Add
+          </Button>
+       {/*  </Link> */}
       </Box>
-      <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      </TableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-        <Pagination count={Math.ceil(users.length / 10)} page={page} onChange={handleChange} />
+      <Box width="100%" maxWidth="lg">
+        <BasicTable/>
       </Box>
+    </Box>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '50%',
+        height: '100%',
+        bgcolor: '#e5e5e5',
+        border: '0px solid #000',
+        borderRadius: '15px',
+        boxShadow: 24,
+        p: 1,
+        maxHeight: '80%',
+        overflowY: 'auto',
+      }}>
+        <AddUser/>
+      </Box>
+    </Modal>
     </MenuLayout>
   );
 };
