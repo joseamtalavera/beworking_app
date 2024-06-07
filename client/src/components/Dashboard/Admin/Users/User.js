@@ -29,6 +29,32 @@ const theme = createTheme();
 
 export default function User() {
 
+/*   const location = useLocation();
+
+  function mapUserToState(user) {
+    return {
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      type: user.type || '',
+      category: user.category || '',
+      status: user.status || '',
+      registeredName: user.registeredName || '',
+      country: user.country || '',
+      state: user.state || '',
+      city: user.city || '',
+      postCode: user.postCode || '',
+      address: user.address || '',
+      vat: user.vat || '',
+      paymentMethod: user.paymentMethod || '',
+    };
+  }
+
+  const initialUserState = location.state ? mapUserToState(location.state.user) : mapUserToState({});
+  const [user, setUser] = useState(initialUserState);
+  console.log('User:', user); */
+
+
   const location = useLocation();
   const initialUserState = location.state ? location.state.user : {
     name: '',
@@ -37,14 +63,14 @@ export default function User() {
     type: '',
     category: '',
     status: '',
-    registeredName: '',
+    registered_name: '',
     country: '',
     state: '',
     city: '',
-    postCode: '',
+    post_code: '',
     address: '',
     vat: '',
-    paymentMethod: '',
+    payment_method: '',
   };
   const [user, setUser] = useState(initialUserState);
   console.log('User:', user);
@@ -265,8 +291,8 @@ export default function User() {
                     </FormLabel>
                   <OutlinedInput 
                     size="small" 
-                    value={user.registeredName}
-                    onChange={(e) => setUser({ ...user, registeredName: e.target.value })}
+                    value={user.registered_name}
+                    onChange={(e) => setUser({ ...user, registered_name: e.target.value })}
                     disabled={!isEditing}
                     />
                 </FormControl>
@@ -317,8 +343,8 @@ export default function User() {
                     </FormLabel>
                   <OutlinedInput 
                     size="small" 
-                    value={user.postCode}
-                    onChange={(e) => setUser({ ...user, postCode: e.target.value })}
+                    value={user.post_code}
+                    onChange={(e) => setUser({ ...user, post_code: e.target.value })}
                     disabled={!isEditing}
                   />
                 </FormControl>
@@ -356,8 +382,8 @@ export default function User() {
                     </FormLabel>
                   <OutlinedInput 
                     size="small" 
-                    value={user.paymentMethod}
-                    onChange={(e) => setUser({ ...user, paymentMethod: e.target.value })}
+                    value={user.payment_method}
+                    onChange={(e) => setUser({ ...user, payment_method: e.target.value })}
                     disabled={!isEditing}
                   />
                 </FormControl>

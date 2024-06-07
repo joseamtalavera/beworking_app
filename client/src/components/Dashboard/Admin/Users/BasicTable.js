@@ -54,6 +54,7 @@ export default function DataTable() {
                     }
                 });
                 setUsers(data);
+                console.log('Users:', data);
             } catch (error) {
                 console.error('Error:', error);
             } finally {
@@ -85,13 +86,13 @@ export default function DataTable() {
     
     return (
         <Container maxWidth="lg">
-            <Box sx={{ boxShadow: 3, height: 400, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Box sx={{ boxShadow: 3, height: 500, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 {isLoading ? (
                     <CircularProgress />
                 ) : (
            
             <DataGrid
-                style={{ height: 400, width: '100%', cursor: 'pointer'}}
+                style={{ height: 500, width: '100%', cursor: 'pointer'}}
                 rows={users}
                 columns={columns}
                 pageSize={25}
@@ -114,3 +115,6 @@ export default function DataTable() {
         </Container>
     );
 }
+
+
+

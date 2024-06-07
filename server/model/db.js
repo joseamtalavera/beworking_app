@@ -35,7 +35,7 @@ if (isProduction) {
 
 const pool = new Pool(poolConfig);
 
-
+/* 
 const createTableQuery = `
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -54,15 +54,15 @@ CREATE TABLE IF NOT EXISTS users (
     status VARCHAR(255), -- converted, potential, rejected, waiting list, contacted, visitor
     -- Billing Address
     address VARCHAR(255),
-    postCode VARCHAR(255),
+    post_code VARCHAR(255),
     state VARCHAR(255),
     country VARCHAR(255),
     -- Billing Details
-    registeredName VARCHAR(255),
+    registered_name VARCHAR(255),
     vat VARCHAR(255),
-    paymentMethod VARCHAR(255), -- card, bank transfer, bank charge
+    payment_method VARCHAR(255), -- card, bank transfer, bank charge
     -- Additional Data
-    additionalData TEXT
+    additional_data TEXT
 );
 `;
 
@@ -81,14 +81,14 @@ pool.query(createTableQuery, (err, _) => {
         ADD COLUMN IF NOT EXISTS category VARCHAR(255),
         ADD COLUMN IF NOT EXISTS status VARCHAR(255),
         ADD COLUMN IF NOT EXISTS address VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS postCode VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS post_code VARCHAR(255),
         ADD COLUMN IF NOT EXISTS city VARCHAR(255),
         ADD COLUMN IF NOT EXISTS state VARCHAR(255),
         ADD COLUMN IF NOT EXISTS country VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS registeredName VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS registered_name VARCHAR(255),
         ADD COLUMN IF NOT EXISTS vat VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS paymentMethod VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS additionalData TEXT;
+        ADD COLUMN IF NOT EXISTS payment_method VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS additional_data TEXT;
         `;
         pool.query(addIsAdminColumnQuery, (err, _) => {
             if (err){
@@ -99,7 +99,7 @@ pool.query(createTableQuery, (err, _) => {
         });
     }
 });
-
+ */
 
 
 module.exports = pool;
