@@ -156,7 +156,10 @@ function Copyright(props) {
         }}
       >
         {'Copyright © '}
-        <Link color="inherit" href="https://globaltechno.io/">
+        <Link color="inherit" 
+          href="https://globaltechno.io/" 
+          target="_blank" 
+          rel="noopener noreferrer">
           Globaltechno OÜ
         </Link>{' '}
         {new Date().getFullYear()}

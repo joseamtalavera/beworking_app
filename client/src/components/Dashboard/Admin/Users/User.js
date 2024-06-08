@@ -394,7 +394,12 @@ export default function User() {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
               {!isEditing && (
-                <Button startIcon={ <EditIcon />} size="small" variant="outlined" onClick={() => setIsEditing(true)}>
+                <Button 
+                  startIcon={ <EditIcon />} 
+                  size="small" 
+                  variant="outlined" 
+                  onClick={() => setIsEditing(true)}
+                  >
                   Edit
                 </Button>
               )}

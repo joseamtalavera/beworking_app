@@ -23,9 +23,28 @@ const Users = () => {
 
   return (
     <MenuLayout>
-    <Box display="flex" flexDirection="column" alignItems="center" width="100%" marginTop="64px">
-      <Box display="flex" justifyContent="flex-end" width="100%" maxWidth="lg" marginBottom="1rem">
-       {/*  <Link to="/dashboard/admin/users/add-user" style={{ textDecoration: 'none' }}> */}
+
+      <Box display="flex" flexDirection="column" alignItems="flex-end" width="100%" marginTop="64px">
+        <Box sx={{ maxWidth: 'lg', margin: 'auto', boxShadow: 0, height: 50, width: '90%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={handleOpen}
+            sx={{  
+              marginBottom: '1rem',
+              marginRight: '0rem',
+            }}
+          >
+          Add
+          </Button>
+          </Box>
+          <BasicTable/>
+      </Box>
+
+
+   {/*  <Box display="flex" flexDirection="column" alignItems="flex-end" width="100%" marginTop="64px">
+      <Box width="100%" maxWidth="lg" marginRight="1 rem">
+       
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -34,12 +53,13 @@ const Users = () => {
           >
             Add
           </Button>
-       {/*  </Link> */}
+       
       </Box>
-      <Box width="100%" maxWidth="lg">
+      <Box width="100%" maxWidth="lg" marginRight="1 rem">
         <BasicTable/>
       </Box>
-    </Box>
+    </Box> */}
+
     <Modal
       open={open}
       onClose={handleClose}

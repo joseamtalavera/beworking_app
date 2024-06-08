@@ -85,8 +85,8 @@ export default function DataTable() {
     });
     
     return (
-        <Container maxWidth="lg">
-            <Box sx={{ boxShadow: 3, height: 500, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+       /*  <Container maxWidth="lg"> */
+            <Box sx={{ maxWidth: 'lg', margin: 'auto', boxShadow: 3, height: 500, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 {isLoading ? (
                     <CircularProgress />
                 ) : (
@@ -112,7 +112,7 @@ export default function DataTable() {
            
             )}
             </Box>
-        </Container>
+       /*  </Container> */
     );
 }
 

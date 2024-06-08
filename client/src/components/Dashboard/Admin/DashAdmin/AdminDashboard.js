@@ -1,46 +1,3 @@
-//AdminDashboard.js
-
-//import React from 'react';
-//import { Typography, Box } from '@mui/material';
-//import ResponsiveDrawerAdmin from '../../../Menu/ResponsiveDrawerAdmin';
-//import { DynamicLayout } from '../../../mu_components/mu_dashboard/mu_layout/mu_dynamic-layout';
-
-
-//function AdminDashboard() {
-    
-    
-    /* return (
-        <Box sx={{
-            backgroundColor: 'white', 
-            display:"flex", 
-            flexDirection:"column"
-            }}
-        >
-            //<DynamicLayout>{children}</DynamicLayout> 
-            <ResponsiveDrawerAdmin /> 
-                <Box sx={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    height: '100vh' 
-                    }}
-                >      
-                    <Typography 
-                        variant="h4">
-                            Welcome to the Admin Dashboard!
-                    </Typography>
-                </Box>
-            </Box>
-       
-    ); */
-
-    
-    
-//} 
-
-//export default AdminDashboard; 
-
 
 //AdminDashboard.js
 import * as React from 'react';
@@ -68,14 +25,24 @@ import { mainListItems, secondaryListItems } from './ListItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import { ListItemIcon } from '@mui/material';
+
 
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography 
+      variant="body2" 
+      color="text.secondary" 
+      align="center" 
+      {...props}
+      >
       {'Copyright © '}
-      <Link color="inherit" href="https://globaltechno.io/">
+      <Link 
+        color="inherit" 
+        href="https://globaltechno.io/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
         Globaltechno OÜ
       </Link>{' '}
       {new Date().getFullYear()}
@@ -83,6 +50,8 @@ function Copyright(props) {
     </Typography>
   );
 }
+
+  
 
 const drawerWidth = 240;
 
