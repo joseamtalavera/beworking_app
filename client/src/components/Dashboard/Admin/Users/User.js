@@ -23,6 +23,12 @@ import PaymentIcon from '@mui/icons-material/Payment';
 
 import MenuLayout from '../../../Menu/MenuLayout'; 
 import { useLocation } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+
 
 
 const theme = createTheme();
@@ -61,7 +67,7 @@ export default function User() {
     email: '',
     phone: '',
     type: '',
-    category: '',
+    /*category: '',*/
     status: '',
     registered_name: '',
     country: '',
@@ -71,6 +77,7 @@ export default function User() {
     address: '',
     vat: '',
     payment_method: '',
+    created: '',
   };
   const [user, setUser] = useState(initialUserState);
   console.log('User:', user);
@@ -128,6 +135,8 @@ export default function User() {
     setIsEditing(true);
   };
 
+  const [open, setOpen] = useState(false);
+
 
 
   return (
@@ -178,7 +187,14 @@ export default function User() {
                       <OutlinedInput 
                         size="small" 
                         value={user.name}
-                        onChange={(e) => setUser({ ...user, name: e.target.value })}
+                       /*  onChange={(e) => setUser({ ...user, name: e.target.value })} */
+                        onChange={(e) =>{
+                          if (e.target.value.trim() === '') {
+                              setOpen(true);
+                          } else {
+                              setUser({ ...user, name: e.target.value });
+                          }
+                        }}
                         disabled={!isEditing}
                       />
                     )}
@@ -226,12 +242,12 @@ export default function User() {
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Category</Typography>
+                  <Typography variant="body2" sx={{ color:'black'}}>Created</Typography>
                     </FormLabel>
                   <OutlinedInput 
                     size="small" 
-                    value={user.category}
-                    onChange={(e) => setUser({ ...user, category: e.target.value })}
+                    value={user.created}
+                    onChange={(e) => setUser({ ...user, created: e.target.value })}
                     disabled={!isEditing}
                     />
                 </FormControl>
@@ -405,20 +421,16 @@ export default function User() {
               )}
               {isEditing && (
                 <>
-                <Button size="small" variant="outlined" onClick={() => setIsEditing(false)}>
-                  Cancel
+                <Button 
+                  size="small" 
+                  variant="outlined" 
+                  onClick={() => setIsEditing(false)}>
+                    Cancel
                 </Button>
                 <Button 
                   size="small" 
-                  variant="contained" 
-                  sx={{ 
-                    backgroundColor: '#4caf50', 
-                    color: 'white',
-                    '&:hover': { 
-                      backgroundColor: 'darkgreen', 
-                      color: 'white',
-                     },
-                    }}
+                  color="success"
+                  variant="outlined" 
                   onClick={handleSave}
                   >
                   Save
@@ -429,6 +441,22 @@ export default function User() {
           </Box>
         </Card>
       </MenuLayout>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        >
+          <DialogTitle>{"Error"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Name cannot be empty
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
     </ThemeProvider>
   );
 }

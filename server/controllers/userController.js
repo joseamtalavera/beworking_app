@@ -1,5 +1,5 @@
 
-const { getAllUsers, addUserDb, updateUserDb } = require('../model/userQueries');
+const { getAllUsers, addUserDb, updateUserDb, deleteUserDb } = require('../model/userQueries');
 
 
 exports.getTableUsers = async (req, res, next) => {
@@ -30,6 +30,17 @@ exports.updateUser = async (req, res, next) => {
         res.json({ message: 'User updated successfully', user: updatedUser});
     } catch (error){
         console.error('Error in updateUser:', error);
+        next(error);
+    }
+}
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        console.log('Deleting use with id:', req.params.id);
+        const deletedUser = await deleteUserDb(req.params.id);
+        res.json({ message: 'User deleted successfully', user: deletedUser});
+    } catch (error) {
+        console.error('Error in deleteUser:', error);
         next(error);
     }
 }

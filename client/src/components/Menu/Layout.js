@@ -141,6 +141,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { mainListItems, secondaryListItems } from '../Dashboard/Admin/DashAdmin/ListItems';
 import orange from '@mui/material/colors/orange';
+import { useLocation } from 'react-router-dom';
+import { listItems, moreItems } from '../Dashboard/Admin/DashAdmin/ListItems';
 
 function Copyright(props) {
     return (
@@ -155,7 +157,7 @@ function Copyright(props) {
             padding: '40px',
         }}
       >
-        {'Copyright © '}
+        {'Powered by '}
         <Link color="inherit" 
           href="https://globaltechno.io/" 
           target="_blank" 
@@ -229,6 +231,14 @@ export default function Layout({ children }) {
     setOpen(!open);
   };
 
+  const location = useLocation();
+  const allItems = [...listItems, ...moreItems];
+  let currentPage = allItems.find((item) => item.path === location.pathname)?.text;
+  if (!currentPage) {
+    const parentPath = location.pathname.split('/').slice(0, -1).join('/');
+    currentPage = allItems.find((item) => item.path === parentPath)?.text;
+  }
+
   return (
     <ThemeProvider theme={Theme}>
       <Box sx={{ display: 'flex' }}>
@@ -258,7 +268,8 @@ export default function Layout({ children }) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              {/* Dashboard */}
+              {currentPage}
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

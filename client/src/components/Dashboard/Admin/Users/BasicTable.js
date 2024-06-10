@@ -8,6 +8,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Avatar from '@mui/material/Avatar';
+import ResponsiveDialog from '../../../../Utils/ResponsiveDialog';
+
+
 
 
 export default function DataTable() {
@@ -19,12 +26,10 @@ export default function DataTable() {
 
     const columns = [
         //{ field: 'id', headerName: 'ID', width: 100, hide: true }, 
-        { field: 'name', headerName: 'Name', width: 300, filterable: true },
-        { field: 'email', headerName: 'Email', width: 200, filterable: true },
-        /* {
-            field: 'nameAndEmail',
-            headerName: 'Name',
-            width: 250,
+        { 
+            field: 'name', 
+            headerName: 'Name', 
+            width: 250, 
             filterable: true,
             renderCell: (params) => {
                 const user = params.row;
@@ -32,30 +37,67 @@ export default function DataTable() {
                     console.log('User not found');
                     return null;
                 }
-                if(!user.email) {
-                    console.log('Email not found');
-                    return null;
-                }
-
-                console.log(user.name, user.email);
-
                 return (
-                    
-                    <div>
-                    {user.name ? user.name : ''}<br />{user.email}
-                </div>
-                )
+                    <div style={{ display: 'flex', alignItems: 'center'}}>
+                        <Avatar scr={user.avatar} style={{ marginRight: 10}} />
+                        {user.name}
+                    </div>
+                );
             }
-        }, */
+        },
+        { field: 'email', headerName: 'Email', width: 200, filterable: true },
         { field: 'phone', headerName: 'Phone', width: 200, filterable: true},
-        { field: 'category', headerName: 'Category', width: 175, filterable: true },
-        { field: 'status', headerName: 'Status', width: 175, filterable: true },
+        { field: 'type', headerName: 'Type', width: 200, filterable: true },
+        { 
+            field: 'status', 
+            headerName: 'Status', 
+            width: 200, 
+            filterable: true,
+            renderCell: (params) => {
+                const status = params.row.status;
+                if (status === 'active') {
+                    return (
+                        <Chip
+                            sx={{
+                                borderColor: 'green',
+                                color: 'black',
+                                height: '24px',
+                                '& .MuiChip-icon': {
+                                    color: 'green',
+                                },
+                            }}
+                            variant="outlined"
+                            label="Active"
+                            icon={<CheckCircleIcon fontSize='small' />}
+                        />
+                          
+                    );
+                } else {   
+                    return (
+                        <Chip
+                            sx={{
+                                borderColor: 'red',
+                                color: 'black',
+                                height: '24px',
+                                '& .MuiChip-icon': {
+                                    color: 'red',
+                                },
+                            }}
+                            variant="outlined"
+                            label="Inactive"
+                            icon={<CancelIcon fontSize='small' />}
+                        />
+                            
+                    );
+                }
+            }
+        },
         //{ field: 'created', headerName: 'Created', width: 200, filterable: true, type: 'date' },
         { 
             field: 'delete', 
             headerName: ' ', 
             sortable: false,
-            width: 100, 
+            width: 50, 
             disableClickEventBubbling: true,
             renderCell: (params) => {
                 const onClick = async () => {
@@ -72,9 +114,10 @@ export default function DataTable() {
                     setUsers(users.filter(user => user.id !== id));
                 };
                 return (
-                    <IconButton style={{color: 'orange'}} onClick={onClick}>
+                    /* <IconButton style={{color: 'orange'}} onClick={onClick}>
                         <DeleteOutlineIcon />
-                    </IconButton>
+                    </IconButton> */
+                    <ResponsiveDialog onDelete={onClick} icon={<DeleteOutlineIcon style={{color: 'orange'}} />} />
                 );
                 
             }

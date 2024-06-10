@@ -4,7 +4,10 @@ const saltRounds = 10;
 
 const getAllUsers = async () => {
     try { 
-        const result = await pool.query('SELECT * FROM users');
+        //const result = await pool.query('SELECT * FROM users');
+        const result = await pool.query(
+            "SELECT id, name, email, phone, type, category, status, registered_name, country, state, city, post_code, address, vat, payment_method, TO_CHAR(created, 'DD-MM-YYYY HH24:MI:SS') as created FROM users"
+        );
         return result.rows;
     } catch (error) {
         console.error('Error in getAllUsers:', error);
@@ -49,8 +52,22 @@ const updateUserDb = async (user) => {
     }
 }
 
+const deleteUserDb = async (id) => {
+    try {
+        const result = await pool.query(
+            'DELETE FROM users WHERE id = $1 RETURNING *', 
+            [id]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deleteUser:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getAllUsers,
     addUserDb,
-    updateUserDb
+    updateUserDb,
+    deleteUserDb
 };

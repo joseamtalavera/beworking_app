@@ -89,7 +89,7 @@ import {
   HelpOutline as HelpIcon,
 } from '@mui/icons-material';
 
-const listItems = [
+ export const listItems = [
     { text: 'Users', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/admin/users'},
     { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} /> },
     { text: 'Bookings', icon: <BookingsIcon sx={{fontSize: 20}} /> },
@@ -97,7 +97,7 @@ const listItems = [
     // Add more items as needed
 ];
 
-const moreItems = [
+export const moreItems = [
     { text: 'Maintenance', icon: <MaintenanceIcon sx={{fontSize: 20}} /> },
     { text: 'Reviews', icon: <ReviewsIcon sx={{fontSize: 20}} /> },
     { text: 'Centres', icon: <CentresIcon sx={{fontSize: 20}} /> },
