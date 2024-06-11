@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { FormLabel } from '@mui/material';
+import { FormHelperText, FormLabel } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -28,38 +28,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+//import FormHelperText from '@mui/material/FormHelperText';
 
 
 
 const theme = createTheme();
 
 export default function User() {
-
-/*   const location = useLocation();
-
-  function mapUserToState(user) {
-    return {
-      name: user.name || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      type: user.type || '',
-      category: user.category || '',
-      status: user.status || '',
-      registeredName: user.registeredName || '',
-      country: user.country || '',
-      state: user.state || '',
-      city: user.city || '',
-      postCode: user.postCode || '',
-      address: user.address || '',
-      vat: user.vat || '',
-      paymentMethod: user.paymentMethod || '',
-    };
-  }
-
-  const initialUserState = location.state ? mapUserToState(location.state.user) : mapUserToState({});
-  const [user, setUser] = useState(initialUserState);
-  console.log('User:', user); */
-
 
   const location = useLocation();
   const initialUserState = location.state ? location.state.user : {
@@ -80,7 +56,13 @@ export default function User() {
     created: '',
   };
   const [user, setUser] = useState(initialUserState);
-  console.log('User:', user);
+  const [isEditing, setIsEditing] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [upadateSuccess, setUpadateSuccess] = useState(false);
+  const [nameErrorMessage, setNameErrorMessage] = useState(null);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(null);
+  const [registered_nameErrorMessage, setRegisteredNameErrorMessage] = useState(null);
 
   // only use if it is necessary to fetch the user data when not passed form BasicTable.js
   /* useEffect (() => {
@@ -111,6 +93,36 @@ export default function User() {
   }, []); */
 
   const handleSave = async () => {
+    console.log('User:', user);
+
+    let hasError = false;
+
+    if (!user.name || user.name.trim() === '') {
+      setNameErrorMessage('Name is required');
+      hasError = true;
+    } else {
+      setNameErrorMessage(null);
+    }
+
+    if (!user.email || user.email.trim() === '') {
+      setEmailErrorMessage('Email is required');
+      hasError = true;
+    } else {
+      setEmailErrorMessage(null);
+    }
+
+    if (!user.registered_name || user.registered_name.trim() === '') {
+      setRegisteredNameErrorMessage('Registered Name is required');
+      hasError = true;
+    } else {
+      setRegisteredNameErrorMessage(null);
+    }
+
+    if (hasError) {
+      setOpen(true);
+      return;
+    }
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${initialUserState.id}`, {
         method: 'PUT',
@@ -124,18 +136,18 @@ export default function User() {
       }
       const updatedUser = await response.json();
       setUser(updatedUser);
+      setIsSaveDialogOpen(true);
+      setIsEditing(false);
     } catch (error) {
       console.error('Error updating user:', error);
     }
-  };
-
-
-  const [isEditing, setIsEditing] = useState(false);
+  }
+  
   const handleEditPicture = () => {
     setIsEditing(true);
   };
 
-  const [open, setOpen] = useState(false);
+  
 
 
 
@@ -181,7 +193,9 @@ export default function User() {
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel variant="body2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                    <Typography variant="body2" sx={{ color:'black'}}>Name</Typography>
+                    <Typography variant="body2" sx={{ color:'black'}}>
+                      Name<span style={{ color: 'orange'}}>*</span>
+                    </Typography>
                     </FormLabel>
                     {user && (
                       <OutlinedInput 
@@ -190,27 +204,43 @@ export default function User() {
                        /*  onChange={(e) => setUser({ ...user, name: e.target.value })} */
                         onChange={(e) =>{
                           if (e.target.value.trim() === '') {
-                              setOpen(true);
+                              /* setOpen(true);*/
+                              setNameErrorMessage('Name is required');  
                           } else {
-                              setUser({ ...user, name: e.target.value });
+                             {/*  setUser({ ...user, name: e.target.value }); */}
+                            setUser({ ...user, name: e.target.value });
+                            setNameErrorMessage(null);
                           }
                         }}
                         disabled={!isEditing}
                       />
                     )}
+                   
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Email</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
-                    size="small"
-                    value={user.email}
-                    onChange={(e) => setUser({ ...user, email: e.target.value })}  
-                    disabled={!isEditing}
-                    />
+                    <Typography variant="body2" sx={{ color:'black'}}>
+                      Email<span style={{ color: 'orange'}}>*</span>
+                    </Typography>
+                  </FormLabel>
+                    {user && (
+                      <OutlinedInput 
+                        size="small"
+                        value={user.email}
+                        onChange={(e) => {
+                        if (e.target.value.trim() === '') {
+                          // setOpen(true);
+                          setEmailErrorMessage('Email is required');
+                        } else { 
+                          setUser({ ...user, email: e.target.value });
+                          setEmailErrorMessage(null);
+                        }
+                        }}  
+                        disabled={!isEditing}
+                      />
+                    )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -303,14 +333,26 @@ export default function User() {
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel variant="body2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                    <Typography variant="body2" sx={{  color:'black'}}>Registered Name</Typography>
+                    <Typography variant="body2" sx={{  color:'black'}}>
+                      Registered Name<span style={{ color: 'orange'}}>*</span>
+                    </Typography>
                     </FormLabel>
-                  <OutlinedInput 
-                    size="small" 
-                    value={user.registered_name}
-                    onChange={(e) => setUser({ ...user, registered_name: e.target.value })}
-                    disabled={!isEditing}
-                    />
+                    {user && (
+                      <OutlinedInput 
+                        size="small"
+                        value={user.registered_name}
+                        onChange={(e) => {
+                        if (e.target.value.trim() === '') {
+                          // setOpen(true);
+                          setEmailErrorMessage('Registered Name is required');
+                        } else { 
+                          setUser({ ...user, registered_name: e.target.value });
+                          setEmailErrorMessage(null);
+                        }
+                        }}  
+                        disabled={!isEditing}
+                      />
+                    )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -440,15 +482,14 @@ export default function User() {
             </CardActions>
           </Box>
         </Card>
-      </MenuLayout>
-      <Dialog
+        <Dialog
         open={open}
         onClose={() => setOpen(false)}
         >
           <DialogTitle>{"Error"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Name cannot be empty
+              {nameErrorMessage || emailErrorMessage || registered_nameErrorMessage ||'this field is required'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -457,6 +498,27 @@ export default function User() {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog
+          open={isSaveDialogOpen}
+          onClose={() => setIsSaveDialogOpen(false)}
+          fullWidth={true}
+          maxWidth={'xs'}
+          PaperProps={{ 
+            style: { 
+              
+              boxShadow: 'none',
+              borderRadius: '5px'
+            } 
+          }}
+        >
+          <DialogTitle style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <CheckCircleOutlineIcon style={{ color:'green', fontSize: '3rem'}} />
+            User updated successfully
+          </DialogTitle>
+          </Dialog>
+
+      </MenuLayout>
+     
     </ThemeProvider>
   );
 }
