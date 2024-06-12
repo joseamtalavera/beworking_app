@@ -27,7 +27,8 @@ exports.updateUser = async (req, res, next) => {
     try {
         console.log('Request body:', req.body);
         const updatedUser = await updateUserDb(req.body);
-        res.json({ message: 'User updated successfully', user: updatedUser});
+        console.log('Updated user:', updatedUser);
+        res.json({ message: 'User updated succesfully', user: updatedUser});
     } catch (error){
         console.error('Error in updateUser:', error);
         next(error);

@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { FormHelperText, FormLabel } from '@mui/material';
+import { FormHelperText, FormLabel, MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -20,6 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import PersonOutLineIcon from '@mui/icons-material/PersonOutline';
 import PaymentIcon from '@mui/icons-material/Payment';
+import Select from '@mui/material/Select';
 
 import MenuLayout from '../../../Menu/MenuLayout'; 
 import { useLocation } from 'react-router-dom';
@@ -29,15 +30,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-//import FormHelperText from '@mui/material/FormHelperText';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { GiConsoleController } from 'react-icons/gi';
 
 
 
 const theme = createTheme();
 
 export default function User() {
+  
 
   const location = useLocation();
+  /* const initialUserState = location.state ? {
+    ...location.state.user,
+    type: location.state.user.type || '',
+  } : { */
+   
   const initialUserState = location.state ? location.state.user : {
     name: '',
     email: '',
@@ -62,6 +70,7 @@ export default function User() {
   const [upadateSuccess, setUpadateSuccess] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState(null);
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState(null);
   const [registered_nameErrorMessage, setRegisteredNameErrorMessage] = useState(null);
 
   // only use if it is necessary to fetch the user data when not passed form BasicTable.js
@@ -93,9 +102,11 @@ export default function User() {
   }, []); */
 
   const handleSave = async () => {
-    console.log('User:', user);
+    //console.log('User:', user);
 
     let hasError = false;
+    console.log('Validating user:', user);
+  
 
     if (!user.name || user.name.trim() === '') {
       setNameErrorMessage('Name is required');
@@ -111,6 +122,22 @@ export default function User() {
       setEmailErrorMessage(null);
     }
 
+  if (!user.phone || user.phone.trim() === '') {
+    setPhoneErrorMessage('Phone is required');
+    hasError = true;
+  } else {
+      //const phoneNumber = parsePhoneNumberFromString(user.phone);
+      const phoneRegex = /^\+34 \d{3} \d{3} \d{3}$/;
+      //if (!phoneNumber) {
+      if (!phoneRegex.test(user.phone)) {
+      setPhoneErrorMessage('Invalid phone number. Please enter the phone number in the correct format. "+34 XXX XXX XXX".');
+      hasError = true;
+    } else {
+      setPhoneErrorMessage(null);
+      //setUser ({ ...user, phone: phoneNumber.formatInternational()});
+    } 
+  }
+
     if (!user.registered_name || user.registered_name.trim() === '') {
       setRegisteredNameErrorMessage('Registered Name is required');
       hasError = true;
@@ -125,6 +152,7 @@ export default function User() {
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${initialUserState.id}`, {
+      //const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -135,8 +163,12 @@ export default function User() {
         throw new Error('Failed to update user');
       }
       const updatedUser = await response.json();
+      console.log('Updated user:', updatedUser);
       setUser(updatedUser);
       setIsSaveDialogOpen(true);
+      setTimeout(() => {
+        setIsSaveDialogOpen(false);
+      }, 3000);
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating user:', error);
@@ -197,25 +229,12 @@ export default function User() {
                       Name<span style={{ color: 'orange'}}>*</span>
                     </Typography>
                     </FormLabel>
-                    {user && (
                       <OutlinedInput 
                         size="small" 
                         value={user.name}
-                       /*  onChange={(e) => setUser({ ...user, name: e.target.value })} */
-                        onChange={(e) =>{
-                          if (e.target.value.trim() === '') {
-                              /* setOpen(true);*/
-                              setNameErrorMessage('Name is required');  
-                          } else {
-                             {/*  setUser({ ...user, name: e.target.value }); */}
-                            setUser({ ...user, name: e.target.value });
-                            setNameErrorMessage(null);
-                          }
-                        }}
+                        onChange={(e) => setUser({ ...user, name: e.target.value })}
                         disabled={!isEditing}
-                      />
-                    )}
-                   
+                      />    
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -225,22 +244,12 @@ export default function User() {
                       Email<span style={{ color: 'orange'}}>*</span>
                     </Typography>
                   </FormLabel>
-                    {user && (
                       <OutlinedInput 
                         size="small"
                         value={user.email}
-                        onChange={(e) => {
-                        if (e.target.value.trim() === '') {
-                          // setOpen(true);
-                          setEmailErrorMessage('Email is required');
-                        } else { 
-                          setUser({ ...user, email: e.target.value });
-                          setEmailErrorMessage(null);
-                        }
-                        }}  
+                        onChange={(e) =>  setUser({ ...user, email: e.target.value })} 
                         disabled={!isEditing}
                       />
-                    )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -259,16 +268,25 @@ export default function User() {
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Type</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
+                    <Typography variant="body2" sx={{ color:'black'}}>Type</Typography>
+                  </FormLabel>
+            
+                  <Select
                     size="small" 
                     value={user.type}
                     onChange={(e) => setUser({ ...user, type: e.target.value })}
                     disabled={!isEditing}
-                  />
+                  >
+                    
+                    <MenuItem value={"Virtual Office"}>Virtual Office</MenuItem>
+                    <MenuItem value={"Meeting Room"}>Meeting Room</MenuItem>
+                    <MenuItem value={"Cowork"}>Cowork</MenuItem> 
+                  
+                  </Select>
                 </FormControl>
               </Grid>
+
+
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
@@ -337,22 +355,12 @@ export default function User() {
                       Registered Name<span style={{ color: 'orange'}}>*</span>
                     </Typography>
                     </FormLabel>
-                    {user && (
                       <OutlinedInput 
                         size="small"
                         value={user.registered_name}
-                        onChange={(e) => {
-                        if (e.target.value.trim() === '') {
-                          // setOpen(true);
-                          setEmailErrorMessage('Registered Name is required');
-                        } else { 
-                          setUser({ ...user, registered_name: e.target.value });
-                          setEmailErrorMessage(null);
-                        }
-                        }}  
+                        onChange={(e) => setUser({ ...user, registered_name: e.target.value })}
                         disabled={!isEditing}
                       />
-                    )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -488,12 +496,12 @@ export default function User() {
         >
           <DialogTitle>{"Error"}</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              {nameErrorMessage || emailErrorMessage || registered_nameErrorMessage ||'this field is required'}
+            <DialogContentText sx={{ color: 'orange'}}>
+              {nameErrorMessage || emailErrorMessage || phoneErrorMessage || registered_nameErrorMessage ||'this field is required'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">
+            <Button onClick={() => setOpen(false)} color="primary" variant= "outlined" sx={{ color: 'green', borderColor: 'green'}}>
               OK
             </Button>
           </DialogActions>
@@ -505,7 +513,7 @@ export default function User() {
           maxWidth={'xs'}
           PaperProps={{ 
             style: { 
-              
+              color: 'orange',
               boxShadow: 'none',
               borderRadius: '5px'
             } 

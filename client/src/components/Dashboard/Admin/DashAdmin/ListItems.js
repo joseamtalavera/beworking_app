@@ -87,9 +87,11 @@ import {
   LocalOfferOutlined as ProductIcon,
   SettingsOutlined as SettingsIcon,
   HelpOutline as HelpIcon,
+  DashboardOutlined as DashboardIcon,
 } from '@mui/icons-material';
 
  export const listItems = [
+    { text: 'Dashboard', icon: <DashboardIcon sx={{fontSize: 20}} />, path: '/dashboard/admin'},
     { text: 'Users', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/admin/users'},
     { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} /> },
     { text: 'Bookings', icon: <BookingsIcon sx={{fontSize: 20}} /> },

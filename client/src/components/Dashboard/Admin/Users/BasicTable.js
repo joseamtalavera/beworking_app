@@ -47,11 +47,11 @@ export default function DataTable() {
         },
         { field: 'email', headerName: 'Email', width: 200, filterable: true },
         { field: 'phone', headerName: 'Phone', width: 200, filterable: true},
-        { field: 'type', headerName: 'Type', width: 200, filterable: true },
+        { field: 'type', headerName: 'Type', width: 155, filterable: true },
         { 
             field: 'status', 
             headerName: 'Status', 
-            width: 200, 
+            width: 150, 
             filterable: true,
             renderCell: (params) => {
                 const status = params.row.status;
@@ -185,13 +185,13 @@ export default function DataTable() {
     
     return (
        /*  <Container maxWidth="lg"> */
-            <Box sx={{ maxWidth: 'lg', margin: 'auto', boxShadow: 3, height: 600, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Box sx={{ maxWidth: 'lg', margin: 'auto', boxShadow: 3, height: 550, width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 {isLoading ? (
                     <CircularProgress />
                 ) : (
            
             <DataGrid
-                style={{ height: 600, width: '100%', cursor: 'pointer'}}
+                style={{ height: 550, width: '100%', cursor: 'pointer'}}
                 rows={users}
                 columns={columns}
                 pageSize={25}
