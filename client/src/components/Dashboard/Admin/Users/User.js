@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { FormHelperText, FormLabel, MenuItem } from '@mui/material';
+import { Autocomplete, FormHelperText, FormLabel, MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -44,7 +44,7 @@ export default function User() {
   /* const initialUserState = location.state ? {
     ...location.state.user,
     type: location.state.user.type || '',
-  } : { */
+  } : {  */
    
   const initialUserState = location.state ? location.state.user : {
     name: '',
@@ -72,6 +72,10 @@ export default function User() {
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState(null);
   const [registered_nameErrorMessage, setRegisteredNameErrorMessage] = useState(null);
+  const [type, setType] = useState(user.type || '');// this is the solution at the problem with the select value not been rendered
+  const [status, setStatus] = useState(user.status || '');// this is the solution at the problem with the select value not been rendered
+  const countries = ["Spain", "France", "Germany", "Italy", "Portugal", "United Kingdom", "United States"];
+  
 
   // only use if it is necessary to fetch the user data when not passed form BasicTable.js
   /* useEffect (() => {
@@ -174,6 +178,18 @@ export default function User() {
       console.error('Error updating user:', error);
     }
   }
+
+  useEffect(() => {
+    let timeoutId;
+    if (isSaveDialogOpen) {
+      timeoutId = setTimeout(() => {
+        setIsSaveDialogOpen(false);
+      }, 3000);
+    }
+    return () => {
+      clearTimeout(timeoutId);
+    }, [isSaveDialogOpen];
+  });
   
   const handleEditPicture = () => {
     setIsEditing(true);
@@ -226,7 +242,7 @@ export default function User() {
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel variant="body2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
                     <Typography variant="body2" sx={{ color:'black'}}>
-                      Name<span style={{ color: 'orange'}}>*</span>
+                      Name<span style={{ color: 'orange', fontSize: '1.5em'}}>*</span>
                     </Typography>
                     </FormLabel>
                       <OutlinedInput 
@@ -241,7 +257,7 @@ export default function User() {
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                     <Typography variant="body2" sx={{ color:'black'}}>
-                      Email<span style={{ color: 'orange'}}>*</span>
+                      Email<span style={{ color: 'orange', fontSize: '1.5em'}}>*</span>
                     </Typography>
                   </FormLabel>
                       <OutlinedInput 
@@ -273,16 +289,23 @@ export default function User() {
             
                   <Select
                     size="small" 
-                    value={user.type}
-                    onChange={(e) => setUser({ ...user, type: e.target.value })}
+                    //value={user.type || ''}
+                    value={type}
+                    onChange={(e) => 
+                      {
+                      console.log('e.target.value:', e.target.value);
+                      setType(e.target.value);
+                      setUser({ ...user, type: e.target.value || ''});
+                      }
+                    }
                     disabled={!isEditing}
                   >
-                    
+                    <MenuItem value="" style={{ display: 'none' }}></MenuItem>
                     <MenuItem value={"Virtual Office"}>Virtual Office</MenuItem>
                     <MenuItem value={"Meeting Room"}>Meeting Room</MenuItem>
                     <MenuItem value={"Cowork"}>Cowork</MenuItem> 
-                  
                   </Select>
+
                 </FormControl>
               </Grid>
 
@@ -305,12 +328,25 @@ export default function User() {
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                   <Typography variant="body2" sx={{ color:'black'}}>Status</Typography>
                     </FormLabel>
-                  <OutlinedInput 
+                  
+                    <Select
                     size="small" 
-                    value={user.status}
-                    onChange={(e) => setUser({ ...user, status: e.target.value })}
+                    //value={user.type || ''}
+                    value={status}
+                    onChange={(e) => 
+                      {
+                      console.log('e.target.value:', e.target.value);
+                      setStatus(e.target.value);
+                      setUser({ ...user, status: e.target.value || ''});
+                      }
+                    }
                     disabled={!isEditing}
-                    />
+                  >
+                    <MenuItem value="" style={{ display: 'none' }}></MenuItem>
+                    <MenuItem value={"active"}>Active</MenuItem>
+                    <MenuItem value={"inactive"}>Inactive</MenuItem>
+                  </Select>
+
                 </FormControl>
               </Grid>        
             </Grid>   
@@ -352,7 +388,7 @@ export default function User() {
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                   <FormLabel variant="body2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
                     <Typography variant="body2" sx={{  color:'black'}}>
-                      Registered Name<span style={{ color: 'orange'}}>*</span>
+                      Registered Name<span style={{ color: 'orange', fontSize: '1.5em'}}>*</span>
                     </Typography>
                     </FormLabel>
                       <OutlinedInput 
@@ -368,12 +404,18 @@ export default function User() {
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                   <Typography variant="body2" sx={{ color:'black'}}>Country</Typography>
                     </FormLabel>
-                  <OutlinedInput 
+
+
+                  <Autocomplete 
                     size="small" 
                     value={user.country}
                     onChange={(e) => setUser({ ...user, country: e.target.value })}
+                    options={countries}
+                    renderInput={(params) => <OutlinedInput {...params} />}
                     disabled={!isEditing}
                     />
+
+
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
