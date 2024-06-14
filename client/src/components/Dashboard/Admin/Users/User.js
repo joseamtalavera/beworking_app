@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { Autocomplete, FormHelperText, FormLabel, MenuItem } from '@mui/material';
+import { Autocomplete, FormLabel, MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -30,8 +30,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { GiConsoleController } from 'react-icons/gi';
+import TextField from '@mui/material/TextField';
+import {Country, State, City, getStatesOfCountry} from 'country-state-city';
+
+
+
 
 
 
@@ -74,8 +77,18 @@ export default function User() {
   const [registered_nameErrorMessage, setRegisteredNameErrorMessage] = useState(null);
   const [type, setType] = useState(user.type || '');// this is the solution at the problem with the select value not been rendered
   const [status, setStatus] = useState(user.status || '');// this is the solution at the problem with the select value not been rendered
-  const countries = ["Spain", "France", "Germany", "Italy", "Portugal", "United Kingdom", "United States"];
-  
+  const [country, setCountry] = useState(user.country || '');// this is the solution at the problem with the select value not been rendered
+  const [state, setState] = useState(user.state || '');// this is the solution at the problem with the select value not been rendered
+  let countries = Country.getAllCountries();
+  //let states = State.getStatesOfCountry(country);
+  const [states, setStates] = useState([]);
+
+  useEffect(() => {
+    if (country) {
+      const statesOfCountry = State.getStatesOfCountry(country).map((state) => state.name);
+      setStates(statesOfCountry);
+    }
+  }, [country]);
 
   // only use if it is necessary to fetch the user data when not passed form BasicTable.js
   /* useEffect (() => {
@@ -400,22 +413,22 @@ export default function User() {
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
+                <FormControl variant="outlined" sx={{ width: '100%', mt:1.3 }}>
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Country</Typography>
-                    </FormLabel>
-
-
+                    <Typography variant="body2" sx={{ color:'black'}}>Country</Typography>
+                  </FormLabel>
                   <Autocomplete 
                     size="small" 
-                    value={user.country}
-                    onChange={(e) => setUser({ ...user, country: e.target.value })}
-                    options={countries}
-                    renderInput={(params) => <OutlinedInput {...params} />}
+                    value={country}
+                    onChange={(e, newValue) => {
+                      setUser({ ...user, country: newValue });
+                      setCountry(newValue);
+                    }}
+                    
+                    options={countries.map((country) => country.name)}
+                    renderInput={(params) => <TextField {...params} variant="outlined" />}
                     disabled={!isEditing}
-                    />
-
-
+                  />
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -423,10 +436,16 @@ export default function User() {
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                   <Typography variant="body2" sx={{ color:'black'}}>State</Typography>
                     </FormLabel>
-                  <OutlinedInput 
+                  <Autocomplete
                     size="small" 
-                    value={user.state}
-                    onChange={(e) => setUser({ ...user, state: e.target.value })}
+                    value={state}
+                    onChange={(e, newValue) => {
+                      setUser({ ...user, state: newValue });
+                      setState(newValue);
+                    }}
+                   
+                    options={states}
+                    renderInput={(params) => <TextField {...params} variant="outlined" />}
                     disabled={!isEditing}
                     />
                 </FormControl>
