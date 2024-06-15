@@ -20,6 +20,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import PersonOutLineIcon from '@mui/icons-material/PersonOutline';
 import PaymentIcon from '@mui/icons-material/Payment';
+import BookOnLineIcon from '@mui/icons-material/BookOnline';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DescriptionOutLinedIcon from '@mui/icons-material/DescriptionOutlined';
+import CommentOutLinedIcon from '@mui/icons-material/CommentOutlined';
+import CommentIcon from '@mui/icons-material/Comment';
 import Select from '@mui/material/Select';
 
 import MenuLayout from '../../../Menu/MenuLayout'; 
@@ -31,7 +36,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
-import {Country, State, City, getStatesOfCountry} from 'country-state-city';
+import {Country, State, City} from 'country-state-city';
+
+const options = [
+  { name: 'Profile', icon: <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} /> },
+  { name: 'Billing', icon: <PaymentIcon sx={{ color: 'orange', fontSize: 30 }} /> },
+  //{ name: 'Booking', icon: <BookOnLineIcon sx={{ color: 'orange', fontSize: 30 }} /> },
+  { name: 'Documents', icon: <DescriptionOutLinedIcon sx={{ color: 'orange', fontSize: 30 }} /> },
+  { name: 'Comments', icon: <CommentOutLinedIcon sx={{ color: 'orange', fontSize: 30 }} /> },
+];
 
 
 
@@ -42,19 +55,12 @@ const theme = createTheme();
 
 export default function User() {
   
-
   const location = useLocation();
-  /* const initialUserState = location.state ? {
-    ...location.state.user,
-    type: location.state.user.type || '',
-  } : {  */
-   
   const initialUserState = location.state ? location.state.user : {
     name: '',
     email: '',
     phone: '',
     type: '',
-    /*category: '',*/
     status: '',
     registered_name: '',
     country: '',
@@ -70,25 +76,44 @@ export default function User() {
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-  const [upadateSuccess, setUpadateSuccess] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState(null);
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState(null);
   const [registered_nameErrorMessage, setRegisteredNameErrorMessage] = useState(null);
   const [type, setType] = useState(user.type || '');// this is the solution at the problem with the select value not been rendered
-  const [status, setStatus] = useState(user.status || '');// this is the solution at the problem with the select value not been rendered
-  const [country, setCountry] = useState(user.country || '');// this is the solution at the problem with the select value not been rendered
-  const [state, setState] = useState(user.state || '');// this is the solution at the problem with the select value not been rendered
+  const [status, setStatus] = useState(user.status || '');
+  
   let countries = Country.getAllCountries();
-  //let states = State.getStatesOfCountry(country);
+  const [country, setCountry] = useState(user.country || '');
+  
+  const [state, setState] = useState(user.state || '');
   const [states, setStates] = useState([]);
+  
+  const [city, setCity] = useState(user.city || '');
+  const [cities, setCities] = useState([]);
+
+  
 
   useEffect(() => {
     if (country) {
-      const statesOfCountry = State.getStatesOfCountry(country).map((state) => state.name);
-      setStates(statesOfCountry);
+      const countryObject = countries.find(c => c.name === country);
+      if (countryObject) {
+        const statesOfCountry = State.getStatesOfCountry(countryObject.isoCode).map((state) => state.name);
+        setStates(statesOfCountry);
+      }
     }
   }, [country]);
+
+  useEffect(() => {
+    if (state) {
+      const countryObject = countries.find(c => c.name === country);
+      const stateObject = State.getStatesOfCountry(countryObject.isoCode).find(s => s.name === state);
+      if (stateObject) {
+        const citiesOfState = City.getCitiesOfState(countryObject.isoCode, stateObject.isoCode).map((city) => city.name);
+        setCities(citiesOfState);
+      }
+    }
+  }, [state]);
 
   // only use if it is necessary to fetch the user data when not passed form BasicTable.js
   /* useEffect (() => {
@@ -217,12 +242,26 @@ export default function User() {
       <MenuLayout >
         <Card sx={{ maxWidth: '60%', margin: 'auto', mt: 5, mb: 2, }}>
         <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+            {options.map((option) => (
+              <Box key={option.name} sx={{ display: 'flex', alignItems: 'center', mr:8 }}>
+                {option.icon}
+                <Box>
+                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:1, color: 'orange'}}>
+                    {option.name}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} />
             <Box>
-              <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>Profile</Typography>
+              <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>
+                Profile
+              </Typography>
             </Box>
-          </Box>
+          </Box> */}
         <Box sx={{ position: 'relative', display: 'inline-flex', mr: 2 }}>
           <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" sx={{ width: 80, height: 80 }} /> {/* User avatar */}
             <IconButton 
@@ -365,19 +404,7 @@ export default function User() {
             </Grid>   
             </Box>
           </Stack>
-          {/* <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
-            <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
-              <Button size="small" variant="outlined">
-                Cancel
-              </Button>
-              <Button size="small" variant="contained" sx={{ backgroundColor: '#4caf50', color: 'white'}}>
-                Save
-              </Button>
-            </CardActions>
-          </Box> */}
           
-       {/*  </Card> */}
-       {/*  <Card sx={{ maxWidth: '60%', margin: 'auto', mt: 2, mb: 2, mb: 5 }}> */}
           <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center'}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <PaymentIcon sx={{ color: 'orange', fontSize: 30 }} />
@@ -455,10 +482,15 @@ export default function User() {
                   <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                   <Typography variant="body2" sx={{ color:'black'}}>City</Typography>
                     </FormLabel>
-                  <OutlinedInput 
+                  <Autocomplete 
                     size="small" 
-                    value={user.city}
-                    onChange={(e) => setUser({ ...user, city: e.target.value })}
+                    value={city}
+                    onChange={(e, newValue) => {
+                      setUser({ ...user, city: newValue });
+                      setCity(newValue);
+                    }}
+                    options={cities}
+                    renderInput={(params) => <TextField {...params} variant="outlined" />}
                     disabled={!isEditing}
                   />
                 </FormControl>
