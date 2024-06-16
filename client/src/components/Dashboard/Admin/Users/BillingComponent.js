@@ -37,14 +37,10 @@ import DialogActions from '@mui/material/DialogActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
 import {Country, State, City} from 'country-state-city';
-import BillingComponent from './BillingComponent';
-import CommentsComponent from './CommentsComponent';
-import DocumentsComponent from './DocumentsComponent';
+
 import ProfileComponent from './ProfileComponent';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { BorderBottom } from '@mui/icons-material';
+import DocumentsComponent from './DocumentsComponent';
+import CommmentsComponent from './CommentsComponent';
 
 const options = [
   { name: 'Profile', icon: <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} /> },
@@ -100,7 +96,7 @@ export default function User() {
   const [city, setCity] = useState(user.city || '');
   const [cities, setCities] = useState([]);
 
-  const [selectedOption, setSelectedOption] = useState('Profile');
+  const [selectedOption, setSelectedOption] = useState('User');
 
   
 
@@ -252,7 +248,7 @@ export default function User() {
       <MenuLayout >
         <Card sx={{ maxWidth: '60%', margin: 'auto', mt: 5, mb: 2, }}>
         <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-          {/*<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
             {options.map((option) => (
               <Box key={option.name} sx={{ display: 'flex', alignItems: 'center', mr:8 }} onClick={() => setSelectedOption(option.name)}>
                 {option.icon}
@@ -263,15 +259,15 @@ export default function User() {
                 </Box>
               </Box>
             ))}
-          </Box> */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          </Box>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} />
             <Box>
               <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>
                 Profile
               </Typography>
             </Box>
-          </Box>
+          </Box> */}
         <Box sx={{ position: 'relative', display: 'inline-flex', mr: 2 }}>
           <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" sx={{ width: 80, height: 80 }} /> {/* User avatar */}
             <IconButton 
@@ -290,12 +286,8 @@ export default function User() {
             </Box>
         </Box>
           <Divider />
-          <Stack spacing={2} sx={{ my: 1 }}>
-         {/*  {selectedOption === 'Profile' && <ProfileComponent />}
-          {selectedOption === 'Billing' && <BillingComponent />}
-          {selectedOption === 'Documents' && <DocumentsComponent />}
-          {selectedOption === 'Comments' && <CommentsComponent />} */}
-          <Box
+          {/* <Stack spacing={2} sx={{ my: 1 }}>
+           <Box
             sx={{
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
@@ -417,28 +409,18 @@ export default function User() {
               </Grid>        
             </Grid>   
             </Box>
-          </Stack>
-          <Accordion >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
+          </Stack> */}
           
-          <Box sx={{ mb: 0.2, mt: 0.2, p:0.5, display: 'flex', alignItems: 'center'}}>
+         {/*  <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center'}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <PaymentIcon sx={{ color: 'orange', fontSize: 30 }} />
                 <Box >
                   <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>Billing</Typography>
                 </Box >
             </Box>
-          </Box>
-          </AccordionSummary>
+          </Box> */}
           <Divider />
-          
-             
-              
-          <Stack spacing={2} sx={{ my: 1}}>
+          <Stack spacing={2} sx={{ my: 1 }}>
            <Box
             sx={{
             display: 'flex',
@@ -573,9 +555,8 @@ export default function User() {
               </Grid>
             </Grid>
             </Box>
-          </Stack> 
-          </Accordion>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider' }}>
+          </Stack>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
               {!isEditing && (
                 <Button 

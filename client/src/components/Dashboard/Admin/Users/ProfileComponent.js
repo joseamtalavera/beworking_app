@@ -37,14 +37,7 @@ import DialogActions from '@mui/material/DialogActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
 import {Country, State, City} from 'country-state-city';
-import BillingComponent from './BillingComponent';
-import CommentsComponent from './CommentsComponent';
-import DocumentsComponent from './DocumentsComponent';
-import ProfileComponent from './ProfileComponent';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { BorderBottom } from '@mui/icons-material';
+import { orange } from '@mui/material/colors';
 
 const options = [
   { name: 'Profile', icon: <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} /> },
@@ -100,7 +93,7 @@ export default function User() {
   const [city, setCity] = useState(user.city || '');
   const [cities, setCities] = useState([]);
 
-  const [selectedOption, setSelectedOption] = useState('Profile');
+  const [selectedOption, setSelectedOption] = useState('User');
 
   
 
@@ -125,33 +118,6 @@ export default function User() {
     }
   }, [state]);
 
-  // only use if it is necessary to fetch the user data when not passed form BasicTable.js
-  /* useEffect (() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${initialUserState.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-    
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
-        }
-        //const data = await response.json();
-
-        const text = await response.text();
-        console.log('Text:', text);
-
-        const data = JSON.parse(text);
-        setUser(data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    fetchUser();
-  }, []); */
 
   const handleSave = async () => {
     //console.log('User:', user);
@@ -249,53 +215,9 @@ export default function User() {
 
   return (
     <ThemeProvider theme={theme}>
-      <MenuLayout >
-        <Card sx={{ maxWidth: '60%', margin: 'auto', mt: 5, mb: 2, }}>
-        <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-          {/*<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-            {options.map((option) => (
-              <Box key={option.name} sx={{ display: 'flex', alignItems: 'center', mr:8 }} onClick={() => setSelectedOption(option.name)}>
-                {option.icon}
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:1, color: 'orange'}}>
-                    {option.name}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box> */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} />
-            <Box>
-              <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>
-                Profile
-              </Typography>
-            </Box>
-          </Box>
-        <Box sx={{ position: 'relative', display: 'inline-flex', mr: 2 }}>
-          <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" sx={{ width: 80, height: 80 }} /> {/* User avatar */}
-            <IconButton 
-              sx={{ 
-              position: 'absolute', 
-              bottom: 0, 
-              right: 0, 
-              backgroundColor: 'white', 
-              padding: '3px', 
-              '&:hover': { backgroundColor: 'white' } 
-              }} 
-              onClick={handleEditPicture} /* Edit icon button */
-            >
-              <EditIcon />
-            </IconButton>
-            </Box>
-        </Box>
-          <Divider />
+       
           <Stack spacing={2} sx={{ my: 1 }}>
-         {/*  {selectedOption === 'Profile' && <ProfileComponent />}
-          {selectedOption === 'Billing' && <BillingComponent />}
-          {selectedOption === 'Documents' && <DocumentsComponent />}
-          {selectedOption === 'Comments' && <CommentsComponent />} */}
-          <Box
+           <Box
             sx={{
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
@@ -418,164 +340,9 @@ export default function User() {
             </Grid>   
             </Box>
           </Stack>
-          <Accordion >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
           
-          <Box sx={{ mb: 0.2, mt: 0.2, p:0.5, display: 'flex', alignItems: 'center'}}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <PaymentIcon sx={{ color: 'orange', fontSize: 30 }} />
-                <Box >
-                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>Billing</Typography>
-                </Box >
-            </Box>
-          </Box>
-          </AccordionSummary>
-          <Divider />
-          
-             
-              
-          <Stack spacing={2} sx={{ my: 1}}>
-           <Box
-            sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            gap: 2,
-            mb: 0, mt: 1, p:2
-            }}
-            >
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel variant="body2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                    <Typography variant="body2" sx={{  color:'black'}}>
-                      Registered Name<span style={{ color: 'orange', fontSize: '1.5em'}}>*</span>
-                    </Typography>
-                    </FormLabel>
-                      <OutlinedInput 
-                        size="small"
-                        value={user.registered_name}
-                        onChange={(e) => setUser({ ...user, registered_name: e.target.value })}
-                        disabled={!isEditing}
-                      />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%', mt:1.3 }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                    <Typography variant="body2" sx={{ color:'black'}}>Country</Typography>
-                  </FormLabel>
-                  <Autocomplete 
-                    size="small" 
-                    value={country}
-                    onChange={(e, newValue) => {
-                      setUser({ ...user, country: newValue });
-                      setCountry(newValue);
-                    }}
-                    
-                    options={countries.map((country) => country.name)}
-                    renderInput={(params) => <TextField {...params} variant="outlined" />}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>State</Typography>
-                    </FormLabel>
-                  <Autocomplete
-                    size="small" 
-                    value={state}
-                    onChange={(e, newValue) => {
-                      setUser({ ...user, state: newValue });
-                      setState(newValue);
-                    }}
-                   
-                    options={states}
-                    renderInput={(params) => <TextField {...params} variant="outlined" />}
-                    disabled={!isEditing}
-                    />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>City</Typography>
-                    </FormLabel>
-                  <Autocomplete 
-                    size="small" 
-                    value={city}
-                    onChange={(e, newValue) => {
-                      setUser({ ...user, city: newValue });
-                      setCity(newValue);
-                    }}
-                    options={cities}
-                    renderInput={(params) => <TextField {...params} variant="outlined" />}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Post Code</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
-                    size="small" 
-                    value={user.post_code}
-                    onChange={(e) => setUser({ ...user, post_code: e.target.value })}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Address</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
-                    size="small" 
-                    value={user.address}
-                    onChange={(e) => setUser({ ...user, address: e.target.value })}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>VAT</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
-                    size="small"
-                    value={user.vat}
-                    onChange={(e) => setUser({ ...user, vat: e.target.value })}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" sx={{ width: '100%' }}>
-                  <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                  <Typography variant="body2" sx={{ color:'black'}}>Method of Payment</Typography>
-                    </FormLabel>
-                  <OutlinedInput 
-                    size="small" 
-                    value={user.payment_method}
-                    onChange={(e) => setUser({ ...user, payment_method: e.target.value })}
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </Grid>
-            </Grid>
-            </Box>
-          </Stack> 
-          </Accordion>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider' }}>
+         
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
               {!isEditing && (
                 <Button 
@@ -607,7 +374,8 @@ export default function User() {
               )}    
             </CardActions>
           </Box>
-        </Card>
+       
+
         <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -641,9 +409,9 @@ export default function User() {
             <CheckCircleOutlineIcon style={{ color:'green', fontSize: '3rem'}} />
             User updated successfully
           </DialogTitle>
-          </Dialog>
+          </Dialog> 
 
-      </MenuLayout>
+    
      
     </ThemeProvider>
   );
