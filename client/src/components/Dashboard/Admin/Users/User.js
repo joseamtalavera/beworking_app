@@ -252,18 +252,6 @@ export default function User() {
       <MenuLayout >
         <Card sx={{ maxWidth: '60%', margin: 'auto', mt: 5, mb: 2, }}>
         <Box sx={{ mb: 1, mt: 1, p:2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-          {/*<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-            {options.map((option) => (
-              <Box key={option.name} sx={{ display: 'flex', alignItems: 'center', mr:8 }} onClick={() => setSelectedOption(option.name)}>
-                {option.icon}
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:1, color: 'orange'}}>
-                    {option.name}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box> */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <PersonOutLineIcon sx={{ color: 'orange', fontSize: 30 }} />
             <Box>
@@ -291,10 +279,7 @@ export default function User() {
         </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
-         {/*  {selectedOption === 'Profile' && <ProfileComponent />}
-          {selectedOption === 'Billing' && <BillingComponent />}
-          {selectedOption === 'Documents' && <DocumentsComponent />}
-          {selectedOption === 'Comments' && <CommentsComponent />} */}
+         
           <Box
             sx={{
             display: 'flex',
@@ -575,6 +560,49 @@ export default function User() {
             </Box>
           </Stack> 
           </Accordion>
+
+          <Accordion >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+          
+          <Box sx={{ mb: 0.2, mt: 0.2, p:0.5, display: 'flex', alignItems: 'center'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <CommentOutLinedIcon sx={{ color: 'orange', fontSize: 30 }} />
+                <Box >
+                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>Comments</Typography>
+                </Box >
+            </Box>
+          </Box>
+          </AccordionSummary>
+          <Divider />
+          <Stack spacing={2} sx={{ my: 1}}>
+            </Stack>
+          </Accordion>
+
+          <Accordion >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+          
+          <Box sx={{ mb: 0.2, mt: 0.2, p:0.5, display: 'flex', alignItems: 'center'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <DescriptionOutLinedIcon sx={{ color: 'orange', fontSize: 30 }} />
+                <Box >
+                  <Typography variant="h6" sx={{ mb: 0.5, mb:0.5, ml:2, color: 'orange'}}>Documents</Typography>
+                </Box >
+            </Box>
+          </Box>
+          </AccordionSummary>
+          <Divider />
+          <Stack spacing={2} sx={{ my: 1}}>
+            </Stack>
+          </Accordion>
+
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
               {!isEditing && (

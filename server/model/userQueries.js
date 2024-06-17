@@ -24,7 +24,7 @@ const addUserDb = async (user) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const result = await pool.query(
-            'INSERT INTO users (name, email, phone, type, category, status, registered_name, country, state, city, post_code, address, vat, paymentMethod, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *', 
+            'INSERT INTO users (name, email, phone, type, category, status, registered_name, country, state, city, post_code, address, vat, payment_method, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *', 
             [name, email, phone, type, category, status, registered_name, country, state, city, post_code, address, vat, payment_method, hashedPassword]
         );
 
