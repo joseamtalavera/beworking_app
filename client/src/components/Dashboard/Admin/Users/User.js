@@ -114,13 +114,34 @@ export default function User() {
     }
   }, [country]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (state) {
       const countryObject = countries.find(c => c.name === country);
       const stateObject = State.getStatesOfCountry(countryObject.isoCode).find(s => s.name === state);
       if (stateObject) {
         const citiesOfState = City.getCitiesOfState(countryObject.isoCode, stateObject.isoCode).map((city) => city.name);
         setCities(citiesOfState);
+      }
+    }
+  }, [state]); */
+
+  useEffect(() => {
+    if (state) {
+      const countryObject = countries.find(c => c.name === country);
+      if(countryObject){
+        const stateObject = State.getStatesOfCountry(countryObject.isoCode).find(s => s.name === state);
+        if (stateObject) {
+          const citiesOfState = City.getCitiesOfState(countryObject.isoCode, stateObject.isoCode).map((city) => city.name);
+          if (citiesOfState.length > 0) {
+            setCities(citiesOfState);
+          } else {
+            console.log(`No cities found for state ${state} in country ${country}`);
+          }
+        } else {
+          console.log(`State ${state} not found in states of country ${country}`);
+        }
+      } else {
+        console.log(`Country ${country} not found in countries array`);
       }
     }
   }, [state]);
@@ -179,7 +200,7 @@ export default function User() {
     hasError = true;
   } else {
       //const phoneNumber = parsePhoneNumberFromString(user.phone);
-      const phoneRegex = /^\+34 \d{3} \d{3} \d{3}$/;
+      const phoneRegex = /^\+\d{2} \d{3} \d{3} \d{3}$/;
       //if (!phoneNumber) {
       if (!phoneRegex.test(user.phone)) {
       setPhoneErrorMessage('Invalid phone number. Please enter the phone number in the correct format. "+34 XXX XXX XXX".');
