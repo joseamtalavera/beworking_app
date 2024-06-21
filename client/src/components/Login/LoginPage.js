@@ -3,6 +3,9 @@ import React, {useState} from 'react';
 import { Grid,Box, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from '@mui/material';
 import Login from './Login'; 
 import RegistrationForm from './RegistrationForm';
+//import { useMediaQuery } from '@mui/material';
+
+
 
 
 const LoginPage = () => {
@@ -11,8 +14,8 @@ const LoginPage = () => {
         const [showSignUpLink, setShowSignUpLink] = useState(true);
         const [open, setOpen] = useState(false); 
 
+        //const isMobile = useMediaQuery('(max-width:600px)');
 
-        
 
         const backgroundImageStyle = {
                 height: '100vh',
@@ -26,6 +29,7 @@ const LoginPage = () => {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'       
         };
+
 
         const loginContainerStyle = {
                 display: 'flex',
@@ -56,17 +60,18 @@ const LoginPage = () => {
         
 
         return (
-                <Grid container style={{ height: '100vh', position: 'relative' }}>
-                        <Grid item xs={4} style={backgroundImageStyle}>
+                <Grid container style={{ height: '100vh', position: 'relative' }} >
+                        <Grid item xs={0} sm={4} style={backgroundImageStyle}>
+                        {/* <Grid item xs={isMobile ? 0 : 4} style={isMobile ? {} : backgroundImageStyle}> */}
                         </Grid>
-                        <Grid item xs={8} style={loginContainerStyle}>
+                        <Grid item xs={12} sm={8} md={8} style={loginContainerStyle}>
                                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
                                         {/* onRegistration toggle the Register to Login */}
                                         {showRegistrationForm ? <RegistrationForm onRegistrationSuccess={handleRegistrationSuccess} /> : <Login />} 
                                 </Box>
                                 <Box position="absolute" top={2} left={2}>
                                         <Link href="/">
-                                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '50px', marginTop: '30px'}} /> {/* Logo image */}
+                                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '10px', marginTop: '30px'}} /> {/* Logo image */}
                                         </Link>
                                 </Box>
                                 <Box position = "absolute" top={2} right={2} display= "flex" alignItems="center">

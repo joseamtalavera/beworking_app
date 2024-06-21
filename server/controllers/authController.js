@@ -77,6 +77,8 @@ exports.registerEmail = async (req, res) => {
         const user = await createUser(null, email, hashedPassword, confirmationToken);
         if (user.error) {
             console.log('Error Createing user:', user.error);
+            res.status(400).send({message: 'User already exists'})
+            return;
         } else {
             console.log('Created user:', user);
         }
@@ -109,11 +111,9 @@ exports.registerEmail = async (req, res) => {
         } catch (error) {
         console.log('Error sending email:', error);
         }
-
-        //console.log("Confirmation email sent: %s", info.messageId);
         res.status(201).send({user});
     } catch (error) {
-        console.log(error);
+        console.log('Error:', error);
         if (error.message === 'User already exists') {
             res.status(400).send({message: 'User already exists'});
         } else {
@@ -246,7 +246,7 @@ exports.sendResetEmail = async (req, res) => {
             secure: false,
             auth: {
                 user: 'info@mo-rentals.com',
-                pass: '@Rakna6164',
+                pass: '@Rakna03100310',
             }
         });
 

@@ -202,7 +202,7 @@ function Login(props) {
 
           <Grid container justifyContent="space-between" alignItems="center">
           
-          <FormControlLabel
+          {/*<FormControlLabel
             control={<Checkbox 
               checked={keepMeLoggedIn} 
               onChange={(e) => setKeepMeLoggedIn(e.target.checked)} 
@@ -215,7 +215,7 @@ function Login(props) {
               }}
                />}
             label={<Typography variant="body2" style={{color: '#808080'}}>Keep me logged in</Typography>}
-          />
+          />*/}
           
           <Typography variant='body2'>
             <Link href="#" onClick={handleRecoveryClick} underline='none'>Forgot password?</Link>

@@ -61,6 +61,7 @@ const RegistrationForm = (props) => {
             if (!response.ok) {
                 const data = await response.json();
                 if (response.status === 400 && data.message === 'User already exists') {
+                    console.log(data.message);
                     setErrorMessage('User already exists');
                     setOpen(true); 
                 } else if (response.status === 400 && data.message === 'Invalid email') {
