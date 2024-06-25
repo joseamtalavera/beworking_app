@@ -12,9 +12,7 @@ const RegistrationForm = (props) => {
     const [errorMessage, setErrorMessage] = useState(''); 
     const [open, setOpen] = useState(false); 
     
-    // Use regex to validate password format
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -36,19 +34,16 @@ const RegistrationForm = (props) => {
             setOpen(true); 
             return;
         }
-
         if (password !== confirmPassword) {
             setErrorMessage('Passwords do not match');
             setOpen(true);
             return;
         }
-        
         if (!passwordRegex.test(password)) {
             setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
             setOpen(true); 
             return;
         }
-
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
                 method: 'POST',
@@ -57,7 +52,6 @@ const RegistrationForm = (props) => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-
             if (!response.ok) {
                 const data = await response.json();
                 if (response.status === 400 && data.message === 'User already exists') {
@@ -76,7 +70,7 @@ const RegistrationForm = (props) => {
                     console.log('Registration successful');
                     // we will modify this to use cookies *****
                     //localStorage.setItem('token', data.token); // this token is generated for authentication in authController.js (loginEmail function), in line 177, using jwt.sign
-                    props.onRegistrationSuccess(); // Call the onRegistrationSuccess function that was passed from the Login.js 
+                    props.onRegistrationSuccess(); // Call the onRegistrationSuccess function that was passed from the LoginPage.js 
                 } else {
                     setErrorMessage('Registration failed');
                     setOpen(true); 
@@ -90,24 +84,16 @@ const RegistrationForm = (props) => {
         }
     };
 
-   
-
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
         setShowPassword(!showPassword);
     }
 
-    const formContainerStyle = {
-        maxWidth: '500px', 
-        margin: 'auto', 
-        padding: '20px', 
-        boxSizing: 'border-box' 
-      };
-      
-
-
     return (       
-        <Box component="form" onSubmit={handleSubmit} sx={formContainerStyle}>
+        <Box component="form" onSubmit={handleSubmit} sx={{maxWidth: '500px', 
+            margin: 'auto', 
+            padding: '20px', 
+            boxSizing: 'border-box' }}>
           
             <Grid container direction="column" spacing={2}>
                 <Grid item>
@@ -183,23 +169,24 @@ const RegistrationForm = (props) => {
                 PaperProps={{
                     style: {
                         width: "60%",
-                        maxHeight: '150px',
+                        maxHeight: '160px',
                         textAlign: 'center'
                     },
                 }}
             >
                 <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText sx={{ color: 'orange'}}>
                         Please try again
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions style={{ display: 'flex', justifyContent: 'center', padding: '0' }}>
+                <DialogActions>
                     <Button 
                         onClick={() => setOpen(false)} 
+                        size= 'small' 
                         color="primary" 
-                        autoFocus
-                        style={{ marginTop: '20px', marginBottom: '20px', width: '150px', backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' }, color: 'white'}}
+                        variant= "outlined" 
+                        sx={{ color: 'green', borderColor: 'green'}}
                     >
                         Close
                     </Button>

@@ -658,8 +658,15 @@ export default function User() {
           </Box>
         </Card>
         <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
+          open={open}
+          onClose={() => setOpen(false)}
+          PaperProps={{
+            style: {
+              width: "60%",
+              maxHeight: '150px',
+              textAlign: 'center'
+            },
+          }}
         >
           <DialogTitle>{"Error"}</DialogTitle>
           <DialogContent>

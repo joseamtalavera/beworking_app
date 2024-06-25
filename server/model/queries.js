@@ -22,6 +22,7 @@ const createUser = async (userid, email, hashedPassword, confirmationToken) => {
         newUser = await pool.query('INSERT INTO users(google_id) VALUES($1) RETURNING *', [userid]);
       } else if (email && hashedPassword) {
         console.log(`Inserting into database: email=${email}, hasdPassword=${hashedPassword}, confirmationToken=${confirmationToken}`);
+        // super important to set email_confirmed to false. The user must confirm their email before they can log in
         newUser = await pool.query('INSERT INTO users(email, password, confirmation_token, email_confirmed) VALUES($1, $2, $3, $4) RETURNING *', [email, hashedPassword, confirmationToken, false]);
         console.log('New user created:', newUser.rows[0]);
       }

@@ -55,7 +55,7 @@ const { use } = require('passport');
 }; 
  */
 
-// register new user
+// register new user.
 exports.registerEmail = async (req, res) => {
     try {
         let {email, password} = req.body;
@@ -70,7 +70,7 @@ exports.registerEmail = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Generate a confirmation token
-        const confirmationToken = crypto.randomBytes(20).toString('hex'); //this is the token that we keep in the database and send to the user's email and sent to the user in the email
+        const confirmationToken = crypto.randomBytes(20).toString('hex'); //this is the token that we keep in the database and send to the user's email for confirmation
         console.log('Confirmation token:', confirmationToken);
 
         // Create a new user in the database
@@ -90,7 +90,7 @@ exports.registerEmail = async (req, res) => {
             secure: false,
             auth: {
                 user: 'info@mo-rentals.com',
-                pass: '@Rakna6164',
+                pass: '@Rakna03100310',
             }
         });
 

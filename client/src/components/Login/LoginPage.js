@@ -1,11 +1,9 @@
 
 import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Grid,Box, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from '@mui/material';
 import Login from './Login'; 
 import RegistrationForm from './RegistrationForm';
-//import { useMediaQuery } from '@mui/material';
-
-
 
 
 const LoginPage = () => {
@@ -13,9 +11,6 @@ const LoginPage = () => {
         const [showRegistrationForm, setShowRegistrationForm] = useState(false);
         const [showSignUpLink, setShowSignUpLink] = useState(true);
         const [open, setOpen] = useState(false); 
-
-        //const isMobile = useMediaQuery('(max-width:600px)');
-
 
         const backgroundImageStyle = {
                 height: '100vh',
@@ -30,7 +25,6 @@ const LoginPage = () => {
                 backgroundRepeat: 'no-repeat'       
         };
 
-
         const loginContainerStyle = {
                 display: 'flex',
                 justifyContent: 'center',
@@ -39,30 +33,30 @@ const LoginPage = () => {
                 position: 'relative'
         };
 
-
         const handleSignUpClick= (event) => {
                 event.preventDefault();
                 setShowRegistrationForm(true);
                 setShowSignUpLink(false);
         };
+
         const handleLoginClick= (event) => {
                 event.preventDefault();
                 setShowRegistrationForm(false);
                 setShowSignUpLink(true);
-        }
+        };
+
+        const navigate = useNavigate();
+
         const handleRegistrationSuccess = () => {
                 setShowRegistrationForm(false);
                 setShowSignUpLink(true);
                 setOpen(true);
-        }
+        };
 
-
-        
 
         return (
                 <Grid container style={{ height: '100vh', position: 'relative' }} >
                         <Grid item xs={0} sm={4} style={backgroundImageStyle}>
-                        {/* <Grid item xs={isMobile ? 0 : 4} style={isMobile ? {} : backgroundImageStyle}> */}
                         </Grid>
                         <Grid item xs={12} sm={8} md={8} style={loginContainerStyle}>
                                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -76,7 +70,7 @@ const LoginPage = () => {
                                 </Box>
                                 <Box position = "absolute" top={2} right={2} display= "flex" alignItems="center">
                                         {showSignUpLink ?
-                                        <Typography variant="body2" style={{marginTop: '50px', color: '#808080'}}> 
+                                        <Typography variant="body2" style={{marginTop: '50px', color: 'black'}}> 
                                         New to BeWorking 
                                         <Link  href = "#" onClick={handleSignUpClick} style = {{color: 'orange', marginRight: '20px', marginLeft: '10px', marginTop: '50px'}}
                                                 underline='none'
@@ -85,7 +79,7 @@ const LoginPage = () => {
                                         </Link>
                                         </Typography>
                                         :
-                                        <Typography variant="body2" style={{marginTop: '50px', color: '#808080'}}> 
+                                        <Typography variant="body2" style={{marginTop: '50px', color: 'black'}}> 
                                         Already have an Account? 
                                         <Link  href = "#" onClick={handleLoginClick} style = {{color: 'orange', marginRight: '20px', marginLeft: '10px', marginTop: '50px'}}
                                         underline='none'
@@ -108,16 +102,20 @@ const LoginPage = () => {
                                 >
                                 <DialogTitle>{"Registration Successful!"}</DialogTitle>
                                         <DialogContent>
-                                                <DialogContentText>
-                                                        Please login to continue
+                                                <DialogContentText sx={{ color: 'orange'}}>
+                                                        Please check your email to confirm your account
                                                 </DialogContentText>
                                         </DialogContent>
-                                        <DialogActions style={{ display: 'flex', justifyContent: 'center', padding: '0' }}>
+                                        <DialogActions >
                                                 <Button 
-                                                onClick={()=> setOpen(false)} 
+                                                onClick={()=> {
+                                                        setOpen(false);
+                                                        navigate('/');
+                                                }}
+                                                size='small'
                                                 color="primary" 
-                                                autoFocus
-                                                style={{ marginTop: '20px', marginBottom:'20px', width: '150px', backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' }, color: 'white'}}
+                                                variant= "outlined" 
+                                                sx={{ color: 'green', borderColor: 'green'}}
                                                 >
                                                 Close
                                                 </Button>

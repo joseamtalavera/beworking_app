@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Checkbox, FormControlLabel, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
@@ -13,27 +13,16 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
   const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
-  const [open, setOpen] = useState(false); // state for dialog box
+  const [open, setOpen] = useState(false); 
+
+
   const navigate = useNavigate(); 
   const { setIsAuthenticated, setIsAdmin } = useAuth(false);
-  //const { isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin } = useAuth(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  // This hook checks if the user is already authenticated
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     if (isAdmin) {
-  //       navigate('/dashboard/admin');
-  //     }else {
-  //       navigate('/dashboard/user');
-  //     }
-  //   }
-  // }, [isAuthenticated, navigate]);
-
-  // This hook checks if a token is expired
+  
   useEffect(() => {
     const tokenExpiration = localStorage.getItem('tokenExpiration');
     if (Date.now() > tokenExpiration) {
@@ -53,7 +42,6 @@ function Login(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-
     if (!email || !password) {
       setErrorMessage('Please fill out all fields');
       setOpen(true);
@@ -66,26 +54,6 @@ function Login(props) {
       return;
     }
 
-    function clearAllCookies() {
-      const cookies = document.cookie.split(";");
-
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf("=");
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        const trimmedName = name.trim();
-        if (trimmedName !== 'keepMeLoggedIn' && trimmedName !== 'G_ENABLED_IDPS' && trimmedName !== 'g_state') {
-          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-      }
-    }
-
-    if (keepMeLoggedIn) {
-      clearAllCookies();
-        document.cookie = `keepMeLoggedIn=${email}; path=/`;
-    }
-
-
     try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
@@ -96,28 +64,28 @@ function Login(props) {
         });
 
         if (!response.ok) {
-          //window.alert('Login failed');
           setErrorMessage('Email or password is incorrect');
           setOpen(true);
         } else {
             const data = await response.json();
-            
-            if (data.user) {
+            if (data.user && data.user.email_confirmed) {
                 console.log('Login successful');
                 console.log('is_admin:', data.user.is_admin);
                 localStorage.setItem('token', JSON.stringify(data.token));
-                localStorage.setItem('tokenExpiration', Date.now() + 60 * 60 * 1000);
+                localStorage.setItem('tokenExpiration', Date.now() + 30 * 60 * 1000);
                 localStorage.setItem('isAdmin', JSON.stringify(data.user.is_admin));
-                console.log('isAdmin in local storage:, JSO.parse:', JSON.parse(localStorage.getItem('isAdmin')));
+                console.log('isAdmin in local storage:, JSON.parse:', JSON.parse(localStorage.getItem('isAdmin')));
                 setIsAuthenticated(true); 
                 setIsAdmin(data.user.is_admin);  
 
-                // navigation logic
                 if (data.user.is_admin) {
                   navigate('/dashboard/admin');
                 } else {
                   navigate('/dashboard/user');
                 }
+            } else if (data.user && !data.user.email_confirmed) {
+                setErrorMessage('Please confirm your email');
+                setOpen(true);
             } else {
             setErrorMessage('Login failed');
             setOpen(true);
@@ -131,7 +99,6 @@ function Login(props) {
   };
 
 
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
     setShowPassword(!showPassword);
@@ -142,21 +109,22 @@ function Login(props) {
     setShowRecoveryForm(true);
   };
 
-
   if (showRecoveryForm) {
-    return <EmailRecoveryForm emailReset={emailReset} setEmailReset={setEmailReset} />;
+    return <EmailRecoveryForm 
+      emailReset={emailReset} 
+      setEmailReset={setEmailReset} 
+      />;
   }
 
-  const formContainerStyle = {
-    maxWidth: '500px', // Or any suitable width
-    margin: 'auto', // This centers the form
-    padding: '20px', // Optional, for internal spacing
-    boxSizing: 'border-box' // Ensures padding doesn't affect overall width
-  };
-  
-
+ 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={formContainerStyle}>
+    <Box component="form" onSubmit={handleSubmit} sx={{
+      maxWidth: '500px', 
+      margin: 'auto', 
+      padding: '20px', 
+      boxSizing: 'border-box'
+      }}
+      >
           
       <Grid container direction= "column" spacing={2}>
             <Grid item>
@@ -201,28 +169,10 @@ function Login(props) {
           />
 
           <Grid container justifyContent="space-between" alignItems="center">
-          
-          {/*<FormControlLabel
-            control={<Checkbox 
-              checked={keepMeLoggedIn} 
-              onChange={(e) => setKeepMeLoggedIn(e.target.checked)} 
-              name="remember"
-              sx={{ 
-                color: 'orange', 
-                '&.Mui-checked': {
-                  color: 'orange',
-                },
-              }}
-               />}
-            label={<Typography variant="body2" style={{color: '#808080'}}>Keep me logged in</Typography>}
-          />*/}
-          
-          <Typography variant='body2'>
-            <Link href="#" onClick={handleRecoveryClick} underline='none'>Forgot password?</Link>
-          </Typography>
-          
+            <Typography variant='body2'>
+              <Link href="#" onClick={handleRecoveryClick} underline='none'>Forgot password?</Link>
+            </Typography>
           </Grid>
-
 
           <Button
             type="submit" 
@@ -233,9 +183,7 @@ function Login(props) {
             Log In
           </Button>
 
-
-
-          <Typography align="center" variant="body2" style={{color: '#808080'}}>
+          <Typography align="center" variant="body2" style={{color: 'black'}}>
           By continuing you accept these 
           <Link href="#" underline='none'> Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
           </Typography>
