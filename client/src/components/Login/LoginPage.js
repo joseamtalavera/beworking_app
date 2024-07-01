@@ -95,13 +95,13 @@ const LoginPage = () => {
                                 PaperProps={{
                                         style: {
                                                 width: "60%",
-                                                maxHeight: '150px',
+                                                maxHeight: '170px',
                                                 textAlign: 'center'
                                         },
                                 }}
                                 >
-                                <DialogTitle>{"Registration Successful!"}</DialogTitle>
-                                        <DialogContent>
+                                <DialogTitle style={{ fontSize: 'default' }}>{"Registration Successful!"}</DialogTitle>
+                                        <DialogContent style={{ overflow: 'hidden'}}>
                                                 <DialogContentText sx={{ color: 'orange'}}>
                                                         Please check your email to confirm your account
                                                 </DialogContentText>

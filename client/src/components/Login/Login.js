@@ -197,23 +197,24 @@ function Login(props) {
         PaperProps={{
           style: {
             width: "60%",
-            maxHeight: '150px',
+            maxHeight: '170px',
             textAlign: 'center'
           },
         }}
       >
         <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+        <DialogContent style={{ overflow: 'hidden'}} >
+          <DialogContentText style={{ color: 'orange'}} >
             Please try again
           </DialogContentText>
         </DialogContent>
-        <DialogActions style={{ display: 'flex', justifyContent: 'center', padding: '0' }}>
+        <DialogActions>
           <Button 
             onClick={() => setOpen(false)} 
+            size='small'
             color="primary" 
-            autoFocus
-            style={{ marginTop: '20px', marginBottom: '20px', width: '150px', backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' }, color: 'white'}}
+            variant='outlined'
+            sx={{ color: 'green', borderColor: 'green'}}
           >
             Close
           </Button>
@@ -222,4 +223,5 @@ function Login(props) {
     </Box>
   );
 }
+
 export default Login;

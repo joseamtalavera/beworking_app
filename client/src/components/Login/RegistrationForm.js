@@ -169,13 +169,13 @@ const RegistrationForm = (props) => {
                 PaperProps={{
                     style: {
                         width: "60%",
-                        maxHeight: '160px',
+                        maxHeight: '170px',
                         textAlign: 'center'
                     },
                 }}
             >
                 <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ overflow: 'hidden'}}>
                     <DialogContentText sx={{ color: 'orange'}}>
                         Please try again
                     </DialogContentText>
