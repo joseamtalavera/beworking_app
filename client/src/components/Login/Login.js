@@ -16,10 +16,10 @@ function Login(props) {
   const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); 
-
+  const { setIsAuthenticated, setIsAdmin } = useAuth(false);
 
   const navigate = useNavigate(); 
-  const { setIsAuthenticated, setIsAdmin } = useAuth(false);
+  
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   
@@ -27,6 +27,8 @@ function Login(props) {
     const tokenExpiration = localStorage.getItem('tokenExpiration');
     if (Date.now() > tokenExpiration) {
       setIsAuthenticated(false);  
+      setErrorMessage('Session expired. Please log in again');
+      setOpen(true);
     }
   }, [setIsAuthenticated]);
 
@@ -72,7 +74,7 @@ function Login(props) {
                 console.log('Login successful');
                 console.log('is_admin:', data.user.is_admin);
                 localStorage.setItem('token', JSON.stringify(data.token));
-                localStorage.setItem('tokenExpiration', Date.now() + 30 * 60 * 1000);
+                localStorage.setItem('tokenExpiration', Date.now() + 60 * 60 * 1000);
                 localStorage.setItem('isAdmin', JSON.stringify(data.user.is_admin));
                 console.log('isAdmin in local storage:, JSON.parse:', JSON.parse(localStorage.getItem('isAdmin')));
                 setIsAuthenticated(true); 
