@@ -18,13 +18,14 @@ function PasswordReset() {
                 We have sent you an email to reset your password!
             </Typography>
             <Button 
-                variant="contained" 
+                size='small'
+                variant="outlined" 
                 component={Link} 
                 to="/" 
-                style={{ marginTop: '20px', width: '300px', backgroundColor: 'orange' }}
+                style={{ marginTop: '20px', width: '30px', backgroundColor: 'transparent', color: 'orange', border: '1px solid orange'}}
                 onClick={() => console.log('Password reset email sent')}
             >
-                Confirm
+                Close
             </Button>
         </div>
     );

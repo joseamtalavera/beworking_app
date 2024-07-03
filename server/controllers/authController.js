@@ -104,7 +104,7 @@ exports.registerEmail = async (req, res) => {
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">Thank you for registering. Please click the link below to confirm your email address.</p>
-                <a href="http://localhost:3003/confirm-email/${confirmationToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Confirm Email</a>      
+                <a href="http://localhost:3003/confirm-email/${confirmationToken}" style="display: inline-block; padding: 8px 16px; margin: 20px auto; width: auto; background-color: transparent; color: orange; text-decoration: none; font-size: 14px; border: 2px solid orange; border-radius: 25x; cursor: pointer;">Confirm Email</a>      
             </div>
             `
         });       
@@ -169,7 +169,7 @@ exports.loginEmail = async (req, res) => {
         }
 
         // Generate a token for the user
-        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}); //this token is sent to the RegistrationForm.js, in line 76 and stored in localStorage
+        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}); //this token is sent to the Login.js, in line 74 and stored in localStorage
         res.status(201).send({ user, token });
     } catch (error) {
         console.log(error);
@@ -254,12 +254,12 @@ exports.sendResetEmail = async (req, res) => {
         let info = await transporter.sendMail({
             from: '"BeWorking" info@mo-rentals.com', 
             to: email,
-            subject: "BeWorking: Please Password Reset",
+            subject: "BeWorking: Please Reset Your Password",
             text: "Click the link to reset your password",
             html: `
             <div style="text-align: center;">
                 <p style="margin-top: 30px;">You have requested a password reset. Click the link below to reset your password. If you did not request a password reset, please ignore this email.</p>
-                <a href="http://localhost:3003/reset/${resetToken}" style="display: block; padding: 16px 0; margin: 20px auto; width: 300px; background-color: orange; color: white; text-decoration: none; font-size: 16px; border-radius: 25px; cursor: pointer;">Reset Password</a>
+                <a href="http://localhost:3003/reset/${resetToken}" style="display: inline-block; padding: 8px 16px; margin: 20px auto; width: auto; background-color: transparent; color: orange; text-decoration: none; font-size: 14px; border: 2px solid orange; border-radius: 25x; cursor: pointer;">Reset Password</a>
             </div>
             `
         });

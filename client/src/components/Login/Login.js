@@ -6,6 +6,7 @@ import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
+//import { get } from '../../../../server/routers/authRoutes';
 
 
 function Login(props) {
@@ -24,11 +25,27 @@ function Login(props) {
 
   
   useEffect(() => {
+   
+    const token = localStorage.getItem('token');
     const tokenExpiration = localStorage.getItem('tokenExpiration');
-    if (Date.now() > tokenExpiration) {
-      setIsAuthenticated(false);  
-      setErrorMessage('Session expired. Please log in again');
-      setOpen(true);
+
+    console.log('Token:', token);
+    console.log('Token expiration:', tokenExpiration);
+
+    if(token) {
+      const expirationTime = Number(tokenExpiration);
+      if (!tokenExpiration || Date.now() > expirationTime) {
+        setIsAuthenticated(false);  
+          if (tokenExpiration && Date.now() > expirationTime){
+            setErrorMessage('Session expired');
+            setOpen(true);
+            setTimeout(() => {
+              setOpen(false);
+            }, 3000);
+          }
+      } else {
+        setIsAuthenticated(true);
+      }
     }
   }, [setIsAuthenticated]);
 

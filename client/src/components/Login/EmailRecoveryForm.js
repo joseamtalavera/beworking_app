@@ -7,6 +7,8 @@ import PasswordResetAlert from './PasswordResetAlert';
 
 const EmailRecoveryForm = (props) => {
     const [email, setEmail] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [open, setOpen] = useState(false);
 
 
     const handleEmailChange = (event) => {
@@ -15,6 +17,12 @@ const EmailRecoveryForm = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!email) {
+            setErrorMessage('Please enter your email address');
+            setOpen(true);
+            return;
+        }
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
                 method: 'POST',
@@ -41,19 +49,19 @@ const EmailRecoveryForm = (props) => {
     };
 
 
-    const formContainerStyle = {
-        maxWidth: '500px', // Or any suitable width
-        margin: 'auto', // This centers the form
-        padding: '20px', // Optional, for internal spacing
-        boxSizing: 'border-box' // Ensures padding doesn't affect overall width
-      };
-
-   
-
     return (
         <div>
         {props.emailReset ? <PasswordResetAlert />:(
-        <Box component="form" onSubmit={handleSubmit} sx={formContainerStyle} >
+        <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{
+                maxWidth: '500px',
+                margin: 'auto', 
+                padding: '20px', 
+                boxSizing: 'border-box' 
+            }} 
+        >
           
             <Grid container direction="column" spacing={2}>
                 <Grid item >

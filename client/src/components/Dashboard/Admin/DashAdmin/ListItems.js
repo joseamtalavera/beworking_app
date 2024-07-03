@@ -88,7 +88,9 @@ import {
   SettingsOutlined as SettingsIcon,
   HelpOutline as HelpIcon,
   DashboardOutlined as DashboardIcon,
+  PowerSettingsNewOutlined as LogoutIcon,
 } from '@mui/icons-material';
+
 
  export const listItems = [
     { text: 'Dashboard', icon: <DashboardIcon sx={{fontSize: 20}} />, path: '/dashboard/admin'},
@@ -96,8 +98,17 @@ import {
     { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} /> },
     { text: 'Bookings', icon: <BookingsIcon sx={{fontSize: 20}} /> },
     { text: 'Invoicing', icon: <InvoicingIcon sx={{fontSize: 20}} /> },
-    // Add more items as needed
 ];
+
+const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiration');
+    localStorage.removeItem('isAdmin');
+
+    //useAuth().setIsAuthenticated(false);
+    //useAuth().setIsAdmin(false);
+    window.location.href = '/login';
+};
 
 export const moreItems = [
     { text: 'Maintenance', icon: <MaintenanceIcon sx={{fontSize: 20}} /> },
@@ -106,7 +117,10 @@ export const moreItems = [
     { text: 'Product', icon: <ProductIcon sx={{fontSize: 20}} /> },
     { text: 'Settings', icon: <SettingsIcon sx={{fontSize: 20}} /> },
     { text: 'Help', icon: <HelpIcon sx={{fontSize: 20}} /> },
+    { text: 'Logout', icon: <LogoutIcon sx={{fontSize: 20}} />, onClick: handleLogout},
 ];
+
+
 
 export const mainListItems = (
   <React.Fragment>
@@ -121,7 +135,7 @@ export const mainListItems = (
   </React.Fragment>
 );
 
-export const secondaryListItems = (
+/* export const secondaryListItems = (
   <React.Fragment>
     {moreItems.map((item) => (
       <ListItemButton component={Link} to={item.path} key={item.text}>
@@ -132,4 +146,26 @@ export const secondaryListItems = (
       </ListItemButton>
     ))}
   </React.Fragment>
+); */
+
+export const secondaryListItems = (
+<React.Fragment>
+{moreItems.map((item) => (
+  item.text !== 'Logout' ? (
+    <ListItemButton component={Link} to={item.path} key={item.text}>
+      <ListItemIcon>
+        {item.icon}
+      </ListItemIcon>
+      <ListItemText primary={item.text} />
+    </ListItemButton>
+  ) : (
+    <ListItemButton onClick={item.onClick} key={item.text}>
+      <ListItemIcon>
+        {item.icon}
+      </ListItemIcon>
+      <ListItemText primary={item.text} />
+    </ListItemButton>
+  )
+))}
+</React.Fragment>
 );
