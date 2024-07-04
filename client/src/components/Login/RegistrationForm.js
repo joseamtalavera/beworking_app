@@ -73,8 +73,7 @@ const RegistrationForm = (props) => {
                     props.onRegistrationSuccess(); // Call the onRegistrationSuccess function that was passed from the LoginPage.js 
                 } else {
                     setErrorMessage('Registration failed');
-                    setOpen(true); 
-                
+                    setOpen(true);
                 }
             }
         } catch (error) {
@@ -90,10 +89,16 @@ const RegistrationForm = (props) => {
     }
 
     return (       
-        <Box component="form" onSubmit={handleSubmit} sx={{maxWidth: '500px', 
-            margin: 'auto', 
-            padding: '20px', 
-            boxSizing: 'border-box' }}>
+        <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{
+                maxWidth: '500px', 
+                margin: 'auto', 
+                padding: '20px', 
+                boxSizing: 'border-box' 
+                }}
+            >
           
             <Grid container direction="column" spacing={2}>
                 <Grid item>

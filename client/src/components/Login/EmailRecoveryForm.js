@@ -1,6 +1,6 @@
 // EmailRecoveryForm.js
 import React, {useState} from 'react';
-import {Box, Button, Grid, Typography, Link } from '@mui/material';
+import {Box, Button, Grid, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import EmailInput from './EmailInput';
 import PasswordResetAlert from './PasswordResetAlert';
 
@@ -33,19 +33,50 @@ const EmailRecoveryForm = (props) => {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log('Data:', data);
-            if(data.message === 'Password reset email sent') {
-               props.setEmailReset(true);
+                const data = await response.json();
+                if(response.status === 400 && data.message === 'User does not exist') {
+                    setErrorMessage('User does not exist');
+                    setOpen(true);
+                    return;
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
             } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                console.log('Data:', data);
+                if(data.message === 'Password reset email sent') {
+                    props.setEmailReset(true);
+                } else {
+                    setErrorMessage('Failed to send recovery email');
+                    setOpen(true);
+                }
             }
         } catch (error) {
             console.error('Failed to send recovery email:', error);
-            alert('Failed to send recovery email. Please try again') 
+            setErrorMessage(error.message);
+            setOpen(true);
         }
+    };
+
+    const backgroundImageStyle = {
+        height: '100vh',
+        background: `
+            linear-gradient(
+                rgba(255, 165, 0, 0.5), 
+                rgba(255, 165, 0, 0.5)
+            ),
+            url(/piclogin3.png)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat' 
+    };
+
+    const loginContainerStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        position: 'relative'
     };
 
 
@@ -69,7 +100,7 @@ const EmailRecoveryForm = (props) => {
                         Forgot your password?
                     </Typography>
                     <Typography variant="body1" sx={{mb:2, textAlign: 'center'}}>
-                    Please enter your email address                   
+                        Please enter your email address                   
                     </Typography>
                 </Grid>
 
@@ -85,16 +116,45 @@ const EmailRecoveryForm = (props) => {
                         variant="contained" 
                         fullWidth
                         sx={{ mt: 0, mb: 2, backgroundColor: '#32CD32', '&:hover': { backgroundColor: 'green' } }}
-                        >
+                    >
                         Recover Email
                     </Button>
                 
-                    <Typography align="center" variant="body2" style={{color: '#808080'}}>
-                        Back to my <Link href="/login" underline='none'>BeWorking Account       </Link>
+                    <Typography align="center" variant="body2" style={{color: 'black'}}>
+                        Back to  <Link href="/login" underline='none' sx={{ color: 'orange'}}>Login       </Link>
                     </Typography>
                 </Grid>
             </Grid>
-        
+
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                PaperProps={{
+                    style: {
+                        width: "60%",
+                        maxHeight: '170px',
+                        textAlign: 'center'
+                    },
+                }}
+            >
+                <DialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</DialogTitle>
+                <DialogContent style={{ overflow: 'hidden'}}>
+                    <DialogContentText sx={{ color: 'orange'}}>
+                        Please try again
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button 
+                        onClick={() => setOpen(false)} 
+                        size= 'small' 
+                        color="primary" 
+                        variant= "outlined" 
+                        sx={{ color: 'green', borderColor: 'green'}}
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
         )}
         </div>

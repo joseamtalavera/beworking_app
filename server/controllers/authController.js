@@ -122,7 +122,7 @@ exports.registerEmail = async (req, res) => {
     }
 };
 
-// confirm email
+// confirm email. This is the link that the user clicks on to confirm their email address
 exports.confirmEmail = async (req, res) => {
     const {confirmationToken} = req.params;
     try {

@@ -125,7 +125,8 @@ function Login(props) {
 
   const handleRecoveryClick = (event) => {
     event.preventDefault();
-    setShowRecoveryForm(true);
+    //setShowRecoveryForm(true);
+    navigate('/recover');
   };
 
   if (showRecoveryForm) {

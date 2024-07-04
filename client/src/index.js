@@ -17,6 +17,8 @@ import ThanksPage from './components/Login/ThanksPage';
 import Users from './components/Dashboard/Admin/Users/Users';
 import User from './components/Dashboard/Admin/Users/User';
 import AddUser from './components/Dashboard/Admin/Users/AddUser';
+import EmailRecoveryForm from './components/Login/EmailRecoveryForm';
+import { Email } from '@mui/icons-material';
 
 
 //const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -27,6 +29,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/recover" element={<EmailRecoveryForm />} />
       {/* <Route path="/reset" element={<PasswordResetForm />} /> */}
       <Route path="/confirm-email/:confirmationToken" element={<ConfirmationPage />} />
       <Route path="/thanks" element={<ThanksPage />} />
