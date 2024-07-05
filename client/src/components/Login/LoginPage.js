@@ -1,4 +1,4 @@
-
+// LogingPage.js
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid,Box, Typography, Link, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from '@mui/material';
@@ -7,7 +7,6 @@ import RegistrationForm from './RegistrationForm';
 
 
 const LoginPage = () => {
-
         const [showRegistrationForm, setShowRegistrationForm] = useState(false);
         const [showSignUpLink, setShowSignUpLink] = useState(true);
         const [open, setOpen] = useState(false); 

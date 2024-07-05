@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-import EmailRecoveryForm from './EmailRecoveryForm';
+//import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
+  //const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); 
   const { setIsAuthenticated, setIsAdmin } = useAuth(false);
@@ -129,12 +129,12 @@ function Login(props) {
     navigate('/recover');
   };
 
-  if (showRecoveryForm) {
+  /* if (showRecoveryForm) {
     return <EmailRecoveryForm 
       emailReset={emailReset} 
       setEmailReset={setEmailReset} 
       />;
-  }
+  } */
 
  
   return (
