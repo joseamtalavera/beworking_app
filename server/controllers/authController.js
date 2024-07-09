@@ -11,7 +11,7 @@ const { updateUserPassword } = require('../model/queries');
 const bcrypt = require('bcrypt');
 //const { decrypt } = require('dotenv');
 const nodemailer = require('nodemailer');
-const validator = require('validator');
+//const validator = require('validator');
 const saltRounds = 10;
 const crypto = require('crypto');
 const { use } = require('passport');
@@ -61,10 +61,10 @@ exports.registerEmail = async (req, res) => {
         let {email, password} = req.body;
 
         // Validate the email
-        email = email.trim();
+       /*  email = email.trim();
         if (!validator.isEmail(email)) {
             return res.status(400).send({message: 'Invalid email'});
-        }
+        } */
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);

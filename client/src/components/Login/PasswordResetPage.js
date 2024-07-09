@@ -36,19 +36,18 @@ const PasswordResetPage = () => {
 
     return (
         <Grid container style={{ height: '100vh', position: 'relative' }}>
-            <Grid item xs={4} style={backgroundImageStyle}>
-                {/* Orange Background Here */}
+            <Grid item xs={0} sm={4} style={backgroundImageStyle}>
             </Grid>
-            <Grid item xs={8} style={resetContainerStyle}>
+            <Grid item xs={12} sm={8} md={8} style={resetContainerStyle}>
                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
                     {showPasswordResetForm ? <PasswordResetForm onResetSuccess={handleResetSuccess} /> : <ThanksPage />}
                 </Box>
                 <Box position="absolute" top={2} left={2}>
                     <Link href="/">
-                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '50px', marginTop: '30px' }} /> {/* Logo image */}
+                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '10px', marginTop: '30px' }} /> 
                     </Link>
                 </Box>
-            </Grid>
+            </Grid>  
         </Grid>
     );
 };

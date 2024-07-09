@@ -12,7 +12,7 @@ const RegistrationForm = (props) => {
     const [errorMessage, setErrorMessage] = useState(''); 
     const [open, setOpen] = useState(false); 
     
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -39,11 +39,11 @@ const RegistrationForm = (props) => {
             setOpen(true);
             return;
         }
-        if (!passwordRegex.test(password)) {
-            setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
+       /*  if (!passwordRegex.test(password)) {
+            setErrorMessage('Enter at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
             setOpen(true); 
             return;
-        }
+        } */
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
                 method: 'POST',
@@ -60,6 +60,9 @@ const RegistrationForm = (props) => {
                     setOpen(true); 
                 } else if (response.status === 400 && data.message === 'Invalid email') {
                     setErrorMessage('Email with incorrect format');
+                    setOpen(true);
+                } else if (response.status === 400) {
+                    setErrorMessage(data.message);
                     setOpen(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -174,7 +177,7 @@ const RegistrationForm = (props) => {
                 PaperProps={{
                     style: {
                         width: "60%",
-                        maxHeight: '170px',
+                        maxHeight: '195px',
                         textAlign: 'center'
                     },
                 }}

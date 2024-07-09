@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, Typography, Link, Dialog, DialogContentText } from '@mui/material';
+import { Box, Button, Grid, Typography, Link, Dialog, DialogContentText, DialogActions, DialogContent } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import { DialogTitle } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -9,9 +9,11 @@ const PasswordResetForm = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [ openDialog, setOpenDialog ] = useState(false);
+    const [ open, setOpen ] = useState(false);
     const [ dialogTitle, setDialogTitle ] = useState('');
     const [ dialogContent, setDialogContent ] = useState('');
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
@@ -21,9 +23,9 @@ const PasswordResetForm = (props) => {
         setConfirmPassword(event.target.value);
     };
 
-    const handleCloseDialog = () => {
+   /*  const handleCloseDialog = () => {
         setOpenDialog(false);
-    };
+    }; */
 
     const { resetToken } = useParams();
 
@@ -34,14 +36,21 @@ const PasswordResetForm = (props) => {
         if (!password || !confirmPassword) {
             setDialogTitle('Error');
             setDialogContent('Please fill in all the fields');
-            setOpenDialog(true);
+            setOpen(true);
             return;
         }
 
         if (password !== confirmPassword) {
             setDialogTitle('Error');
             setDialogContent('Passwords do not match');
-            setOpenDialog(true);
+            setOpen(true);
+            return;
+        }
+
+        if (!passwordRegex.test(password)) {
+            setDialogTitle('Error');
+            setDialogContent('Enter at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
+            setOpen(true);
             return;
         }
 
@@ -61,7 +70,7 @@ const PasswordResetForm = (props) => {
                 if (response.status === 400 && data.message === 'Invalid token') {
                     setDialogTitle('Error');
                     setDialogContent('Invalid token');
-                    setOpenDialog(true);
+                    setOpen(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -73,7 +82,7 @@ const PasswordResetForm = (props) => {
                     console.log('Password reset successful');
                     setDialogTitle('Success');
                     setDialogContent('Password reset successful');
-                    setOpenDialog(true);
+                    setOpen(true);
 
                     setPassword('');
                     setConfirmPassword('');
@@ -82,7 +91,7 @@ const PasswordResetForm = (props) => {
                 console.log('Password reset failed');
                 setDialogTitle('Error');
                 setDialogContent('Password reset failed');
-                setOpenDialog(true);
+                setOpen(true);
                 }
             }
         } catch (error) {
@@ -102,7 +111,7 @@ const PasswordResetForm = (props) => {
         margin: 'auto', // This centers the form
         padding: '20px', // Optional, for internal spacing
         boxSizing: 'border-box' // Ensures padding doesn't affect overall width
-      };
+    };
       
 
 
@@ -156,18 +165,43 @@ const PasswordResetForm = (props) => {
                         Reset Password
                     </Button>
                 
-                    <Typography align="center" variant="body2" style={{color: '#808080'}}>
+                    <Typography align="center" variant="body2" style={{color: 'black'}}>
                         By continuing you accept these 
-                        <Link href="#" underline='none'>Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
+                        <Link href="#" underline='none'> Terms and Conditions</Link> and <Link href="#" underline='none'>Privacy Policy</Link>.
                     </Typography>
                     
                 </Grid>
             </Grid>
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogContentText>
-                    {dialogContent}
-                </DialogContentText>
+            <Dialog 
+                open={open} 
+                onClose={() => setOpen(false)}
+                PaperProps={{
+                    style: {
+                        width: "60%",
+                        maxHeight: '190px',
+                        textAlign: 'center'
+                    },
+                }}
+            >
+                <DialogTitle style={{ fontSize: dialogTitle.includes('must') ? '12px' : 'default'}}>{dialogTitle}</DialogTitle>
+                    <DialogContent sx={{ overflow: 'hidden'}}>
+                        <DialogContentText style={{color: 'orange'}}>
+                            {dialogContent}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                            onClick={() => {
+                                setOpen(false);
+                            }} 
+                            size= 'small' 
+                            color="primary" 
+                            variant= "outlined" 
+                            sx={{ color: 'green', borderColor: 'green'}}
+                        >
+                            Close
+                        </Button>
+                    </DialogActions>
             </Dialog>
         </Box>
 

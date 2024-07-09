@@ -59,12 +59,11 @@ const LoginPage = () => {
                         </Grid>
                         <Grid item xs={12} sm={8} md={8} style={loginContainerStyle}>
                                 <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                                        {/* onRegistration toggle the Register to Login */}
                                         {showRegistrationForm ? <RegistrationForm onRegistrationSuccess={handleRegistrationSuccess} /> : <Login />} 
                                 </Box>
                                 <Box position="absolute" top={2} left={2}>
                                         <Link href="/">
-                                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '10px', marginTop: '30px'}} /> {/* Logo image */}
+                                        <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginLeft: '10px', marginTop: '30px'}} /> 
                                         </Link>
                                 </Box>
                                 <Box position = "absolute" top={2} right={2} display= "flex" alignItems="center">
@@ -94,7 +93,7 @@ const LoginPage = () => {
                                 PaperProps={{
                                         style: {
                                                 width: "60%",
-                                                maxHeight: '170px',
+                                                maxHeight: '190px',
                                                 textAlign: 'center'
                                         },
                                 }}
