@@ -165,7 +165,7 @@ exports.loginEmail = async (req, res) => {
 
         // If the password is incorrect, send an error message
         if (!isPasswordCorrect) {
-            return res.status(400).send({message: 'password'});
+            return res.status(400).send({message: 'Invalid password'});
         }
 
         // Generate a token for the user

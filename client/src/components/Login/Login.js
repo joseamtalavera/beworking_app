@@ -61,7 +61,7 @@ function Login(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    if (!email || !password) {
+   /*  if (!email || !password) {
       setErrorMessage('Please fill out all fields');
       setOpen(true);
       return;
@@ -71,7 +71,7 @@ function Login(props) {
       setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
       setOpen(true);
       return;
-    }
+    } */
 
     try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
@@ -83,7 +83,9 @@ function Login(props) {
         });
 
         if (!response.ok) {
-          setErrorMessage('Email or password is incorrect');
+          const errorData = await response.json();
+          console.log('Error:', errorData.message)
+          setErrorMessage(errorData.message ||'Email or pass is incorrect'); //errorData.message is the message from authRoutes.js
           setOpen(true);
         } else {
             const data = await response.json();
@@ -217,7 +219,7 @@ function Login(props) {
         PaperProps={{
           style: {
             width: "60%",
-            maxHeight: '170px',
+            maxHeight: '190px',
             textAlign: 'center'
           },
         }}

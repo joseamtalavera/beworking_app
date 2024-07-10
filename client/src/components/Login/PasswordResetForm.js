@@ -47,12 +47,12 @@ const PasswordResetForm = (props) => {
             return;
         }
 
-        if (!passwordRegex.test(password)) {
+        /* if (!passwordRegex.test(password)) {
             setDialogTitle('Error');
             setDialogContent('Enter at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
             setOpen(true);
             return;
-        }
+        } */
 
         try {
             console.log('Reset token:', resetToken);
@@ -71,6 +71,11 @@ const PasswordResetForm = (props) => {
                     setDialogTitle('Error');
                     setDialogContent('Invalid token');
                     setOpen(true);
+                } else if (response.status === 400) {
+                    setDialogTitle('Error');
+                    setDialogContent(data.message);
+                    setOpen(true);
+                
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -178,7 +183,7 @@ const PasswordResetForm = (props) => {
                 PaperProps={{
                     style: {
                         width: "60%",
-                        maxHeight: '190px',
+                        maxHeight: '230px',
                         textAlign: 'center'
                     },
                 }}

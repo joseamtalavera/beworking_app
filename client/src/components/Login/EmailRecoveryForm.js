@@ -47,7 +47,7 @@ const EmailRecoveryForm = (props) => {
             setDialogMessage('Please enter your email address');
             setOpen(true);
             return;
-        }
+        } 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/recover`, {
                 method: 'POST',
@@ -64,9 +64,12 @@ const EmailRecoveryForm = (props) => {
                     setDialogMessage('User does not exist');
                     setOpen(true);
                     return;
+                } else if (response.status === 400) {
+                    setDialogMessage(data.message);
+                    setOpen(true);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                } 
             } else {
                 //const data = await response.json();
                 console.log('Data:', data);
@@ -153,7 +156,7 @@ const EmailRecoveryForm = (props) => {
                             >
                                 
                                 <DialogTitle style={{ fontSize: dialogMessage.includes('error') ? '12px' : 'default'}} >
-                                    {dialogMessage.includes('error') || dialogMessage.includes('exist') || dialogMessage.includes('address') ? 'Error': 'Thank you!'}
+                                    {dialogMessage.includes('error') || dialogMessage.includes('exist') || dialogMessage.includes('address') || dialogMessage.includes('valid') ? 'Error': 'Thank you!'}
                                 </DialogTitle>
                                     <DialogContent style={{ overflow: 'hidden'}}>
                                         <DialogContentText sx={{ color: 'orange'}}>
