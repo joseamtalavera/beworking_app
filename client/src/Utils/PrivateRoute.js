@@ -1,15 +1,26 @@
 // PrivateRoute.js
 
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import useAuth from './useAuth';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from '@mui/material';
 
 
 function PrivateRoute({ children, adminRoute = false}) {
     const { isAuthenticated, isLoading, isAdmin } = useAuth();
-    console.log(isAdmin);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <Box 
+                display="flex" 
+                justifyContent="center" 
+                alignItems="center" 
+                height="100vh"
+                >
+                    <CircularProgress color='secondary' />
+            </Box>
+        )
     }
 
     if (!isAuthenticated) {
@@ -17,11 +28,14 @@ function PrivateRoute({ children, adminRoute = false}) {
     } 
 
     if (adminRoute && !isAdmin) {
-        return <Navigate to="/dashboard/admin" replace />;
+        return <Navigate to="/dashboard/user" replace />;
     }
+
     return children;
 }
 
 export default PrivateRoute;
+
+
 
 

@@ -15,6 +15,7 @@ const nodemailer = require('nodemailer');
 const saltRounds = 10;
 const crypto = require('crypto');
 const { use } = require('passport');
+const { renameSync } = require('fs');
 
 
 // token verification for google login
@@ -169,8 +170,14 @@ exports.loginEmail = async (req, res) => {
         }
 
         // Generate a token for the user
-        const token = jwt.sign({id:user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}); //this token is sent to the Login.js, in line 74 and stored in localStorage
-        res.status(201).send({ user, token });
+        const token = jwt.sign({id:user.id, isAdmin: user.isAdmin}, process.env.JWT_SECRET, {expiresIn: '1h'}); 
+        res.cookie('token', token, {
+            httpOnly: true, 
+            secure: true, 
+            sameSite: 'strict',
+            expires: new Date(Date.now() + 3600000), //1 hour
+            });
+        res.status(201).send({user});
     } catch (error) {
         console.log(error);
         if (error.message === 'User already exists') {

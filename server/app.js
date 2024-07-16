@@ -8,6 +8,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+
 const authRoutes = require('./routers/authRoutes');
 const userRoutes = require('./routers/userRoutes');
 
@@ -36,19 +39,20 @@ app.use(cors({
 
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 app.use(express.urlencoded({ extended: true }));
-app.use('/api', authRoutes);
-app.use('/api', userRoutes);
 
-
-// use express-session to maintain session data
-app.use(session({
-    secret: 'some random secret', // In a production app, this should be a large unguessable string, stored in an environment variable.
-    resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
-    saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
+app.use(session({ // use express-session to maintain session data
+    secret: 'some random secret', 
+    resave: false, 
+    saveUninitialized: false 
 }));
 
+app.use(cookieParser());
 
+//const csrfProtection = csrf({ cookie: true });
+//app.use(csrfProtection);
 
+app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
 app.use(passport.session());

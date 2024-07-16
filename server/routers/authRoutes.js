@@ -2,6 +2,7 @@ const express = require('express');
 const {body, validationResult} = require('express-validator');
 const authController = require('../controllers/authController');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 
 
@@ -76,6 +77,26 @@ router.get('/confirm/:confirmationToken', authController.confirmEmail);
 router.use((err, req, res) => {
     console.error(err);
     res.status(500).send({ message: 'Something went wrong', error: err.message });
+});
+
+router.get('/api/auth/status', (req, res) => {
+    console.log('Checking auth status');
+    const token = req.cookies.token;
+    console.log('Token recieved:', token);
+    if (!token) {
+        console.log('No token found');
+        
+        return res.json({ isAuthenticated: false, isAdmin: false });
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Decoded:', decoded);
+        console.log('isAdmin:', decoded.isAdmin);
+        return res.json({ isAuthenticated: true, isAdmin: decoded.isAdmin });
+    } catch (error) {
+        console.log('Error veirfying token:', error);
+        return res.json({ isAuthenticated: false, isAdmin: false });
+    }
 });
 
 module.exports = router;

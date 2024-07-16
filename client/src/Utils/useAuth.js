@@ -7,35 +7,55 @@ function useAuth(autoCheck = true) {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-   
-
     useEffect(() => {
-        const checkAuth = () => {
+
+        const checkAuth = async () => {
             if (autoCheck){
-            const token = localStorage.getItem('googleToken') || localStorage.getItem('token');
-            //const user = JSON.parse(localStorage.getItem('user'));
-            const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
-            setIsAuthenticated(!!token);
-            setIsLoading(false);  
-            setIsAdmin(isAdmin || false);   
-            console.log('isAdmin in useAuth:', isAdmin);              
+                setIsLoading(true);
+                try{
+                    const response = await fetch('/api/auth/status', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json', 
+                        },
+                        credentials: 'include',
+                    });
+                    if (response.ok){
+                        console.log('Response is ok');
+                        const contentType = response.headers.get('content-type');
+                        console.log('Content-Type:', contentType);
+                        
+                        if (contentType && contentType.includes('application/json')) {  
+                            const data = await response.json();
+                            setIsAuthenticated(true);
+                            setIsAdmin(data.isAdmin);
+                        } else {
+                            console.log('Response is not JSON');
+                            setIsAuthenticated(false);
+                            setIsAdmin(false);
+                        }
+                        
+                    } else {
+                        console.log('Response status:', response.status);
+                        setIsAuthenticated(false);
+                        setIsAdmin(false);
+                       
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    setIsAuthenticated(false);
+                    setIsAdmin(false);
+                   
+                } finally {
+                    setIsLoading(false);
+                }
             }
-        }
-        checkAuth();
-
-        // Check auth status whenever local storage changes
-        window.addEventListener('storage', checkAuth);
-
-        // Clean up event listener
-        return () => {
-            window.removeEventListener('storage', checkAuth);
         };
-        
+        checkAuth(); // Call the function  
     }, [autoCheck]);
 
-
-    
-    return {isAuthenticated, setIsAuthenticated, isLoading, isAdmin, setIsAdmin};
+    return {isAuthenticated, setIsAuthenticated, isAdmin, isLoading};
 }
 
 

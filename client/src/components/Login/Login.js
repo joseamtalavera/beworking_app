@@ -1,29 +1,31 @@
+// Login.js
 import React, { useState } from 'react';
 import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-//import EmailRecoveryForm from './EmailRecoveryForm';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+//import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
 //import { get } from '../../../../server/routers/authRoutes';
 
 
 function Login(props) {
-  const [showRecoveryForm, setShowRecoveryForm] = useState(false);
+  //const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   //const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); 
-  const { setIsAuthenticated, setIsAdmin } = useAuth(false);
+  //const { setIsAuthenticated } = useAuth(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
 
   const navigate = useNavigate(); 
   
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  
+  /* 
   useEffect(() => {
    
     const token = localStorage.getItem('token');
@@ -47,7 +49,7 @@ function Login(props) {
         setIsAuthenticated(true);
       }
     }
-  }, [setIsAuthenticated]);
+  }, [setIsAuthenticated]); */
 
   
   const handleEmailChange = (event) => {
@@ -80,6 +82,7 @@ function Login(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email, password }),
+            credentials: 'include', // Ensure cookies are sent with the request
         });
 
         if (!response.ok) {
@@ -92,13 +95,14 @@ function Login(props) {
             if (data.user && data.user.email_confirmed) {
                 console.log('Login successful');
                 console.log('is_admin:', data.user.is_admin);
-                localStorage.setItem('token', JSON.stringify(data.token));
-                localStorage.setItem('tokenExpiration', Date.now() + 60 * 60 * 1000);
-                localStorage.setItem('isAdmin', JSON.stringify(data.user.is_admin));
-                console.log('isAdmin in local storage:, JSON.parse:', JSON.parse(localStorage.getItem('isAdmin')));
-                setIsAuthenticated(true); 
+
+                console.log('Before setIsAuthenticated');
+                //setIsAuthenticated(true); 
+                console.log('After setIsAuthenticated');
+
                 setIsAdmin(data.user.is_admin);  
 
+                console.log('Attempting to navigate. Admin status:', data.user.is_admin);
                 if (data.user.is_admin) {
                   navigate('/dashboard/admin');
                 } else {
