@@ -4,53 +4,17 @@ import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import { useNavigate } from 'react-router-dom';
-//import { useEffect } from 'react';
 import useAuth from '../../Utils/useAuth';
-//import { get } from '../../../../server/routers/authRoutes';
 
 
 function Login(props) {
-  //const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  //const [emailReset, setEmailReset] = useState(false);//props.emailReset passed to the EmailRecoveryForm component
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); 
-  //const { setIsAuthenticated } = useAuth(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-
+  const { setIsAuthenticated, setIsAdmin } = useAuth();
   const navigate = useNavigate(); 
-  
-  //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  /* 
-  useEffect(() => {
-   
-    const token = localStorage.getItem('token');
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
-
-    console.log('Token:', token);
-    console.log('Token expiration:', tokenExpiration);
-
-    if(token) {
-      const expirationTime = Number(tokenExpiration);
-      if (!tokenExpiration || Date.now() > expirationTime) {
-        setIsAuthenticated(false);  
-          if (tokenExpiration && Date.now() > expirationTime){
-            setErrorMessage('Session expired');
-            setOpen(true);
-            setTimeout(() => {
-              setOpen(false);
-            }, 3000);
-          }
-      } else {
-        setIsAuthenticated(true);
-      }
-    }
-  }, [setIsAuthenticated]); */
-
   
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -63,18 +27,6 @@ function Login(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-   /*  if (!email || !password) {
-      setErrorMessage('Please fill out all fields');
-      setOpen(true);
-      return;
-    }
-
-    if (!passwordRegex.test(password)) {
-      setErrorMessage('Password must have at least 8 characters, 1 uppercase letter, 1 number, and 1 special character');
-      setOpen(true);
-      return;
-    } */
-
     try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
@@ -87,7 +39,6 @@ function Login(props) {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.log('Error:', errorData.message)
           setErrorMessage(errorData.message ||'Email or pass is incorrect'); //errorData.message is the message from authRoutes.js
           setOpen(true);
         } else {
@@ -95,14 +46,9 @@ function Login(props) {
             if (data.user && data.user.email_confirmed) {
                 console.log('Login successful');
                 console.log('is_admin:', data.user.is_admin);
-
-                console.log('Before setIsAuthenticated');
-                //setIsAuthenticated(true); 
-                console.log('After setIsAuthenticated');
-
+                setIsAuthenticated(true);
                 setIsAdmin(data.user.is_admin);  
 
-                console.log('Attempting to navigate. Admin status:', data.user.is_admin);
                 if (data.user.is_admin) {
                   navigate('/dashboard/admin');
                 } else {
@@ -135,14 +81,6 @@ function Login(props) {
     navigate('/recover');
   };
 
-  /* if (showRecoveryForm) {
-    return <EmailRecoveryForm 
-      emailReset={emailReset} 
-      setEmailReset={setEmailReset} 
-      />;
-  } */
-
- 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{
       maxWidth: '500px', 
@@ -163,20 +101,7 @@ function Login(props) {
             </Grid>
 
         <Grid item >
-          {/* <GoogleButton 
-            buttonText="Login with Google" 
-          />  */}
-
-
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', margin: '10px auto' }}>
-            <Box flex={1} borderBottom={1} borderColor="orange" />
-              <Typography mx={2} color="orange">
-                or
-              </Typography>
-            <Box flex={1} borderBottom={1} borderColor="orange" />
-          </Box> */}
           
-
           <EmailInput
             email={email}
             handleEmailChange={handleEmailChange}

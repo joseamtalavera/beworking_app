@@ -171,13 +171,15 @@ exports.loginEmail = async (req, res) => {
 
         // Generate a token for the user
         const token = jwt.sign({id:user.id, isAdmin: user.isAdmin}, process.env.JWT_SECRET, {expiresIn: '1h'}); 
+        
         res.cookie('token', token, {
             httpOnly: true, 
             secure: true, 
             sameSite: 'strict',
             expires: new Date(Date.now() + 3600000), //1 hour
             });
-        res.status(201).send({user});
+            
+        res.status(200).send({user});
     } catch (error) {
         console.log(error);
         if (error.message === 'User already exists') {

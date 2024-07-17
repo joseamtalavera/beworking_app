@@ -12,8 +12,9 @@ function useAuth(autoCheck = true) {
         const checkAuth = async () => {
             if (autoCheck){
                 setIsLoading(true);
+
                 try{
-                    const response = await fetch('/api/auth/status', {
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/status`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -21,32 +22,18 @@ function useAuth(autoCheck = true) {
                         credentials: 'include',
                     });
                     if (response.ok){
-                        console.log('Response is ok');
-                        const contentType = response.headers.get('content-type');
-                        console.log('Content-Type:', contentType);
-                        
-                        if (contentType && contentType.includes('application/json')) {  
-                            const data = await response.json();
-                            setIsAuthenticated(true);
-                            setIsAdmin(data.isAdmin);
-                        } else {
-                            console.log('Response is not JSON');
-                            setIsAuthenticated(false);
-                            setIsAdmin(false);
-                        }
-                        
+                        const data = await response.json();
+                        setIsAuthenticated(true);
+                        setIsAdmin(data.isAdmin);    
                     } else {
-                        console.log('Response status:', response.status);
+                        console.log('Response is not ok');
                         setIsAuthenticated(false);
-                        setIsAdmin(false);
-                       
+                        setIsAdmin(false);  
                     }
-
                 } catch (error) {
-                    console.error('Error:', error);
+                    console.error('Fetch error:', error.message);
                     setIsAuthenticated(false);
-                    setIsAdmin(false);
-                   
+                    setIsAdmin(false);  
                 } finally {
                     setIsLoading(false);
                 }
@@ -55,7 +42,7 @@ function useAuth(autoCheck = true) {
         checkAuth(); // Call the function  
     }, [autoCheck]);
 
-    return {isAuthenticated, setIsAuthenticated, isAdmin, isLoading};
+    return {isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin, isLoading};
 }
 
 

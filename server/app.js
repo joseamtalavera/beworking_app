@@ -19,6 +19,7 @@ const app = express();
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(cookieParser());
 
 const port = process.env.PORT || 5005;
 
@@ -46,7 +47,7 @@ app.use(session({ // use express-session to maintain session data
     saveUninitialized: false 
 }));
 
-app.use(cookieParser());
+
 
 //const csrfProtection = csrf({ cookie: true });
 //app.use(csrfProtection);
