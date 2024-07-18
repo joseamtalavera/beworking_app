@@ -13,6 +13,7 @@ export default [
         process: "readonly",
         module: "readonly",
         console: "readonly",
+        fetch: "readonly",
       }
     },
     settings: {

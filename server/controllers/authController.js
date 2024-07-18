@@ -14,8 +14,6 @@ const nodemailer = require('nodemailer');
 //const validator = require('validator');
 const saltRounds = 10;
 const crypto = require('crypto');
-const { use } = require('passport');
-const { renameSync } = require('fs');
 
 
 // token verification for google login

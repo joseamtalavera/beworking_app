@@ -4,9 +4,6 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-
-
-//router.post('/token-signing', authController.loginWithGoogle);
 router.post('/register', 
     [
         body('email').isEmail(),
@@ -74,14 +71,14 @@ router.get('/confirm/:confirmationToken', authController.confirmEmail);
 
 
 
-router.use((err, req, res, next) => {
+router.use((err, req, res) => {
     console.error(err);
     res.status(500).send({ message: 'Something went wrong', error: err.message });
 });
 
 router.get('/auth/status', (req, res) => {
     console.log('Checking auth status');
-    console.log('Cookies:', req.cookies);
+    console.log('Cookies:', req.cookies.token);
     const token = req.cookies.token;
     console.log('Token received:', token);
 
@@ -103,6 +100,18 @@ router.get('/auth/status', (req, res) => {
         console.log('Response:', response);
         return res.json(response);
     }
+});
+
+router.post('/auth/logout', (req, res) => {
+    console.log('Logging out');
+    res.cookie('token', '', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        expires: new Date(0)
+    })
+    console.log('Token cleared');
+    res.clearCookie('token').send({ message: 'Logged out successfully' });
 });
 
 module.exports = router;

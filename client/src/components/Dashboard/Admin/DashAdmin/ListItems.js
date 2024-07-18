@@ -100,15 +100,27 @@ import {
     { text: 'Invoicing', icon: <InvoicingIcon sx={{fontSize: 20}} /> },
 ];
 
-const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('tokenExpiration');
-    localStorage.removeItem('isAdmin');
+const handleLogout = async () => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
 
-    //useAuth().setIsAuthenticated(false);
-    //useAuth().setIsAdmin(false);
-    window.location.href = '/login';
+    console.log('Logout response:', response);
+
+    if (response.ok) {
+      console.log('Logout successful');
+      window.location.href = '/login';
+    } else {
+      console.log('Logout failed');
+    }
+  } catch (error) {
+      console.error('Error during logout:', error);
+    }
 };
+    
+
 
 export const moreItems = [
     { text: 'Maintenance', icon: <MaintenanceIcon sx={{fontSize: 20}} /> },

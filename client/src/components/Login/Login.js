@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../Utils/useAuth';
 
 
-function Login(props) {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -45,7 +45,6 @@ function Login(props) {
             const data = await response.json();
             if (data.user && data.user.email_confirmed) {
                 console.log('Login successful');
-                console.log('is_admin:', data.user.is_admin);
                 setIsAuthenticated(true);
                 setIsAdmin(data.user.is_admin);  
 
@@ -77,7 +76,6 @@ function Login(props) {
 
   const handleRecoveryClick = (event) => {
     event.preventDefault();
-    //setShowRecoveryForm(true);
     navigate('/recover');
   };
 
