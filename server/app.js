@@ -23,7 +23,6 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 5005;
 
-// use cors to allow cross origin resource sharing
 const allowedOrigins = ['http://localhost:3003', 'http://localhost:3000', 'https://be-working.com/'];
 app.use(cors({
     origin: function(origin, callback){
@@ -49,8 +48,20 @@ app.use(session({ // use express-session to maintain session data
 
 
 
-//const csrfProtection = csrf({ cookie: true });
-//app.use(csrfProtection);
+const csrfProtection = csrf({ 
+    cookie:{
+        sameSite: 'none',
+    }
+});
+app.use((err, req, res, next) => {
+    if (err.coder === 'EBADCSRFTOKEN'){
+        res.status(403).send({message: 'CSRF token is invalid'});
+
+    } else {
+       next(); 
+    }
+})
+
 
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
@@ -66,11 +77,9 @@ passport.deserializeUser(function(user, done) {// This function is used to retri
     done(null, user);
 });
 
-
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
     });
-
 
 app.use(function(err, req, res, next) {
     console.error(err.stack);

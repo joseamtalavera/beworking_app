@@ -1,69 +1,17 @@
 const jwt = require('jsonwebtoken');
-//const {OAuth2Client} = require('google-auth-library');
-//const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 const {createUser} = require('../model/queries');
 const { getUserByEmail } = require('../model/queries');
 const { getUserById } = require('../model/queries');
 const { getUserByConfirmationToken, confirmUserEmail } = require('../model/queries');
 const { updateUserPassword } = require('../model/queries');
-
 const bcrypt = require('bcrypt');
-//const { decrypt } = require('dotenv');
 const nodemailer = require('nodemailer');
-//const validator = require('validator');
 const saltRounds = 10;
 const crypto = require('crypto');
 
-
-// token verification for google login
-/* async function verify(token){
-    console.log("Google Client ID (audience):", process.env.GOOGLE_CLIENT_ID); 
-
-    
-    const ticket = await client.verifyIdToken({ 
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload = ticket.getPayload(); 
-    const userid = payload['sub']; 
-    return userid; 
-} */
-
-
-// Google login
-/* exports.loginWithGoogle = async (req, res) => {
-
-    const {token} = req.body;   
-    try {
-        console.log('Verifying token:', token);
-        const userid = await verify(token);
-        console.log('Verified user id:', userid);
-        
-        // Create a new user in the database if the user doesn't exist.
-        console.log('Creating user for id:', userid);
-        const user = await createUser(userid);
-        console.log('Created user:', user);
-
-        res.status(200).send({user});
-    } catch(e) {
-        console.error(e);
-        res.status(500).send({ error: 'Internal Server Error' });
-    } 
-
-}; 
- */
-
-// register new user.
-exports.registerEmail = async (req, res) => {
+const registerEmail = async (req, res) => {
     try {
         let {email, password} = req.body;
-
-        // Validate the email
-       /*  email = email.trim();
-        if (!validator.isEmail(email)) {
-            return res.status(400).send({message: 'Invalid email'});
-        } */
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -93,9 +41,9 @@ exports.registerEmail = async (req, res) => {
             }
         });
 
-        // Send email with defined transport object
+        // Send email to confirm email address
         try{
-        let info = await transporter.sendMail({
+        await transporter.sendMail({
             from: '"BeWorking" info@mo-rentals.com',
             to: email,
             subject: "BeWorking: Please confirm your email",
@@ -121,8 +69,7 @@ exports.registerEmail = async (req, res) => {
     }
 };
 
-// confirm email. This is the link that the user clicks on to confirm their email address
-exports.confirmEmail = async (req, res) => {
+const confirmEmail = async (req, res) => {
     const {confirmationToken} = req.params;
     try {
         const user = await getUserByConfirmationToken(confirmationToken);
@@ -142,17 +89,12 @@ exports.confirmEmail = async (req, res) => {
     
 };
 
-
-
-
-// login user
-exports.loginEmail = async (req, res) => {
+const loginEmail = async (req, res) => {
     try {
         const {email, password} = req.body;
 
         // Check if the user exists
         const user = await getUserByEmail(email);
-        console.log('User:', user);
 
         // If the user doesn't exist, send an error message
         if (!user) {
@@ -188,9 +130,7 @@ exports.loginEmail = async (req, res) => {
     }
 }
 
-
-// reset password
-exports.resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
     console.log('Reset password:', req.body);
     const { resetToken, password } = req.body;
 
@@ -231,9 +171,7 @@ exports.resetPassword = async (req, res) => {
     }
 }
 
-
-//resend reset email
-exports.sendResetEmail = async (req, res) => {
+const sendResetEmail = async (req, res) => {
     const {email} = req.body;
 
     try {
@@ -277,4 +215,12 @@ exports.sendResetEmail = async (req, res) => {
         console.log(error);
         res.status(500).send({message: 'Something went wrong'});
     }
-}   
+}  
+
+module.exports = {
+    registerEmail,
+    loginEmail,
+    resetPassword,
+    sendResetEmail,
+    confirmEmail,
+};

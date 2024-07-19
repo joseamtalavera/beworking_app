@@ -1,6 +1,7 @@
 // PrivateRoute.js
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import useAuth from './useAuth';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -27,17 +28,20 @@ function PrivateRoute({ children, adminRoute = false}) {
     }
 
     if (!isAuthenticated) {
-        console.log('Navigate to /login');
         return <Navigate to="/login" replace />;
     } 
 
     if (adminRoute && !isAdmin) {
-        console.log('Navigate to /dashboard/user');
         return <Navigate to="/dashboard/user" replace />;
     }
 
     return children;
 }
+
+PrivateRoute.propTypes = {
+    children: PropTypes.node.isRequired,
+    adminRoute: PropTypes.bool,
+};
 
 export default PrivateRoute;
 

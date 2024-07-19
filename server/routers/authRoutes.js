@@ -1,6 +1,6 @@
 const express = require('express');
 const {body, validationResult} = require('express-validator');
-const authController = require('../controllers/authController');
+const { registerEmail, loginEmail, confirmEmail, resetPassword, sendResetEmail } = require('../controllers/authController');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
@@ -20,7 +20,7 @@ router.post('/register',
         }
         next();
     },
-    authController.registerEmail);
+    registerEmail);
 router.post('/login', 
     [
         body('email').isEmail().withMessage('Please enter a valid email'),
@@ -34,7 +34,7 @@ router.post('/login',
         }
         next();
     },
-    authController.loginEmail);
+    loginEmail);
 router.post('/recover', 
     [
         body('email').isEmail().withMessage('Please enter a valid email')
@@ -48,7 +48,7 @@ router.post('/recover',
         }
         next();
     },
-    authController.sendResetEmail)
+    sendResetEmail)
 router.post('/resetEmail', 
     [
         body('password')
@@ -65,20 +65,20 @@ router.post('/resetEmail',
         }
         next();
     },
-    authController.resetPassword);
-router.get('/confirm/:confirmationToken', authController.confirmEmail);
+    resetPassword);
+router.get('/confirm/:confirmationToken', confirmEmail);
 
 
 
 
-router.use((err, req, res) => {
+router.use((err, req, res, _next) => {
     console.error(err);
     res.status(500).send({ message: 'Something went wrong', error: err.message });
 });
 
 router.get('/auth/status', (req, res) => {
     console.log('Checking auth status');
-    console.log('Cookies:', req.cookies.token);
+    console.log('Cookies:', req.cookies);
     const token = req.cookies.token;
     console.log('Token received:', token);
 

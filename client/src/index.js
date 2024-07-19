@@ -1,7 +1,8 @@
-//import { GoogleOAuthProvider } from '@react-oauth/google';
+// index.js
+
 import React from 'react';
-import ReactDOM from 'react-dom'; // package for working with the DOM
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';// components for setting up routes
+import ReactDOM from 'react-dom'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App';
 import LoginPage from './components/Login/LoginPage';
 //import VirtualOffice from './components/VirtualOffice/VirtualOffice';
@@ -18,13 +19,9 @@ import Users from './components/Dashboard/Admin/Users/Users';
 import User from './components/Dashboard/Admin/Users/User';
 import AddUser from './components/Dashboard/Admin/Users/AddUser';
 import EmailRecoveryForm from './components/Login/EmailRecoveryForm';
-import { Email } from '@mui/icons-material';
-
-
-//const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 ReactDOM.render(
-  // <GoogleOAuthProvider clientId={googleClientId}>
+  
   <Router>
     <Routes>
       <Route path="/" element={<App />} />
@@ -44,6 +41,6 @@ ReactDOM.render(
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
     </Routes>
   </Router>,
-  //</GoogleOAuthProvider> 
-  document.getElementById('root')// mount the app to the root element
+  
+  document.getElementById('root')
 );

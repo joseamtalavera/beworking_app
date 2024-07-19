@@ -14,7 +14,12 @@ export default [
         module: "readonly",
         console: "readonly",
         fetch: "readonly",
-      }
+      },
+      env: {
+        browser: true,
+        es2021: true,
+        node: true,
+      },
     },
     settings: {
       react: {
