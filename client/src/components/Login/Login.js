@@ -26,12 +26,22 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
     
     try {
+        const csrfToken = getCookie('_csrf');
+        console.log('CSRF Token:', csrfToken);
+
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
             },
             body: JSON.stringify({ email, password }),
             credentials: 'include', // Ensure cookies are sent with the request

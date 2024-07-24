@@ -47,24 +47,25 @@ app.use(session({ // use express-session to maintain session data
 }));
 
 
+app.use((req, res, next) => {
+    const token = req.csrfToken();
+    res.cookie('_csrf', token);
+    next();
+}); 
 
-const csrfProtection = csrf({ 
-    cookie:{
-        sameSite: 'none',
-    }
-});
 app.use((err, req, res, next) => {
-    if (err.coder === 'EBADCSRFTOKEN'){
+    if (err.code === 'EBADCSRFTOKEN'){
         res.status(403).send({message: 'CSRF token is invalid'});
 
     } else {
        next(); 
     }
-})
+});
 
 
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+
 
 app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
 app.use(passport.session());
@@ -89,3 +90,7 @@ app.use(function(err, req, res, next) {
 app.listen(port, () => {
     console.log(`Server is running on Port ${port}`);
   });
+
+  /* console.log(csrfProtection);
+
+  module.exports = { csrfProtection }; */

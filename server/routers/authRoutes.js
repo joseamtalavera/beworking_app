@@ -3,8 +3,33 @@ const {body, validationResult} = require('express-validator');
 const { registerEmail, loginEmail, confirmEmail, resetPassword, sendResetEmail } = require('../controllers/authController');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const csrf = require('csurf');
+const cookieParser = require('cookie-parser');
 
-router.post('/register', 
+router.use(cookieParser());
+
+// CSRF middleware initialization
+const csrfProtection = csrf({
+    cookie: {
+        name: '_csrf',
+        sameSite: 'lax',
+        secure: false
+    }
+});
+
+router.use(csrfProtection);
+
+
+router.use((req, res, next) => {
+    console.log('Headers:', req.headers);
+    console.log('Cookies:', req.cookies);
+    console.log('CSRF Token from headers:', req.headers['xsrf-token']);
+    console.log('CSRF Token from cookies:', req.cookies['_csrf']);
+    next();
+});
+
+
+router.post('/register',
     [
         body('email').isEmail(),
         body('password')
@@ -21,7 +46,8 @@ router.post('/register',
         next();
     },
     registerEmail);
-router.post('/login', 
+
+router.post('/login',
     [
         body('email').isEmail().withMessage('Please enter a valid email'),
         body('password').not().isEmpty().withMessage('Password is required')
@@ -34,8 +60,20 @@ router.post('/login',
         }
         next();
     },
+    (req, res, next) => {
+        console.log('CSRF Token from headers:', req.headers['xsrf-token']);
+        console.log('CSRF Token from cookies:', req.cookies['_csrf']);
+
+        if (req.headers['XSRF-TOKEN'] !== req.cookies['_csrf']) {
+            console.log('CSRF token mismatch');
+        }if (!req.cookies['_csrf']) {
+            console.log('No CSRF token found');
+        }
+        next();
+    },
     loginEmail);
-router.post('/recover', 
+
+router.post('/recover',
     [
         body('email').isEmail().withMessage('Please enter a valid email')
     ],
@@ -48,7 +86,8 @@ router.post('/recover',
         }
         next();
     },
-    sendResetEmail)
+    sendResetEmail);
+
 router.post('/resetEmail', 
     [
         body('password')
