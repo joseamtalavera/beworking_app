@@ -3,31 +3,6 @@ const {body, validationResult} = require('express-validator');
 const { registerEmail, loginEmail, confirmEmail, resetPassword, sendResetEmail } = require('../controllers/authController');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const csrf = require('csurf');
-const cookieParser = require('cookie-parser');
-
-router.use(cookieParser());
-
-// CSRF middleware initialization
-const csrfProtection = csrf({
-    cookie: {
-        name: '_csrf',
-        sameSite: 'lax',
-        secure: false
-    }
-});
-
-router.use(csrfProtection);
-
-
-router.use((req, res, next) => {
-    console.log('Headers:', req.headers);
-    console.log('Cookies:', req.cookies);
-    console.log('CSRF Token from headers:', req.headers['xsrf-token']);
-    console.log('CSRF Token from cookies:', req.cookies['_csrf']);
-    next();
-});
-
 
 router.post('/register',
     [
@@ -57,17 +32,6 @@ router.post('/login',
         if (!errors.isEmpty()) {
             const firstErrorMessage = errors.array()[0].msg;
             return res.status(400).send({message: firstErrorMessage});
-        }
-        next();
-    },
-    (req, res, next) => {
-        console.log('CSRF Token from headers:', req.headers['xsrf-token']);
-        console.log('CSRF Token from cookies:', req.cookies['_csrf']);
-
-        if (req.headers['XSRF-TOKEN'] !== req.cookies['_csrf']) {
-            console.log('CSRF token mismatch');
-        }if (!req.cookies['_csrf']) {
-            console.log('No CSRF token found');
         }
         next();
     },

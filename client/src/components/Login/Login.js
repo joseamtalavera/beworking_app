@@ -24,27 +24,34 @@ function Login() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const csrfToken = getCookie('_csrf');
+    console.log('CSRF token:', csrfToken);
+    
+  if (!csrfToken) {
+    console.error('CSRF token not found in cookies');
+    setErrorMessage('An error occurred. Please try again later.');
+    setOpen(true);
+    return;
+  }
     
     try {
-        const csrfToken = getCookie('_csrf');
-        console.log('CSRF Token:', csrfToken);
-
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken
+                'CSRF-Token': csrfToken,    
             },
             body: JSON.stringify({ email, password }),
-            credentials: 'include', // Ensure cookies are sent with the request
+            credentials: 'include', 
         });
 
         if (!response.ok) {

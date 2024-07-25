@@ -46,29 +46,29 @@ app.use(session({ // use express-session to maintain session data
     saveUninitialized: false 
 }));
 
+app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
+app.use(passport.session());
 
-app.use((req, res, next) => {
-    const token = req.csrfToken();
-    res.cookie('_csrf', token);
-    next();
-}); 
+// Initialize CSRF protection middleware
+const csrfProtection = csrf({ cookie: true });
 
-app.use((err, req, res, next) => {
-    if (err.code === 'EBADCSRFTOKEN'){
-        res.status(403).send({message: 'CSRF token is invalid'});
-
-    } else {
-       next(); 
-    }
-});
-
+app.use(csrfProtection);
 
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 
-
-app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
-app.use(passport.session());
+app.use((err, req, res, next) => {
+    if (err.code === 'EBADCSRFTOKEN'){
+        console.error('Invalid CSRF token detected');
+        console.log('Cookies:', req.cookies);
+        console.log('Headers:', req.headers);
+        console.log('CSRF Token from Cookie:', req.cookies['_csrf']);
+        console.log('CSRF Token from Header:', req.get('CSRF-Token'));
+        res.status(403).send({message: 'CSRF token is invalid'});
+    } else {
+       next(); 
+    }
+});
 
 
 passport.serializeUser(function(user, done) {// This function is used to store the user object into the session
@@ -91,6 +91,4 @@ app.listen(port, () => {
     console.log(`Server is running on Port ${port}`);
   });
 
-  /* console.log(csrfProtection);
-
-  module.exports = { csrfProtection }; */
+  
