@@ -1,5 +1,5 @@
 // Login.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
@@ -15,6 +15,7 @@ function Login() {
   const [open, setOpen] = useState(false); 
   const { setIsAuthenticated, setIsAdmin } = useAuth();
   const navigate = useNavigate(); 
+  const [csrfToken, setCsrfToken] = useState('');
   
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -24,25 +25,28 @@ function Login() {
     setPassword(event.target.value);
   };
 
-  const getCookie = (name) => {
+  /* const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
-  };
+  }; */
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/csrf-token`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const data = await response.json();
+      setCsrfToken(data.csrfToken);
+      console.log('CSRF token:', data.csrfToken);
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const csrfToken = getCookie('_csrf');
-    console.log('CSRF token:', csrfToken);
-    
-  if (!csrfToken) {
-    console.error('CSRF token not found in cookies');
-    setErrorMessage('An error occurred. Please try again later.');
-    setOpen(true);
-    return;
-  }
-    
+  
     try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
             method: 'POST',

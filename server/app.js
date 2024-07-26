@@ -37,7 +37,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(express.json()); // To parse the incoming requests with JSON payloads
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({ // use express-session to maintain session data
@@ -50,9 +50,13 @@ app.use(passport.initialize()); // Initialize passport and restore authenticatio
 app.use(passport.session());
 
 // Initialize CSRF protection middleware
-const csrfProtection = csrf({ cookie: true });
-
+const csrfProtection = csrf();
 app.use(csrfProtection);
+
+app.use((req, res, next) => {
+    req.session.csrfToken = req.csrfToken();
+    next();
+});
 
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
@@ -62,8 +66,8 @@ app.use((err, req, res, next) => {
         console.error('Invalid CSRF token detected');
         console.log('Cookies:', req.cookies);
         console.log('Headers:', req.headers);
-        console.log('CSRF Token from Cookie:', req.cookies['_csrf']);
-        console.log('CSRF Token from Header:', req.get('CSRF-Token'));
+        console.log('CSRF Token from Session:', req.session.csrfToken);
+        console.log('CSRF Token from Header:', req.get('csrf-token'));
         res.status(403).send({message: 'CSRF token is invalid'});
     } else {
        next(); 

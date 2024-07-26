@@ -4,6 +4,11 @@ const { registerEmail, loginEmail, confirmEmail, resetPassword, sendResetEmail }
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
+router.get('/csrf-token', (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+});
+
+
 router.post('/register',
     [
         body('email').isEmail(),
