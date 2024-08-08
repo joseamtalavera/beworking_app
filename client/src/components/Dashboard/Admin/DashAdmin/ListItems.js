@@ -95,7 +95,7 @@ import {
  export const listItems = [
     { text: 'Dashboard', icon: <DashboardIcon sx={{fontSize: 20}} />, path: '/dashboard/admin'},
     { text: 'Users', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/admin/users'},
-    { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} /> },
+    { text: 'Calendar', icon: <CalendarIcon sx={{fontSize: 20}} />, path: '/dashboard/admin/calendar'},
     { text: 'Bookings', icon: <BookingsIcon sx={{fontSize: 20}} /> },
     { text: 'Invoicing', icon: <InvoicingIcon sx={{fontSize: 20}} /> },
 ];

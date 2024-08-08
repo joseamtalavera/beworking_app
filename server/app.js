@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 5005;
 
-const allowedOrigins = ['http://localhost:3003', 'http://localhost:3000', 'https://be-working.com/'];
+const allowedOrigins = ['http://localhost:3003', 'http://16.16.183.230', 'https://app.be-working.com'];
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);

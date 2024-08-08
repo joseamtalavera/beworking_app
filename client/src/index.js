@@ -19,6 +19,7 @@ import Users from './components/Dashboard/Admin/Users/Users';
 import User from './components/Dashboard/Admin/Users/User';
 import AddUser from './components/Dashboard/Admin/Users/AddUser';
 import EmailRecoveryForm from './components/Login/EmailRecoveryForm';
+import BookingCalendar from './components/Calendar/BookingCalendar';
 
 ReactDOM.render(
   
@@ -39,6 +40,7 @@ ReactDOM.render(
       <Route path='/dashboard/admin/users/:id' element={<PrivateRoute><User /></PrivateRoute>} />
       <Route path='/dashboard/admin/users/add-user' element={<PrivateRoute><AddUser /></PrivateRoute>} />
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
+      <Route path='dashboard/admin/calendar' element={<PrivateRoute><BookingCalendar /></PrivateRoute> } />
     </Routes>
   </Router>,
   
