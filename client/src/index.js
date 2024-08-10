@@ -8,18 +8,19 @@ import LoginPage from './components/Login/LoginPage';
 //import VirtualOffice from './components/VirtualOffice/VirtualOffice';
 //import CoWorking from './components/CoWorking/CoWorking';
 //import MeetingRooms from './components/MeetingRooms/MeetingRooms';
-import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboard';
-import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
+
+//import AdminDashboard from './components/Dashboard/Admin/DashAdmin/AdminDashboard';
+//import UserDashboard from './components/Dashboard/User/DashUser/UserDashboard';
 import PrivateRoute from './Utils/PrivateRoute';
 //import PasswordResetForm from './components/Login/PasswordResetForm';
 import PasswordResetPage from './components/Login/PasswordResetPage';
 import ConfirmationPage from './components/Login/ConfirmationPage';
 import ThanksPage from './components/Login/ThanksPage';
-import Users from './components/Dashboard/Admin/Users/Users';
-import User from './components/Dashboard/Admin/Users/User';
-import AddUser from './components/Dashboard/Admin/Users/AddUser';
+//import Users from './components/Dashboard/Admin/Users/Users';
+//import User from './components/Dashboard/Admin/Users/User';
+//import AddUser from './components/Dashboard/Admin/Users/AddUser';
 import EmailRecoveryForm from './components/Login/EmailRecoveryForm';
-import BookingCalendar from './components/Calendar/BookingCalendar';
+//import BookingCalendar from './components/Calendar/BookingCalendar';
 
 ReactDOM.render(
   
@@ -35,12 +36,13 @@ ReactDOM.render(
       {/*<Route path="/virtual-office" element={<VirtualOffice />} />*/}
       {/*<Route path="/coworking" element={<CoWorking />} />*/}
       {/*<Route path="/meeting-rooms" element={<MeetingRooms />} />*/}
-      <Route path='/dashboard/admin' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+
+     {/*  <Route path='/dashboard/admin' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
       <Route path='/dashboard/admin/users' element={<PrivateRoute><Users /></PrivateRoute>} />
       <Route path='/dashboard/admin/users/:id' element={<PrivateRoute><User /></PrivateRoute>} />
       <Route path='/dashboard/admin/users/add-user' element={<PrivateRoute><AddUser /></PrivateRoute>} />
       <Route path='/dashboard/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
-      <Route path='dashboard/admin/calendar' element={<PrivateRoute><BookingCalendar /></PrivateRoute> } />
+      <Route path='dashboard/admin/calendar' element={<PrivateRoute><BookingCalendar /></PrivateRoute> } /> */}
     </Routes>
   </Router>,
   
